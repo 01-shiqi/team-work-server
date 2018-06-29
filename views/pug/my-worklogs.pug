@@ -1,0 +1,236 @@
+extends layouts/_layout.pug
+
+block variables
+	- var activePage = 'my-worklogs'
+	- var activeGroup = 'forms'
+
+block title
+	title Team Work
+
+block content
+	.app-title
+		div
+			h1
+				i.fa.fa-list-ol
+				|  我的工作日志
+
+		ul.app-breadcrumb.breadcrumb
+			li.breadcrumb-item
+				i.fa.fa-home.fa-lg
+			li.breadcrumb-item
+				| 日志
+			li.breadcrumb-item
+				a(href="#") 日志列表
+
+	.modal.fade#editDialog(aria-hide="true")
+		.modal-dialog(role='dialog', style="width:1400px;max-width:1400px;")
+			.modal-content
+				.modal-header
+					h5.modal-title 修改日志
+					button.close(type='button', data-dismiss='modal', aria-label='Close')
+						span(aria-hidden='true') ×
+				.modal-body
+					form.row
+						include ./components/_worklog-editor
+				.modal-footer
+					button.btn.btn-primary#btn-closeDialog(type='button') 确定
+					button.btn.btn-secondary(type='button', data-dismiss='modal') 取消
+
+	.row
+		.col-md-12
+			.tile
+				.mailbox-controls
+
+					.animated-checkbox
+						label
+							input#cb-select-all(type="checkbox")
+							span.label-text
+					.btn-group
+						button.btn.btn-primary.btn-sm#btn-delete-worklogs(type='button')
+							i.fa.fa-trash-o
+							
+
+				.table-responsive.mailbox-messages
+					table.table.table-hover
+						tbody
+							- for (var i = 0; i < worklogs.length; i++)
+								tr(id=`${worklogs[i].id}`)
+									td
+										.animated-checkbox
+											label
+												input.cb-worklog-item(type="checkbox", data-id=`${worklogs[i].id}`)
+												span.label-text 
+									td #{i + 1}
+									td(class=`td${0}`) #{worklogs[i].workDate}
+									td(class=`td${1}`) #{worklogs[i].workBeginTime}
+									td(class=`td${2}`) #{worklogs[i].workEndTime}
+									td(class=`td${3}`) #{worklogs[i].workType}
+									td(class=`td${4}`) #{worklogs[i].model}
+									td(class=`td${5}`) #{worklogs[i].workPlace}
+									td(class=`td${6}`) #{worklogs[i].workObject}
+									td(class=`td${7}`) 
+										.td-textarea #{worklogs[i].workContent}
+									td
+										.animated-checkbox
+											label
+												button.btn.btn-primary.btn-sm.btn-editWorklog(type='button', value=`${worklogs[i].id}`)
+													i.fa.fa-edit
+
+				.text-right
+					.btn-group
+						div
+							ul.pagination
+								if pageIndex == 0
+									li.page-item.disabled
+										a.page-link(href=`my-worklogs?pageIndex=${0}`) «
+								else
+									li.page-item
+										a.page-link(href=`my-worklogs?pageIndex=${0}`) «								
+								- for (var i = 0; i < pageCount; i++)
+									if i == pageIndex
+										li.page-item.active
+											a.page-link(href=`my-worklogs?pageIndex=${i}`) #{i+1}
+									else
+										li.page-item
+											a.page-link(href=`my-worklogs?pageIndex=${i}`) #{i+1}
+								if pageIndex == pageCount - 1
+									li.page-item.disabled
+										a.page-link(href=`my-worklogs?pageIndex=${pageCount - 1}`) »
+								else
+									li.page-item
+										a.page-link(href=`my-worklogs?pageIndex=${pageCount - 1}`) »								
+
+block specific-js
+	script(type='text/javascript', src="js/plugins/bootstrap-datepicker.min.js")
+	script(type='text/javascript', src="js/plugins/select2.min.js")
+	script(type='text/javascript', src="js/plugins/sweetalert.min.js")
+	script(type="text/javascript").
+		$('.btn-editWorklog').click(function(){
+
+			let worklogID = $(this).val()
+			$('#editDialog').attr('data-worklogID', worklogID)
+			worklogID = $('#editDialog').attr('data-worklogID')
+
+			let itemValues = []
+			for(var i = 0; i < 7; ++i) {
+				itemValues.push($("#"+ worklogID + " .td" + i).html())
+			}
+			itemValues.push($("#"+ worklogID + " .td-textarea").html())
+
+			let index = 0;
+			$('#worklogDate').val(itemValues[index++])
+			$('#beginTime').val(itemValues[index++])
+			$('#endTime').val(itemValues[index++])
+			$('#workType').val(itemValues[index++])
+			$('#model').val(itemValues[index++])
+			$('#workPlace').val(itemValues[index++])
+			$('#workObject').val(itemValues[index++])
+			$('#workContent').val(itemValues[index++])
+
+			$('#editDialog').modal()
+		})
+
+		$('#editDialog').on('shown.bs.modal', function() {
+			$('.customSelect').select2()
+		})
+
+		$('#worklogDate').datepicker({
+			format: 'yyyy-mm-dd',
+			firstDay: 1,
+			autoclose: true,
+			todayHighlight: true,
+			dayNamesShort: ['日', '一', '二', '三', '四', '五', '六'],
+		})
+
+		$('#btn-closeDialog').click(function(){
+
+			let itemValues = []
+			itemValues.push($('#worklogDate').val())
+			itemValues.push($('#beginTime').val())
+			itemValues.push($('#endTime').val())
+			itemValues.push($('#workType').val())
+			itemValues.push($('#model').val())
+			itemValues.push($('#workPlace').val())
+			itemValues.push($('#workObject').val())
+			itemValues.push($('#workContent').val())
+
+			let worklogID = $('#editDialog').attr('data-worklogID')
+			itemValues.push(worklogID)
+
+			//- 向后台发送更新数据请求
+			$.ajax({
+				url: "/update-worklog/",
+				type: "post",
+				data: JSON.stringify(itemValues),
+				dataType: "json",
+				success: function(res){
+					if(res.succeed) {
+						//- 更新前台页面的值
+						for(var i = 0; i < 7; ++i) {
+							itemValues.push($("#"+ worklogID + " .td" + i).html())
+							$("#"+ worklogID + " .td" + i).html(itemValues[i])
+						}
+						$("#"+ worklogID + " .td-textarea").html(itemValues[i])
+
+						$('#editDialog').modal('hide')
+					} else {
+						swal("日志修改", "日志修改失败！ 原因：" + res.error, "error")
+					}
+
+				},
+
+				error: function(res){
+					swal("日志修改", "日志修改失败！ 原因：" + res.error, "error")
+				}
+			})
+		})
+
+		$('.customSelect').select2()
+
+		//- 全选或取消全选
+		$('#cb-select-all').click(function(){
+
+			var allChecked = this.checked
+			$(".cb-worklog-item").each(function(){
+				this.checked = allChecked
+			})
+		})
+
+		//- 删除选中的日志
+		$('#btn-delete-worklogs').click(function(){
+			let ids = []
+			$(".cb-worklog-item:checked").each(function(index){
+				ids.push($(this).attr('data-id'))				
+			})
+
+			if(ids.length <= 0){
+				return
+			}
+
+			//- 从后台删除
+			$.ajax({
+				url: "/delete-worklogs/",
+				type: "delete",
+				data: JSON.stringify(ids),
+				dataType: "json",
+				success: function(res){
+					if(res.succeed) {
+						// 删除界面上的日志记录
+						for(let i = 0; i < ids.length; ++i) {
+							$('#' + ids[i]).remove()
+						}
+
+						swal("日志删除", "成功删除" + ids.length + "条日志！", "info")
+					} else {
+						swal("日志删除", "日志删除失败！ 原因：" + res.error, "error")
+					}
+
+				},
+
+				error: function(res){
+					swal("日志删除", "日志删除失败！ 原因：" + res.error, "error")
+				}
+			})
+		})
+
+		

@@ -1,0 +1,368 @@
+﻿<?xml version='1.0' encoding='utf-8'?>
+<Table>
+    <Rights>
+        <Right desc="数据浏览的权限" name="数据浏览" sign="true"/>
+        <Right desc="数据下载的权限" name="数据下载" sign="false"/>
+        <Right desc="自动判读的权限" name="自动判读" sign="false"/>
+        <Right desc="禁止判读的权限" name="禁止判读" sign="false"/>
+        <Right desc="设置必判参数的权限" name="设置必判参数" sign="false"/>
+        <Right desc="用户管理的权限" name="用户管理" sign="false"/>
+        <Right desc="角色管理的权限" name="角色管理" sign="false"/>
+        <Right desc="试验管理的权限" name="试验管理" sign="false"/>
+        <Right desc="野点管理的权限" name="野点管理" sign="false"/>
+        <Right desc="判据管理的权限" name="判据管理" sign="false"/>
+    </Rights>
+    <Users>
+        <User truename="管理员" desc="管理员" password=":98?" unit="一部" name="admin">
+            <role id="000"/>
+        </User>
+        <User truename="连彦泽" desc="1" password="lianyz" unit="yb2" name="lianyz">
+            <role id="000"/>
+        </User>
+        <User truename="李业磊" desc="1" password="liyl" unit="yb" name="liyl">
+            <role id="000"/>
+        </User>
+        <User truename="段飞鹏" desc="2" password="duanfp" unit="一部" name="duanfp">
+            <role id="000"/>
+        </User>
+		<User truename="朱高鹏" desc="2" password="zhugp" unit="一部" name="zhugp">
+            <role id="000"/>
+        </User>
+    </Users>
+    <Roles>
+        <Role desc="拥有所有权限" mustIPParamFilePath="MustIPParam\管理员MustIPParam.xml" id="000" name="管理员"/>
+        <Role desc="" mustIPParamFilePath="MustIPParam\数据浏览角色MustIPParam.xml" id="001" name="数据浏览角色">
+            <right name="数据浏览">
+                <model name="XX5C_主">
+                    <system name="1553B总线"/>
+                    <system name="测量系统"/>
+                    <system name="测量系统"/>
+                </model>
+            </right>
+            <right name="数据下载"/>
+            <right name="自动判读"/>
+            <right name="禁止判读"/>
+            <right name="设置必判参数"/>
+            <right name="用户管理"/>
+            <right name="角色管理"/>
+            <right name="试验管理"/>
+            <right name="判据管理"/>
+        </Role>
+        <Role desc="" mustIPParamFilePath="MustIPParam\浏览角色MustIPParam.xml" id="002" name="浏览角色">
+            <right name="数据浏览">
+                <model name="XX5C_主">
+                    <system name="1553B总线"/>
+                    <system name="测量系统"/>
+                    <system name="测量系统"/>
+                </model>
+            </right>
+            <right name="数据下载"/>
+            <right name="自动判读"/>
+            <right name="禁止判读"/>
+            <right name="设置必判参数"/>
+            <right name="用户管理"/>
+            <right name="角色管理"/>
+            <right name="试验管理"/>
+            <right name="判据管理"/>
+        </Role>
+        <Role desc="测试" mustIPParamFilePath="MustIPParam\测试角色MustIPParam.xml" id="003" name="测试角色">
+            <right name="数据浏览">
+                <model name="31B">
+                    <system name="每帧采样2次"/>
+                    <system name="每帧采样128次"/>
+                    <system name="每帧采样16次"/>
+                    <system name="每帧采样2次"/>
+                    <system name="每帧采样4次"/>
+                    <system name="每帧采样640次"/>
+                    <system name="每帧采样8次"/>
+                    <system name="422-1_1001"/>
+                    <system name="422-1_2001"/>
+                    <system name="422-1_3001"/>
+                    <system name="422-1_4001"/>
+                    <system name="422-1_5001"/>
+                    <system name="RS422第二组_2001"/>
+                    <system name="高速串口AAAA"/>
+                    <system name="高速串口BBBB"/>
+                    <system name="每帧采样2次"/>
+                    <system name="每帧采样2次"/>
+                    <system name="配电器参数"/>
+                    <system name="每帧采样2次"/>
+                    <system name="每帧采样64次"/>
+                    <system name="缓变参数"/>
+                    <system name="每帧采样2次"/>
+                    <system name="指令"/>
+                    <system name="1553B缓变参数"/>
+                    <system name="1553B缓变参数"/>
+                    <system name="1553B缓变参数"/>
+                    <system name="1553B缓变参数"/>
+                    <system name="1553B缓变参数"/>
+                    <system name="1553B缓变参数"/>
+                    <system name="1553B缓变参数"/>
+                    <system name="1553B缓变参数"/>
+                    <system name="1553B缓变参数"/>
+                    <system name="1553B缓变参数"/>
+                    <system name="1553B缓变参数"/>
+                    <system name="1553B缓变参数"/>
+                    <system name="1553B缓变参数"/>
+                    <system name="1553B缓变参数"/>
+                    <system name="1553B缓变参数"/>
+                    <system name="1553B缓变参数"/>
+                    <system name="1553B缓变参数"/>
+                    <system name="1553B缓变参数"/>
+                    <system name="1553B缓变参数"/>
+                    <system name="1553B缓变参数"/>
+                    <system name="1553B缓变参数"/>
+                    <system name="1553B缓变参数"/>
+                    <system name="1553B缓变参数"/>
+                    <system name="1553B缓变参数"/>
+                    <system name="1553B缓变参数"/>
+                    <system name="1553B缓变参数"/>
+                    <system name="1553B缓变参数"/>
+                    <system name="1553B缓变参数"/>
+                    <system name="1553B缓变参数"/>
+                    <system name="1553B缓变参数"/>
+                    <system name="1553B缓变参数"/>
+                    <system name="1553B缓变参数"/>
+                    <system name="1553B指令参数"/>
+                    <system name="1553B缓变参数"/>
+                    <system name="1553B缓变参数"/>
+                    <system name="1553B缓变参数"/>
+                    <system name="1553B缓变参数"/>
+                    <system name="1553B缓变参数"/>
+                    <system name="1553B缓变参数"/>
+                    <system name="1553B缓变参数"/>
+                    <system name="1553B缓变参数"/>
+                    <system name="1553B缓变参数"/>
+                    <system name="1553B缓变参数"/>
+                    <system name="1553B缓变参数"/>
+                    <system name="1553B缓变参数"/>
+                    <system name="1553B缓变参数"/>
+                    <system name="1553B缓变参数"/>
+                    <system name="1553B缓变参数"/>
+                    <system name="1553B缓变参数"/>
+                    <system name="1553B缓变参数"/>
+                    <system name="1553B缓变参数"/>
+                </model>
+                <model name="XX-2">
+                    <system name="422_pt"/>
+                    <system name="控制时序"/>
+                    <system name="指令"/>
+                    <system name="测量系统.缓变量"/>
+                    <system name="多值数据"/>
+                    <system name="流程数据"/>
+                    <system name="时序数据"/>
+                </model>
+                <model name="XX-XX">
+                    <system name="TableName1"/>
+                    <system name="TableName2"/>
+                </model>
+                <model name="XX5C">
+                    <system name="安全监测控制器1"/>
+                    <system name="安全监测控制器2"/>
+                    <system name="安全指令接收机"/>
+                    <system name="多测速应答机"/>
+                    <system name="光传状态参数"/>
+                    <system name="检测站状态1"/>
+                    <system name="检测站状态2"/>
+                    <system name="检测站状态3"/>
+                    <system name="前端测控组合数据1"/>
+                    <system name="前端测控组合数据2"/>
+                    <system name="综合电源1"/>
+                    <system name="综合电源2"/>
+                    <system name="综合电源3"/>
+                    <system name="向安全监测控制器发送ab值"/>
+                    <system name="向存储软件发送命令"/>
+                    <system name="向多测速应答机综测_检测站发送命令"/>
+                    <system name="向指挥控制发送状态"/>
+                    <system name="向指挥控制系统发送命令"/>
+                    <system name="向自动测控_地面综合电源_安全监测控制器发送命令"/>
+                    <system name="安全指令接收机综测仪"/>
+                    <system name="弹头测控参数1"/>
+                    <system name="弹头测控参数2"/>
+                    <system name="多测速应答机综测仪"/>
+                    <system name="光传输设备"/>
+                    <system name="检测站1状态"/>
+                    <system name="检测站2状态"/>
+                    <system name="检测站3状态"/>
+                    <system name="自动测控组合1"/>
+                    <system name="自动测控组合2"/>
+                    <system name="综合电源1"/>
+                    <system name="综合电源2"/>
+                    <system name="储箱快速增压配气台频采数值量_备"/>
+                    <system name="储箱快速增压配气台频采数值量_主"/>
+                    <system name="储箱压力频采数值量_备"/>
+                    <system name="储箱压力频采数值量_主"/>
+                    <system name="地测指令_备"/>
+                    <system name="地测指令_主"/>
+                    <system name="地面电源控制指令_备"/>
+                    <system name="地面电源控制指令_主"/>
+                    <system name="电源配电组合工作状态_备"/>
+                    <system name="电源配电组合工作状态_主"/>
+                    <system name="电源配电组合设备关键数值量_备"/>
+                    <system name="电源配电组合设备关键数值量_主"/>
+                    <system name="动力系统控制指令_备"/>
+                    <system name="动力系统控制指令_主"/>
+                    <system name="嵌入式测控设备冗余切换控制指令_备"/>
+                    <system name="嵌入式测控设备冗余切换控制指令_主"/>
+                    <system name="一二级配气台控制状态_备"/>
+                    <system name="一二级配气台控制状态_主"/>
+                    <system name="一二级配气台频采数值量_备"/>
+                    <system name="一二级配气台频采数值量_主"/>
+                    <system name="贮箱增压配气台加电状态_备"/>
+                    <system name="贮箱增压配气台加电状态_主"/>
+                    <system name="1553B校验错误原码"/>
+                    <system name="1553B原码"/>
+                    <system name="BCtoRT10SA1"/>
+                    <system name="BCtoRT11SA1"/>
+                    <system name="BCtoRT12SA1"/>
+                    <system name="BCtoRT13SA1"/>
+                    <system name="BCtoRT14SA1"/>
+                    <system name="BCtoRT15SA1"/>
+                    <system name="BCtoRT16SA1"/>
+                    <system name="BCtoRT17SA1"/>
+                    <system name="BCtoRT17SA1_加表功能测试"/>
+                    <system name="BCtoRT17SA1_射向装订"/>
+                    <system name="BCtoRT17SA1_姿态角极性测试"/>
+                    <system name="BCtoRT17SA1_自标定"/>
+                    <system name="BCtoRT17SA20"/>
+                    <system name="BCtoRT21SA1"/>
+                    <system name="BCtoRT21SA2"/>
+                    <system name="BCtoRT5SA1"/>
+                    <system name="BCtoRT6SA1"/>
+                    <system name="BCtoRT7SA1"/>
+                    <system name="BCtoRT8SA1"/>
+                    <system name="BCtoRT9SA1"/>
+                    <system name="RT10SA1toBC"/>
+                    <system name="RT11SA1toBC"/>
+                    <system name="RT12SA1toBC"/>
+                    <system name="RT13SA1toBC"/>
+                    <system name="RT14SA27toBC"/>
+                    <system name="RT14SA3toBC"/>
+                    <system name="RT15SA27toBC"/>
+                    <system name="RT15SA3toBC"/>
+                    <system name="RT16SA27toBC"/>
+                    <system name="RT16SA3toBC"/>
+                    <system name="RT17SA21toBC"/>
+                    <system name="RT17SA30toBC"/>
+                    <system name="RT17SA3toBC"/>
+                    <system name="RT17SA5toBC"/>
+                    <system name="RT17SA7toBC"/>
+                    <system name="RT17SA8toBC"/>
+                    <system name="RT17SA9toBC"/>
+                    <system name="RT18SA2toBC"/>
+                    <system name="RT18SA30toBC"/>
+                    <system name="RT18SA4toBC"/>
+                    <system name="RT20SA10toBC"/>
+                    <system name="RT20SA11toBC"/>
+                    <system name="RT20SA1toBC"/>
+                    <system name="RT20SA2toBC"/>
+                    <system name="RT20SA3toBC"/>
+                    <system name="RT20SA4toBC"/>
+                    <system name="RT20SA5toBC"/>
+                    <system name="RT20SA6toBC"/>
+                    <system name="RT20SA7toBC"/>
+                    <system name="RT20SA8toBC"/>
+                    <system name="RT20SA9toBC"/>
+                    <system name="RT21SA3toBC"/>
+                    <system name="RT5SA27toBC"/>
+                    <system name="RT5SA3toBC"/>
+                    <system name="RT6SA27toBC"/>
+                    <system name="RT6SA3toBC"/>
+                    <system name="RT7SA27toBC"/>
+                    <system name="RT7SA3toBC"/>
+                    <system name="RT8SA1toBC"/>
+                    <system name="RT9SA1toBC"/>
+                    <system name="点名自检结果"/>
+                    <system name="计算机字-CPU1"/>
+                    <system name="计算机字-CPU2"/>
+                    <system name="计算机字-CPU3"/>
+                    <system name="计算机字原码-CPU1"/>
+                    <system name="控制时序"/>
+                    <system name="同步结果"/>
+                    <system name="同步时间"/>
+                    <system name="485_FX1"/>
+                    <system name="485_FX2"/>
+                    <system name="485_HX1"/>
+                    <system name="485_HX2"/>
+                    <system name="485_SLTL_FY1"/>
+                    <system name="485_SLTL_FY2"/>
+                    <system name="485_SLTL_GD1"/>
+                    <system name="485_SLTL_GD2"/>
+                    <system name="485_SLTL_PH1"/>
+                    <system name="485_SLTL_PH2"/>
+                    <system name="冲击"/>
+                    <system name="低频振动"/>
+                    <system name="高频振动"/>
+                    <system name="过载"/>
+                    <system name="热环境"/>
+                    <system name="测量系统"/>
+                    <system name="动力系统"/>
+                    <system name="控制系统"/>
+                    <system name="指令"/>
+                    <system name="指令状态(T10-T13)"/>
+                    <system name="指令状态(T2-T9)"/>
+                    <system name="总体参数"/>
+                    <system name="GPS"/>
+                    <system name="平台高串"/>
+                </model>
+                <model name="CZ7">
+                    <system name="1553BData"/>
+                    <system name="计算机字-CPU1"/>
+                    <system name="计算机字-CPU2"/>
+                    <system name="计算机字-CPU3"/>
+                    <system name="计算机字原码-CPU1"/>
+                    <system name="测量系统"/>
+                    <system name="指令"/>
+                </model>
+                <model name="CZ-7">
+                    <system name="姿态位置测量仪"/>
+                    <system name="缓变参数"/>
+                    <system name="每帧采样6次"/>
+                    <system name="缓变参数"/>
+                    <system name="每帧采样120次"/>
+                    <system name="每帧采样240次"/>
+                    <system name="每帧采样6次"/>
+                    <system name="缓变参数"/>
+                    <system name="8Y661-P1rqz1"/>
+                    <system name="8Y661-P1rqz2"/>
+                    <system name="8Y661-P1rqz3"/>
+                    <system name="8Y661-P1yqz1"/>
+                    <system name="8Y661-P1yqz2"/>
+                    <system name="8Y661-P1yqz3"/>
+                    <system name="8Y661-Stgd1"/>
+                    <system name="8Y661-Stgd2"/>
+                    <system name="8Y665-Z1-R1"/>
+                    <system name="8Y665-Z1-R2"/>
+                    <system name="8Y665-Z1-R3"/>
+                    <system name="8Y665-Z1-Y1"/>
+                    <system name="8Y665-Z1-Y2"/>
+                    <system name="8Y665-Z1-Y3"/>
+                    <system name="8Y665-Z2-R1"/>
+                    <system name="8Y665-Z2-R2"/>
+                    <system name="8Y665-Z2-R3"/>
+                    <system name="8Y665-Z2-Y1"/>
+                    <system name="8Y665-Z2-Y2"/>
+                    <system name="8Y665-Z2-Y3"/>
+                    <system name="8Y665-Z3-R1"/>
+                    <system name="8Y665-Z3-R2"/>
+                    <system name="8Y665-Z3-R3"/>
+                    <system name="8Y665-Z3-Y1"/>
+                    <system name="8Y665-Z3-Y2"/>
+                    <system name="8Y665-Z3-Y3"/>
+                    <system name="8Y665-Z4-R1"/>
+                    <system name="8Y665-Z4-R2"/>
+                    <system name="8Y665-Z4-R3"/>
+                    <system name="8Y665-Z4-Y1"/>
+                    <system name="8Y665-Z4-Y2"/>
+                    <system name="8Y665-Z4-Y3"/>
+                    <system name="缓变参数"/>
+                    <system name="缓变参数"/>
+                    <system name="指令"/>
+                </model>
+            </right>
+            <right name="数据下载"/>
+            <right name="自动判读"/>
+            <right name="禁止判读"/>
+        </Role>
+    </Roles>
+</Table>
