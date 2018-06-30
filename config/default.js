@@ -2,7 +2,7 @@
 
 module.exports = {
 	host: '127.0.0.1',
-	database: 'teamwork',
+	database: 'team_work',
 	httpPort: 8080,
 	httpsPort: 443,
 	session: {

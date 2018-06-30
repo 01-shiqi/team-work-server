@@ -41,14 +41,14 @@ class Worklog extends Base {
                 whereClause = ' where ' + whereClause
             }
 
-            let totalCountSql = 'select count(*) as value from worklog ' + whereClause
+            let totalCountSql = 'select count(*) as value from tw_worklog ' + whereClause
             let totalCount = await this.queryValue(totalCountSql)
 
             let startIndex = pageIndex * countPerPage
 
             let pageCount = Math.ceil(totalCount / countPerPage)
 
-            var sql = 'select id, work_date as workDate, work_begin_time as workBeginTime, work_end_time as workEndTime, work_type as workType, model, work_place as workPlace, work_object as workObject, work_content as workContent from worklog ' 
+            var sql = 'select id, work_date as workDate, work_begin_time as workBeginTime, work_end_time as workEndTime, work_type as workType, model, work_place as workPlace, work_object as workObject, work_content as workContent from tw_worklog ' 
                     + whereClause 
                     + ' order by workDate desc, workBeginTime '
                     + ' limit ' + startIndex + ',' + countPerPage
@@ -86,7 +86,7 @@ class Worklog extends Base {
             sqlSource.push(now)
             sqlSource.push(now)
 
-            var sql = 'insert into worklog (id, user_id, work_date, work_begin_time, work_end_time, work_type, model, work_place, work_object, work_content, created_at, updated_at) ' + 
+            var sql = 'insert into tw_worklog (id, user_id, work_date, work_begin_time, work_end_time, work_type, model, work_place, work_object, work_content, created_at, updated_at) ' + 
                       'values(?,?,?,?,?,?,?,?,?,?,?,?)'
 
             let succeed = await this.executeSql(sql, sqlSource)
@@ -107,7 +107,7 @@ class Worklog extends Base {
             
             let worklogID = worklogItems[worklogItems.length - 1]
 
-            let sql = 'update worklog set work_date=? , work_begin_time=?, work_end_time=?, work_type=?, model=?, work_place=?, work_object=?, work_content=?, updated_at=? where ' 
+            let sql = 'update tw_worklog set work_date=? , work_begin_time=?, work_end_time=?, work_type=?, model=?, work_place=?, work_object=?, work_content=?, updated_at=? where ' 
                     + this.genStrCondition('id', worklogID)
 
             // 最后一个参数worklogID不添加至sqlData中
@@ -143,7 +143,7 @@ class Worklog extends Base {
                 }
             }
 
-            let sql = 'delete from worklog where id in ( ' + deletingIds + ' )';
+            let sql = 'delete from tw_worklog where id in ( ' + deletingIds + ' )';
 
             let succeed = await this.executeSql(sql);
             this.sendSucceed(res)
