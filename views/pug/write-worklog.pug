@@ -39,6 +39,7 @@ block specific-js
 	script(type='text/javascript', src="js/plugins/bootstrap-datepicker.min.js")
 	script(type='text/javascript', src="js/plugins/select2.min.js")
 	script(type='text/javascript', src="js/plugins/bootstrap-datepicker.min.js")
+	script(type='text/javascript', src="js/validate.js")
 	script(type="text/javascript").
 		$('#sl').click(function(){
 			$('#tl').loadingBtn();
@@ -63,21 +64,17 @@ block specific-js
 
 		$('#btnCommitWorklog').click(function(){
 
-			var worklogContent = {
-				workDate: $('#worklogDate').val(),
-				workBeginTime: $('#beginTime').val(),
-				workEndTime: $('#endTime').val(),
-				workType: $('#workType').val(), 
-				model: $('#model').val(),
-				workPlace: $('#workPlace').val(), 
-				workObject: $('#workObject').val(), 
-				workContent: $('#workContent').val(),
+			let worklog = getWorklog()
+			
+			// 验证数据
+			if(!checkInput(worklog)){
+				return;
 			}
 
 			$.ajax({
 				url: "/write-worklog/",
 				type: "post",
-				data: JSON.stringify(worklogContent),
+				data: JSON.stringify(worklog),
 				dataType: "json",
 				success: function(res){
 					if(res.succeed) {
@@ -94,4 +91,5 @@ block specific-js
 			});
 		});
 
-		$('.customSelect').select2();
+		$('.customSelect').select2({ tags: false })
+		$('.customSelect-tags').select2({ tags: true })

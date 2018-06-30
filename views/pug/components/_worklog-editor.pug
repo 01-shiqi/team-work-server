@@ -6,7 +6,8 @@
 .form-group.col-md-2
     label.control-label 开始时间
     select.form-control.customSelect#beginTime
-        optgroup(label="选择时间")
+        optgroup(label="选择开始时间")
+            option
             option 08:30
             option 09:00
             option 09:30
@@ -40,7 +41,8 @@
 .form-group.col-md-2
     label.control-label 结束时间
     select.form-control.customSelect#endTime
-        optgroup(label="选择时间")
+        optgroup(label="选择结束时间")
+            option
             option 08:30
             option 09:00
             option 09:30
@@ -75,6 +77,7 @@
     label.control-label 工作类型
     select.form-control.customSelect#workType
         optgroup(label="选择工作类型")
+            option
             option 软件开发
             option 文档编写
             option 运行维护
@@ -86,6 +89,7 @@
     label.control-label 所属型号
     select.form-control.customSelect#model
         optgroup(label="选择所属型号")
+            option
             option CZ-2C
             option CZ-3A
             option CZ-5
@@ -96,7 +100,7 @@
 
 .form-group.col-md-2
     label.control-label 工作地点
-    select.form-control.customSelect#workPlace
+    select.form-control.customSelect-tags#workPlace
         optgroup(label="选择或录入工作地点")
             option 仿真楼
             option 七车间
@@ -105,7 +109,13 @@
 
 .form-group.col-md-12
     label.control-label 工作对象
-    input.form-control#workObject(type="text", placeholder="录入工作对象，如XXXX系统、XXXX软件")
+    select.form-control.customSelect-tags#workObject(placeholder="选择或录入工作对象，如XXXX系统、XXXX软件")
+        optgroup(label="选择或录入工作对象")
+            option
+            option 实时数据处理系统
+            option 跨平台实时数据处理系统
+            option XX准备系统
+            option 远程自动判读系统
 
 .form-group.col-md-12
     label(for='workContent') 工作内容

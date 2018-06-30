@@ -23,7 +23,7 @@ block content
 				a(href="#") 日志列表
 
 	.modal.fade#editDialog(aria-hide="true")
-		.modal-dialog(role='dialog', style="width:1400px;max-width:1400px;")
+		.modal-dialog(role='dialog', style="width:1400px;max-width:1400px;top:50px;")
 			.modal-content
 				.modal-header
 					h5.modal-title 修改日志
@@ -104,6 +104,8 @@ block specific-js
 	script(type='text/javascript', src="js/plugins/bootstrap-datepicker.min.js")
 	script(type='text/javascript', src="js/plugins/select2.min.js")
 	script(type='text/javascript', src="js/plugins/sweetalert.min.js")
+	script(type='text/javascript', src="js/plugins/bootstrap-notify.min.js")
+	script(type='text/javascript', src="js/validate.js")
 	script(type="text/javascript").
 		$('.btn-editWorklog').click(function(){
 
@@ -144,15 +146,22 @@ block specific-js
 
 		$('#btn-closeDialog').click(function(){
 
+			let worklog = getWorklog()
+			
+			// 验证数据
+			if(!checkInput(worklog)){
+				return;
+			}
+
 			let itemValues = []
-			itemValues.push($('#worklogDate').val())
-			itemValues.push($('#beginTime').val())
-			itemValues.push($('#endTime').val())
-			itemValues.push($('#workType').val())
-			itemValues.push($('#model').val())
-			itemValues.push($('#workPlace').val())
-			itemValues.push($('#workObject').val())
-			itemValues.push($('#workContent').val())
+			itemValues.push(worklog.workDate)
+			itemValues.push(worklog.workBeginTime)
+			itemValues.push(worklog.workEndTime)
+			itemValues.push(worklog.workType)
+			itemValues.push(worklog.model)
+			itemValues.push(worklog.workPlace)
+			itemValues.push(worklog.workObject)
+			itemValues.push(worklog.workContent)
 
 			let worklogID = $('#editDialog').attr('data-worklogID')
 			itemValues.push(worklogID)
