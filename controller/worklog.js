@@ -16,11 +16,41 @@ class Worklog extends Base {
         this.commitWorklog = this.commitWorklog.bind(this)
         this.updateWorklog = this.updateWorklog.bind(this)
         this.deleteWorklogs = this.deleteWorklogs.bind(this)
+        this.loadBasicInfo = this.loadBasicInfo.bind(this)
+        this.loadAllBasicInfos = this.loadAllBasicInfos.bind(this)
     }
 
     async writeWorklog(req, res, next) {
-        
-        res.render('write-worklog', this.appendUserInfo(req))
+        let basicInfos = await this.loadAllBasicInfos()
+        res.render('write-worklog', this.appendUserInfo(req, basicInfos))
+    }
+
+    /**
+     * 加载基本信息
+     * @param {*} tableName 
+     */
+    async loadBasicInfo(tableName) {
+        try {
+            var sql = 'select `name` from ' + tableName +  ' order by `order`'
+            var basicInfos = await this.queryArray(sql)
+            return basicInfos
+        }
+        catch (error) {
+            return []
+        }
+    }
+
+    async loadAllBasicInfos() {
+
+        let basicInfos = {}
+
+        basicInfos.workTimes = await this.loadBasicInfo('tw_work_time')
+        basicInfos.workTypes = await this.loadBasicInfo('tw_work_type')
+        basicInfos.models = await this.loadBasicInfo('tw_model')
+        basicInfos.workPlaces = await this.loadBasicInfo('tw_work_place')
+        basicInfos.workObjects = await this.loadBasicInfo('tw_work_object')
+
+        return basicInfos
     }
 
     // 获取日志列表
@@ -53,8 +83,11 @@ class Worklog extends Base {
                     + ' order by workDate desc, workBeginTime '
                     + ' limit ' + startIndex + ',' + countPerPage
 
-            var worklogs = await this.queryArray(sql)
-            res.render('my-worklogs',  this.appendUserInfo(req, { worklogs: worklogs, pageCount: pageCount, pageIndex:  pageIndex }))
+            let resultData = await this.loadAllBasicInfos()
+            resultData.worklogs = await this.queryArray(sql)
+            resultData.pageCount = pageCount
+            resultData.pageIndex = pageIndex
+            res.render('my-worklogs',  this.appendUserInfo(req, resultData))
         }
         catch (error) {
             logger.error(error)

@@ -66,6 +66,7 @@
 @import '4-pages/user-profile';
 
 
+// td中的文本区域，只显示一行，如果文字显示不全，则用...显示
 .td-textarea {
     text-overflow: ellipsis;
     overflow: hidden;
