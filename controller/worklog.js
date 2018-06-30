@@ -47,7 +47,6 @@ class Worklog extends Base {
             let startIndex = pageIndex * countPerPage
 
             let pageCount = Math.ceil(totalCount / countPerPage)
-            console.log(pageCount)
 
             var sql = 'select id, work_date as workDate, work_begin_time as workBeginTime, work_end_time as workEndTime, work_type as workType, model, work_place as workPlace, work_object as workObject, work_content as workContent from worklog ' 
                     + whereClause 
@@ -140,11 +139,11 @@ class Worklog extends Base {
                 let deletingId = '\'' + ids[i] + '\''
                 deletingIds += deletingId
                 if(i < ids.length - 1) {
-                    deletingId += ','
+                    deletingIds += ','
                 }
             }
 
-            var sql = 'delete from worklog where id in ( ' + deletingIds + ' )';
+            let sql = 'delete from worklog where id in ( ' + deletingIds + ' )';
 
             let succeed = await this.executeSql(sql);
             this.sendSucceed(res)
