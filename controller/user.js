@@ -5,6 +5,7 @@ import dtime from 'time-formater'
 import xml2js from 'xml2js'
 import fs from 'fs'
 import url from 'url'
+import logger from '../logger/logger'
 
 var DATABASE = 'dataip';
 var MODELTABLE = 'A_Model';
@@ -24,46 +25,57 @@ class User extends Base {
     constructor() {
         super()
 
+        this.getLogin = this.getLogin.bind(this)
         this.login = this.login.bind(this)
+        this.logout = this.logout.bind(this)
         this.loadUser = this.loadUser.bind(this)
         this.keyLogin = this.keyLogin.bind(this)
     }
 
+    // 获取登录页面
     async getLogin(req, res, next) {
         res.render('login')
     }
 
+    // 登录
     async login(req, res, next) {
         const form = new formidable.IncomingForm();
         form.parse(req, async (err, fields, files) => {
             if (err) {
-                res.send({
-                    status: 0,
-                    type: 'FORM_DATA_ERROR',
-                    message: '表单信息错误'
-                })
+                res.redirect('/login');
                 return
             }
-            const { user_name, password, isThirdPartyLogin, status = 1 } = fields;
-            var user = {};
+            const { loginName, password } = fields;
 
-            let sessionID = req.sessionID;
-            let time = process.uptime();
-            req.session.sessionID = time;
-
-            req.session.user_id = user_name;
-            if (isThirdPartyLogin == 'true') {
-                res.send("");
-                return;
+            try {
+                let sql = 'select id, true_name as trueName from tw_user where ' 
+                        + ' login_name = \'' + loginName + '\''
+                        + ' and password = \'' + password + '\''
+    
+                var users = await this.queryArray(sql)
+                if(!users || users.length <= 0){
+                    res.render('login', { message: '用户名或密码错误' })
+                }
+    
+                req.session.user_id = users[0].id
+                req.session.true_name = users[0].trueName
+    
+                res.redirect('/index')
             }
-            this.loadUser(user_name, password, function (user) {
-                console.dir(user);
-                console.log(JSON.stringify(user))
-                res.send(user);
-            });
+            catch (error) {
+                logger.error(error)
+                res.render('login', { message: error })
+            } 
+
         })
     }
 
+    // 注销
+    async logout(req, res, next) {
+        delete req.session.user_id
+        delete req.session.true_name
+        res.redirect('/login');
+    }
 
     async keyLogin(req, res, next) {
         var user = {

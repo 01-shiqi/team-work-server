@@ -35,7 +35,7 @@ class Worklog extends Base {
             let whereClause = '';
             const userID = this.getUserID(req)
             if(userID){
-                whereClause += this.genStrCondition('UserID', userID);
+                whereClause += this.genStrCondition('user_id', userID);
             }
             if(whereClause != '') {
                 whereClause = ' where ' + whereClause

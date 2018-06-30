@@ -2,41 +2,44 @@ doctype html
 html
 	head
 		include includes/_head.pug
-		title Login - Vali Admin
+		title Login - Team Work
 
 	body
 		section.material-half-bg
 			.cover
 
 		section.login-content
-			.logo: h1 Vali
+			.logo: h1 Team Work
 
 			.login-box
-				form.login-form(action="index.html")
+				form.login-form(action="/login", method="post")
 					h3.login-head
 						i.fa.fa-lg.fa-fw.fa-user
-						| SIGN IN
+						| 登录
 					.form-group
-						label.control-label USERNAME
-						input.form-control(type="text", placeholder="Email", autofocus)
+						label.control-label 用户名
+						input.form-control(type="text", name="loginName", placeholder="用户名", autofocus)
 
 					.form-group
-						label.control-label PASSWORD
-						input.form-control(type="password", placeholder="Password")
+						label.control-label 密码
+						input.form-control(type="password", name="password", placeholder="密码")
+
+					.form-group
+						label.control-label(style="color:red;") #{message}
 
 					.form-group
 						.utility
 							.animated-checkbox
 								label
 									input(type="checkbox")
-									span.label-text Stay Signed in
+									span.label-text 记住登录
 							p.semibold-text.mb-2
-								a(href="#" data-toggle="flip") Forgot Password ?
+								a(href="#" data-toggle="flip") 忘记密码 ?
 
 					.form-group.btn-container
-						button.btn.btn-primary.btn-block
+						button.btn.btn-primary.btn-block#btn-login
 							i.fa.fa-sign-in.fa-lg.fa-fw
-							| SIGN IN
+							| 登录
 
 				form.forget-form(action="index.html")
 					h3.login-head

@@ -38,7 +38,7 @@ class Check{
 
 	async checkLogin(req, res, next) {
 		const user_id = req.session.user_id;
-		if(!user_id || user_id != '') {
+		if(!user_id || user_id == '') {
 			// 重定位
 			res.redirect('/login');
 			return;
