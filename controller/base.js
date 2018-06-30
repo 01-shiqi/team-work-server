@@ -64,7 +64,7 @@ class Base {
      * @param {*} req 
      */
     getUserID(req) {
-        return req.session.userID;
+        return req.session.user_id;
     }
 
     /**

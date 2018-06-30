@@ -29,6 +29,10 @@ class User extends Base {
         this.keyLogin = this.keyLogin.bind(this)
     }
 
+    async getLogin(req, res, next) {
+        res.render('login')
+    }
+
     async login(req, res, next) {
         const form = new formidable.IncomingForm();
         form.parse(req, async (err, fields, files) => {
@@ -47,7 +51,7 @@ class User extends Base {
             let time = process.uptime();
             req.session.sessionID = time;
 
-            req.session.userID = user_name;
+            req.session.user_id = user_name;
             if (isThirdPartyLogin == 'true') {
                 res.send("");
                 return;

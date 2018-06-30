@@ -3,18 +3,22 @@
 import express from 'express';
 import Home from '../controller/home';
 import Worklog from '../controller/worklog';
+import User from '../controller/user';
+import Check from '../middlewares/check'
 
 const router = express.Router()
 
-router.get('/index',  Home.getIndex)
+router.get('/index', Check.checkLogin, Home.getIndex)
 
-router.get('/write-worklog', Worklog.writeWorklog)
-router.post('/write-worklog', Worklog.commitWorklog)
+router.get('/write-worklog', Check.checkLogin, Worklog.writeWorklog)
+router.post('/write-worklog', Check.checkLogin, Worklog.commitWorklog)
 
-router.get('/my-worklogs', Worklog.getMyWorklogs)
+router.get('/my-worklogs', Check.checkLogin, Worklog.getMyWorklogs)
 
-router.post('/update-worklog', Worklog.updateWorklog)
+router.post('/update-worklog', Check.checkLogin, Worklog.updateWorklog)
 
-router.delete('/delete-worklogs', Worklog.deleteWorklogs)
+router.delete('/delete-worklogs', Check.checkLogin, Worklog.deleteWorklogs)
+
+router.get('/login', User.getLogin)
 
 export default router

@@ -12,7 +12,7 @@ class Check{
 	 * @param {*} res 
 	 * @param {*} next 
 	 */
-	async checkLogin(req, res, next) {
+	async checkLoginUseTimeout(req, res, next) {
 		let timeNow = process.uptime();
 		let sessionID = req.sessionID;
 		let timeBeforn = req.session.sessionID;
@@ -23,7 +23,7 @@ class Check{
 			return
 		}
 		req.session.sessionID = timeNow;
-		const userID = req.session.userID
+		const userID = req.session.user_id
 		if (!userID) {
 			res.send({
 				state: false,
@@ -34,6 +34,17 @@ class Check{
 		} else {
 			next()
 		}
+	}
+
+	async checkLogin(req, res, next) {
+		const user_id = req.session.user_id;
+		if(!user_id || user_id != '') {
+			// 重定位
+			res.redirect('/login');
+			return;
+		}
+
+		next()
 	}
 
 	async checkAdmin(req, res, next) {
