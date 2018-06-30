@@ -48,7 +48,7 @@ class User extends Base {
             const { loginName, password } = fields;
 
             try {
-                let sql = 'select id, true_name as trueName from tw_user where ' 
+                let sql = 'select id, true_name as trueName, job_position as jobPosition from tw_user where ' 
                         + ' login_name = \'' + loginName + '\''
                         + ' and password = \'' + password + '\''
     
@@ -59,7 +59,7 @@ class User extends Base {
     
                 req.session.user_id = users[0].id
                 req.session.true_name = users[0].trueName
-                req.session.job_position = "软件工程师"
+                req.session.job_position = users[0].jobPosition
     
                 res.redirect('/index')
             }
