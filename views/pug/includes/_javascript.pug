@@ -3,6 +3,10 @@ script(src='js/jquery-3.2.1.min.js')
 script(src='js/popper.min.js')
 script(src='js/bootstrap.min.js')
 script(src='js/main.js')
+script(src='js/jquerysession.js')
 
 // The javascript plugin to display page loading on top
 script(src='js/plugins/pace.min.js')
+script(type="text/javascript").
+    $('#lbl-true-name').text($.session.get('true_name'))
+    $('#lbl-job-position').text($.session.get('job_position'))
