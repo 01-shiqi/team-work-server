@@ -44,6 +44,8 @@ class Base {
 
         this.getUserID = this.getUserID.bind(this)
         this.getID = this.getID.bind(this)
+
+        this.appendUserInfo = this.appendUserInfo.bind(this)
     }
 
 
@@ -57,6 +59,20 @@ class Base {
                 the.sendError(res, err)
             }
         }
+    }
+
+    /**
+     * 向返回给前端的数据中增加用户信息
+     * @param {*} data 
+     */
+    appendUserInfo(req, data){
+        if(!data){
+            data = {}
+        }
+        data.trueName = req.session.true_name
+        data.jobPosition = req.session.job_position
+
+        return data
     }
 
     /**

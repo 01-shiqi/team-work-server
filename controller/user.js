@@ -59,6 +59,7 @@ class User extends Base {
     
                 req.session.user_id = users[0].id
                 req.session.true_name = users[0].trueName
+                req.session.job_position = "软件工程师"
     
                 res.redirect('/index')
             }
@@ -74,6 +75,7 @@ class User extends Base {
     async logout(req, res, next) {
         delete req.session.user_id
         delete req.session.true_name
+        delete req.session.job_position
         res.redirect('/login');
     }
 

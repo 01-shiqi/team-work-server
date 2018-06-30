@@ -14,7 +14,7 @@ class Home extends Base {
     }
 
     async getIndex(req, res, next) {
-        res.render('index')
+        res.render('index', this.appendUserInfo(req))
     }
 }
 

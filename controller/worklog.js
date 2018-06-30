@@ -20,7 +20,7 @@ class Worklog extends Base {
 
     async writeWorklog(req, res, next) {
         
-        res.render('write-worklog')
+        res.render('write-worklog', this.appendUserInfo(req))
     }
 
     // 获取日志列表
@@ -54,7 +54,7 @@ class Worklog extends Base {
                     + ' limit ' + startIndex + ',' + countPerPage
 
             var worklogs = await this.queryArray(sql)
-            res.render('my-worklogs', { worklogs: worklogs, pageCount: pageCount, pageIndex:  pageIndex })
+            res.render('my-worklogs',  this.appendUserInfo(req, { worklogs: worklogs, pageCount: pageCount, pageIndex:  pageIndex }))
         }
         catch (error) {
             logger.error(error)
