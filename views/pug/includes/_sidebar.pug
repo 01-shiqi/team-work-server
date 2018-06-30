@@ -4,8 +4,8 @@ aside.app-sidebar
 	.app-sidebar__user
 		img.app-sidebar__user-avatar(src='/img/default.jpg', alt='User Image')
 		div
-			p.app-sidebar__user-name#lbl-true-name(style="font-weight:bold;") #{trueName}
-			p.app-sidebar__user-designationlbl-job-position(style="padding-top:8px;") #{jobPosition}
+			p.app-sidebar__user-name#lbl-true-name(style="font-weight:bold;padding-top:0px;") #{trueName}
+			p.app-sidebar__user-designationlbl-job-position(style="padding-top:5px;margin-bottom:0px;") #{jobPosition}
 
 	ul.app-menu
 		//- li
@@ -29,7 +29,7 @@ aside.app-sidebar
 		//- 		span.app-menu__label 我的任务
 
 		li
-			a.app-menu__item(href='write-worklog' class={'active': activePage == 'write-worklogs'})
+			a.app-menu__item(href='write-worklog' class={'active': activePage == 'write-worklog'})
 				i.app-menu__icon.fa.fa-edit
 				span.app-menu__label 录入日志
 
