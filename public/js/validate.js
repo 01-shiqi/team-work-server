@@ -68,3 +68,22 @@ function checkInput(worklog){
     }
     return true
 }
+
+/**
+ * 初始化日期选择器
+ */
+function initDatePicker() {
+    $('#worklogDate').datepicker({
+        language: "zh-CN",
+        weekStart: 1,
+        todayBtn: true,
+        todayHighlight: true,
+        autoclose: true,
+        format: 'yyyy-mm-dd',
+        daysOfWeekHighlighted: '0, 6'
+    })
+    
+    var now = new Date()
+    $('#worklogDate').datepicker('setDate', now)
+    $('#worklogDate').datepicker('setEndDate', now)
+}

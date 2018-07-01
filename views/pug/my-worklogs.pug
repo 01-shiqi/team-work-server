@@ -101,10 +101,12 @@ block content
 										a.page-link(href=`my-worklogs?pageIndex=${pageCount - 1}`) »								
 
 block specific-js
-	script(type='text/javascript', src="js/plugins/bootstrap-datepicker.min.js")
+	script(type='text/javascript', src="js/plugins/bootstrap-datepicker/js/bootstrap-datepicker.min.js")
 	script(type='text/javascript', src="js/plugins/select2.min.js")
 	script(type='text/javascript', src="js/plugins/sweetalert.min.js")
 	script(type='text/javascript', src="js/plugins/bootstrap-notify.min.js")
+	script(type='text/javascript', src="js/plugins/bootstrap-datepicker/js/bootstrap-datepicker.min.js")
+	script(type='text/javascript', src="js/plugins/bootstrap-datepicker/locales/bootstrap-datepicker.zh-CN.min.js", charset="UTF-8")
 	script(type='text/javascript', src="js/validate.js")
 	script(type="text/javascript").
 		$('.btn-editWorklog').click(function(){
@@ -150,13 +152,7 @@ block specific-js
 			$('.customSelect-tags').select2({ tags: true })
 		})
 
-		$('#worklogDate').datepicker({
-			format: 'yyyy-mm-dd',
-			firstDay: 1,
-			autoclose: true,
-			todayHighlight: true,
-			dayNamesShort: ['日', '一', '二', '三', '四', '五', '六'],
-		})
+		initDatePicker()
 
 		$('#btn-closeDialog').click(function(){
 
