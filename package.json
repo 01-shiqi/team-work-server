@@ -1,9 +1,9 @@
 {
-  "name": "node-elm",
+  "name": "team-work-server",
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
-  "author": "cangdu <1264889788@qq.com>",
+  "author": "lianyz <yanzel@qq.com>",
   "license": "GPL",
   "private": true,
   "scripts": {
@@ -13,7 +13,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/bailicangdu/node-elm"
+    "url": "https://github.com/lianyz/team-work-server"
   },
   "dependencies": {
     "babel": "^6.23.0",
@@ -41,6 +41,7 @@
     "node-fetch": "^1.6.3",
     "pinyin": "^2.8.3",
     "pm2": "^2.4.6",
+    "pug": "^2.0.3",
     "qiniu": "^6.1.13",
     "sha1": "^1.1.1",
     "supervisor": "^0.12.0",
@@ -53,6 +54,12 @@
     "babel-plugin-transform-async-to-generator": "^6.24.1",
     "babel-plugin-transform-es2015-classes": "^6.24.1",
     "babel-plugin-transform-es2015-modules-commonjs": "^6.24.1",
-    "babel-plugin-transform-export-extensions": "^6.22.0"
+    "babel-plugin-transform-export-extensions": "^6.22.0",
+    "autoprefixer": "^7.2.6",
+    "grunt": "^1.0.2",
+    "grunt-contrib-pug": "^1.0.0",
+    "grunt-contrib-watch": "^1.0.1",
+    "grunt-postcss": "^0.8.0",
+    "grunt-sass": "^2.1.0"
   }
 }

@@ -15236,3 +15236,7 @@ be a descendant of the grid when it is being dragged.
   width: 300px;
   white-space: nowrap;
 }
+
+#btn-login {
+  font-size: 18px;
+}

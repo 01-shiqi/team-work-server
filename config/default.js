@@ -3,7 +3,7 @@
 module.exports = {
 	host: '127.0.0.1',
 	database: 'team_work',
-	httpPort: 8080,
+	httpPort: 3002,
 	httpsPort: 443,
 	session: {
 		name: 'SID',

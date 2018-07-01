@@ -37,6 +37,11 @@ function checkInput(worklog){
         return false
     }
 
+    if(parseFloat(worklog.workTimeLength) <= 0) {
+        showWarning('工作时长必须为大于零的数！')
+        return false
+    }
+
     if(!worklog.workType){
         showWarning('工作类型不能为空！')
         return false
