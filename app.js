@@ -48,6 +48,21 @@ app.use(session({
 		cookie: config.session.cookie
 }))
 
+let logdir = __dirname + '/logs'
+
+fs.exists(logdir, function(exists) {
+    if(!exists) {
+        fs.mkdir(logdir, function(err){
+            if(err){
+                console.log('创建文件夹[' + logdir + ']失败，原因：' + err)
+            }else{
+                console.log('创建文件夹[' + logdir + ']成功。')
+            }
+        })
+    }
+})
+
+
 app.use(expressWinston.logger({
     transports: [
         new (winston.transports.Console)({
@@ -55,7 +70,7 @@ app.use(expressWinston.logger({
           colorize: true
         }),
         new winston.transports.File({
-          filename: __dirname + '/logs/success.log'
+          filename: logdir + '/success.log'
         })
     ]
 }));
@@ -74,7 +89,7 @@ app.use(expressWinston.errorLogger({
           colorize: true
         }),
         new winston.transports.File({
-          filename:  __dirname + '/logs/error.log'
+          filename:  logdir + '/error.log'
         })
     ]
 }));

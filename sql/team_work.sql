@@ -10,7 +10,7 @@ Target Server Type    : MYSQL
 Target Server Version : 50720
 File Encoding         : 65001
 
-Date: 2018-07-01 00:36:12
+Date: 2018-07-01 13:38:47
 */
 
 SET FOREIGN_KEY_CHECKS=0;
@@ -67,7 +67,7 @@ CREATE TABLE `tw_worklog` (
   `user_id` char(36) DEFAULT NULL,
   `work_date` date DEFAULT NULL,
   `work_begin_time` varchar(50) DEFAULT NULL,
-  `work_end_time` varchar(50) DEFAULT NULL,
+  `work_time_length` float(50,1) DEFAULT NULL,
   `work_type` varchar(50) DEFAULT NULL,
   `model` varchar(50) DEFAULT NULL,
   `work_place` varchar(50) DEFAULT NULL,
@@ -81,8 +81,6 @@ CREATE TABLE `tw_worklog` (
 -- ----------------------------
 -- Records of tw_worklog
 -- ----------------------------
-INSERT INTO `tw_worklog` VALUES ('3323fbdd-ed07-42e9-8d67-81d595acd072', '1', '2018-07-01', '08:30', '09:00', '文档编写', 'CZ-2C', '仿真楼', '远程自动判读系统', 'sss', '2018-07-01 12:17:26', '2018-07-01 12:25:14');
-INSERT INTO `tw_worklog` VALUES ('c69c8a04-54fb-4825-b3f5-b1aa3ab88d8e', '1', '2018-07-01', '09:30', '10:00', '文档编写', 'CZ-5', '仿真楼', '实时数据处理系统', 'bbbbbb', '2018-07-01 12:17:36', '2018-07-01 12:17:36');
 
 -- ----------------------------
 -- Table structure for `tw_work_object`
