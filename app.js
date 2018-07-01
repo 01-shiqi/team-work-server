@@ -87,12 +87,11 @@ var options = {
 	cert: fs.readFileSync(__dirname +  '/caecc.com.self-cert.pem')
 };
 
-var server = https.createServer(options, app);
-
-server.listen(config.httpsPort);
+// var server = https.createServer(options, app);
+// server.listen(config.httpsPort);
 
 var httpServer = http.createServer(app);
 httpServer.listen(config.httpPort)
 
-console.log('https port: ' + config.httpsPort);
+// console.log('https port: ' + config.httpsPort);
 console.log('http port: ' + config.httpPort);
