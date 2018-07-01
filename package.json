@@ -9,7 +9,7 @@
   "scripts": {
     "dev": "grunt watch",
     "build": "grunt build --force",
-    "start": "node app.js"
+    "start": "node team-work-server.js"
   },
   "repository": {
     "type": "git",
