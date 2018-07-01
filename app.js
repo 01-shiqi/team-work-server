@@ -1,6 +1,6 @@
 import express from 'express';
 import config from 'config-lite';
-import router from './routes/index.js';
+import router from './routes/team-work-server.js';
 import cookieParser from 'cookie-parser'
 import session from 'express-session';
 // import connectMongo from 'connect-mongo';

@@ -1,7 +1,7 @@
 {
   "apps": [{
     "name": "team-work-server",
-    "script": "index.js",
+    "script": "team-work-server.js",
     "cwd": "/home/lianyz/team-work-server",
     "exec_mode": "fork",
     "max_memory_restart": "1G",

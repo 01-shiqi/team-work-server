@@ -2,7 +2,7 @@
   "name": "team-work-server",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
+  "main": "team-work-server.js",
   "author": "lianyz <yanzel@qq.com>",
   "license": "GPL",
   "private": true,
