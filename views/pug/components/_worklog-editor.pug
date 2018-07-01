@@ -4,25 +4,32 @@
     input.form-control#worklogDate(type="text",placeholder="选择日期")
 
 .form-group.col-md-2
-    label.control-label.worklog-edit-label 开始时间
-    select.form-control.customSelect#beginTime
-        optgroup(label="选择开始时间")
-            - for (var i = 0; i < workTimes.length; i++)
-                option #{workTimes[i].name}
-
-.form-group.col-md-2
-    label.control-label.worklog-edit-label 结束时间
-    select.form-control.customSelect#endTime
-        optgroup(label="选择结束时间")
-            - for (var i = 0; i < workTimes.length; i++)
-                option #{workTimes[i].name}
-
-.form-group.col-md-2
     label.control-label.worklog-edit-label 工作类型
     select.form-control.customSelect#workType
         optgroup(label="选择工作类型")
             - for (var i = 0; i < workTypes.length; i++)
                 option #{workTypes[i].name}
+
+.form-group.col-md-2
+    label.control-label.worklog-edit-label 开始时间
+    select.form-control.customSelect#workBeginTime
+        optgroup(label="选择开始时间")
+            - for (var i = 0; i < workTimes.length; i++)
+                option #{workTimes[i].name}
+
+.form-group.col-md-2
+    label.control-label.worklog-edit-label 工作时长(小时)
+    select.form-control.customSelect-tags#workTimeLength
+        optgroup(label="选择或录入工作时长")
+            option 0.5
+            option 1.0
+            option 1.5
+            option 2.0
+            option 3.5
+            option 4.0
+            option 4.5
+            option 5.5
+            option 6.0
 
 .form-group.col-md-2
     label.control-label.worklog-edit-label 所属型号

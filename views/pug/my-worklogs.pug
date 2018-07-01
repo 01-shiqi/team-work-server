@@ -63,7 +63,7 @@ block content
 									td #{i + 1}
 									td(class=`td${0}`) #{worklogs[i].workDate}
 									td(class=`td${1}`) #{worklogs[i].workBeginTime}
-									td(class=`td${2}`) #{worklogs[i].workEndTime}
+									td(class=`td${2}`) #{worklogs[i].workTimeLength.toFixed(1)}
 									td(class=`td${3}`) #{worklogs[i].workType}
 									td(class=`td${4}`) #{worklogs[i].model}
 									td(class=`td${5}`) #{worklogs[i].workPlace}
@@ -111,6 +111,7 @@ block specific-js
 
 			let worklogID = $(this).val()
 			$('#editDialog').attr('data-worklogID', worklogID)
+
 			worklogID = $('#editDialog').attr('data-worklogID')
 
 			let itemValues = []
@@ -121,19 +122,32 @@ block specific-js
 
 			let index = 0;
 			$('#worklogDate').val(itemValues[index++])
-			$('#beginTime').val(itemValues[index++])
-			$('#endTime').val(itemValues[index++])
+			$('#workBeginTime').val(itemValues[index++])
+			setSelect2Value('#workTimeLength', itemValues[index++])
 			$('#workType').val(itemValues[index++])
 			$('#model').val(itemValues[index++])
-			$('#workPlace').val(itemValues[index++])
-			$('#workObject').val(itemValues[index++])
+			//- $("#workPlace").append("<option value='"+itemValues[index]+"' selected>"+itemValues[index]+"</option>");
+			//- $('#workPlace').trigger('change'); 
+			//- $('#workPlace').val(itemValues[index++])
+			setSelect2Value('#workPlace', itemValues[index++])
+			setSelect2Value('#workObject', itemValues[index++])
 			$('#workContent').val(itemValues[index++])
 
 			$('#editDialog').modal()
 		})
 
+		function setSelect2Value(selector, value){
+
+			// 如果值不在select的列表中，则先把值添加至列表  todo
+			$(selector).append("<option value='"+ value +"' selected>"+ value +"</option>")
+			$(selector).trigger('change')
+			
+			$(selector).val(value)
+		}
+
 		$('#editDialog').on('shown.bs.modal', function() {
-			$('.customSelect').select2()
+			$('.customSelect').select2({ tags: false })
+			$('.customSelect-tags').select2({ tags: true })
 		})
 
 		$('#worklogDate').datepicker({
@@ -156,7 +170,7 @@ block specific-js
 			let itemValues = []
 			itemValues.push(worklog.workDate)
 			itemValues.push(worklog.workBeginTime)
-			itemValues.push(worklog.workEndTime)
+			itemValues.push(worklog.workTimeLength)
 			itemValues.push(worklog.workType)
 			itemValues.push(worklog.model)
 			itemValues.push(worklog.workPlace)
@@ -193,8 +207,6 @@ block specific-js
 				}
 			})
 		})
-
-		$('.customSelect').select2()
 
 		//- 全选或取消全选
 		$('#cb-select-all').click(function(){

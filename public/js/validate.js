@@ -1,8 +1,8 @@
 function getWorklog(){
     let worklog = {
         workDate: $('#worklogDate').val(),
-        workBeginTime: $('#beginTime').val(),
-        workEndTime: $('#endTime').val(),
+        workBeginTime: $('#workBeginTime').val(),
+        workTimeLength: $('#workTimeLength').val(),
         workType: $('#workType').val(), 
         model: $('#model').val(),
         workPlace: $('#workPlace').val(), 
@@ -32,13 +32,8 @@ function checkInput(worklog){
         return false
     }
 
-    if(!worklog.workEndTime){
-        showWarning('结束时间不能为空！')
-        return false
-    }
-
-    if(worklog.workEndTime <= worklog.workBeginTime) {
-        showWarning('结束时间必须在开始时间之后！')
+    if(!worklog.workTimeLength){
+        showWarning('工作时长不能为空！')
         return false
     }
 
