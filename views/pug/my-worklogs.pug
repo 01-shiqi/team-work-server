@@ -128,9 +128,6 @@ block specific-js
 			setSelect2Value('#workTimeLength', itemValues[index++])
 			$('#workType').val(itemValues[index++])
 			$('#model').val(itemValues[index++])
-			//- $("#workPlace").append("<option value='"+itemValues[index]+"' selected>"+itemValues[index]+"</option>");
-			//- $('#workPlace').trigger('change'); 
-			//- $('#workPlace').val(itemValues[index++])
 			setSelect2Value('#workPlace', itemValues[index++])
 			setSelect2Value('#workObject', itemValues[index++])
 			$('#workContent').val(itemValues[index++])
@@ -138,15 +135,31 @@ block specific-js
 			$('#editDialog').modal()
 		})
 
+		// 判断selector中是否存在html为value的option
+		function existOption(selector, value) {
+			let box = $(selector).find('option')
+			let exist = false
+			for(let i=0; i<box.length; i++){
+				if($(selector).find('option').eq(i).html() == value) {
+					exist = true
+				}
+			}
+			return exist
+		}
+
+		// 为select2控件的输入区域设置值
 		function setSelect2Value(selector, value){
 
-			// 如果值不在select的列表中，则先把值添加至列表  todo
-			$(selector).append("<option value='"+ value +"' selected>"+ value +"</option>")
-			$(selector).trigger('change')
+			// 如果值不在select的列表中，则先把值添加至列表
+			if(!existOption(selector, value)) {
+				$(selector).append("<option value='"+ value +"' selected>"+ value +"</option>")
+				$(selector).trigger('change')
+			}
 			
 			$(selector).val(value)
 		}
 
+		// 对话框加载完成后的事件
 		$('#editDialog').on('shown.bs.modal', function() {
 			$('.customSelect').select2({ tags: false })
 			$('.customSelect-tags').select2({ tags: true })
