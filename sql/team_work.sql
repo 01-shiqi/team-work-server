@@ -72,7 +72,7 @@ CREATE TABLE `tw_worklog` (
   `model` varchar(50) DEFAULT NULL,
   `work_place` varchar(50) DEFAULT NULL,
   `work_object` varchar(50) DEFAULT NULL,
-  `work_content` varchar(500) DEFAULT NULL,
+  `work_content` varchar(5000) DEFAULT NULL,
   `created_at` datetime DEFAULT NULL,
   `updated_at` datetime DEFAULT NULL,
   PRIMARY KEY (`id`)
