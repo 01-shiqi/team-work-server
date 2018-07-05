@@ -16,7 +16,7 @@ router.get('/my-worklogs', Check.checkLogin, Worklog.getMyWorklogs)
 router.post('/update-worklog', Check.checkLogin, Worklog.updateWorklog)
 router.delete('/delete-worklogs', Check.checkLogin, Worklog.deleteWorklogs)
 
-router.get('/manage-worklogs', Check.checkLogin, Worklog.manageWorklogs)
+router.get('/manage-worklogs', Check.checkAdmin, Worklog.manageWorklogs)
 
 router.post('/login', User.login)
 router.get('/logout', User.logout)
