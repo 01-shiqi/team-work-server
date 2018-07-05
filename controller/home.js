@@ -14,7 +14,12 @@ class Home extends Base {
     }
 
     async getIndex(req, res, next) {
-        res.render('index', this.appendUserInfo(req))
+        if(req.session.role == 0) {
+            res.redirect('/manage-worklogs')
+        } else {
+            res.redirect('/write-worklog')
+        }
+        // res.render('index', this.appendUserInfo(req))
     }
 }
 

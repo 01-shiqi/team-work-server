@@ -12,7 +12,9 @@ class Worklog extends Base {
         super()
 
         this.writeWorklog = this.writeWorklog.bind(this)
+        this.manageWorklogs = this.manageWorklogs.bind(this)
         this.getMyWorklogs = this.getMyWorklogs.bind(this)
+        this.getWorklogList = this.getWorklogList.bind(this)
         this.commitWorklog = this.commitWorklog.bind(this)
         this.updateWorklog = this.updateWorklog.bind(this)
         this.deleteWorklogs = this.deleteWorklogs.bind(this)
@@ -53,8 +55,18 @@ class Worklog extends Base {
         return basicInfos
     }
 
+    // 获取管理日志列表
+    async manageWorklogs(req, res, next) {
+        await this.getWorklogList(req, res, next, true)
+    }
+  
+    // 获取我的日志列表
+    async getMyWorklogs(req, res, next) {  
+        await this.getWorklogList(req, res, next, false)
+    }
+
     // 获取日志列表
-    async getMyWorklogs(req, res, next) {
+    async getWorklogList(req, res, next, allusers) {
 
         try {
             let params = await this.extractQueryParams(req)
@@ -64,7 +76,7 @@ class Worklog extends Base {
 
             let whereClause = '';
             const userID = this.getUserID(req)
-            if(userID){
+            if(userID && !allusers){
                 whereClause += this.genStrCondition('user_id', userID);
             }
             if(whereClause != '') {
@@ -78,16 +90,24 @@ class Worklog extends Base {
 
             let pageCount = Math.ceil(totalCount / countPerPage)
 
-            var sql = 'select id, work_date as workDate, work_begin_time as workBeginTime, work_time_length as workTimeLength, work_type as workType, model, work_place as workPlace, work_object as workObject, work_content as workContent from tw_worklog ' 
-                    + whereClause 
-                    + ' order by workDate desc, workBeginTime '
-                    + ' limit ' + startIndex + ',' + countPerPage
+            let sql = 'select tw_worklog.id, work_date as workDate, work_begin_time as workBeginTime, work_time_length as workTimeLength, work_type as workType, model, work_place as workPlace, work_object as workObject, work_content as workContent '
+            
+            if(allusers) {
+                sql += ', tw_user.true_name as trueName from tw_worklog left join tw_user on tw_worklog.user_id = tw_user.id '
+            } else {
+                sql += ', null as trueName from tw_worklog '
+            }
+
+            sql += whereClause 
+                + ' order by workDate desc, trueName, workBeginTime '
+                + ' limit ' + startIndex + ',' + countPerPage
 
             let resultData = await this.loadAllBasicInfos()
             resultData.worklogs = await this.queryArray(sql)
             resultData.pageCount = pageCount
             resultData.pageIndex = pageIndex
-            res.render('my-worklogs',  this.appendUserInfo(req, resultData))
+            let viewName = allusers ? 'manage-worklogs' : 'my-worklogs'
+            res.render(viewName,  this.appendUserInfo(req, resultData))
         }
         catch (error) {
             logger.error(error)

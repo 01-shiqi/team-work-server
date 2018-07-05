@@ -10,7 +10,7 @@ Target Server Type    : MYSQL
 Target Server Version : 50720
 File Encoding         : 65001
 
-Date: 2018-07-01 23:40:17
+Date: 2018-07-05 23:38:09
 */
 
 SET FOREIGN_KEY_CHECKS=0;
@@ -47,6 +47,7 @@ CREATE TABLE `tw_user` (
   `true_name` varchar(255) DEFAULT NULL,
   `password` varchar(255) DEFAULT NULL,
   `job_position` varchar(255) DEFAULT NULL,
+  `role` int(11) NOT NULL DEFAULT '1',
   PRIMARY KEY (`id`),
   UNIQUE KEY `uk_login_name` (`login_name`) USING HASH
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
@@ -54,9 +55,9 @@ CREATE TABLE `tw_user` (
 -- ----------------------------
 -- Records of tw_user
 -- ----------------------------
-INSERT INTO `tw_user` VALUES ('1', 'lianyz', '连彦泽', 'lianyz', '项目负责人');
-INSERT INTO `tw_user` VALUES ('2', 'liangyl', '梁艳龙', 'liangyl', '软件开发工程师');
-INSERT INTO `tw_user` VALUES ('3', 'huoxj', '霍晓静', 'huoxj', '软件测试工程师');
+INSERT INTO `tw_user` VALUES ('1', 'lianyz', '连彦泽', 'lianyz', '项目负责人', '0');
+INSERT INTO `tw_user` VALUES ('2', 'liangyl', '梁艳龙', 'liangyl', '软件开发工程师', '1');
+INSERT INTO `tw_user` VALUES ('3', 'huoxj', '霍晓静', 'huoxj', '软件测试工程师', '1');
 
 -- ----------------------------
 -- Table structure for `tw_worklog`

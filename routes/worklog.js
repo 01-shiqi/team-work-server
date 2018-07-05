@@ -8,13 +8,15 @@ import Check from '../middlewares/check'
 
 const router = express.Router()
 
-router.get('/index', Check.checkLogin, Worklog.writeWorklog)
+router.get('/index', Check.checkLogin, Home.getIndex)
 
 router.get('/write-worklog', Check.checkLogin, Worklog.writeWorklog)
 router.post('/write-worklog', Check.checkLogin, Worklog.commitWorklog)
 router.get('/my-worklogs', Check.checkLogin, Worklog.getMyWorklogs)
 router.post('/update-worklog', Check.checkLogin, Worklog.updateWorklog)
 router.delete('/delete-worklogs', Check.checkLogin, Worklog.deleteWorklogs)
+
+router.get('/manage-worklogs', Check.checkLogin, Worklog.manageWorklogs)
 
 router.post('/login', User.login)
 router.get('/logout', User.logout)

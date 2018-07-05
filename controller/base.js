@@ -71,6 +71,7 @@ class Base {
         }
         data.trueName = req.session.true_name
         data.jobPosition = req.session.job_position
+        data.role = req.session.role
 
         return data
     }
