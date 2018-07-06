@@ -15240,3 +15240,7 @@ be a descendant of the grid when it is being dragged.
 #btn-login {
   font-size: 18px;
 }
+
+#div-worklog-list {
+  margin-bottom: 0px;
+}

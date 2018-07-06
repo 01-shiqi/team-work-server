@@ -72,7 +72,7 @@ class Worklog extends Base {
             let params = await this.extractQueryParams(req)
             let pageIndex = params.pageIndex || 0
 
-            const countPerPage = 10;
+            const countPerPage = 12;
 
             let whereClause = '';
             const userID = this.getUserID(req)
