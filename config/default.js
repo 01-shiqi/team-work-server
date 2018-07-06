@@ -1,7 +1,7 @@
 'use strict';
 
 module.exports = {
-	host: '127.0.0.1',
+	host: '192.168.151.64',
 	database: 'team_work',
 	httpPort: 3002,
 	httpsPort: 443,
