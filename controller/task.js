@@ -6,15 +6,15 @@ import logger from '../logger/logger'
 import moment from 'moment'
 
 
-class Worklog extends Base {
+class Task extends Base {
 
     constructor() {
         super()
 
         this.writeWorklog = this.writeWorklog.bind(this)
-        this.manageWorklogs = this.manageWorklogs.bind(this)
-        this.getMyWorklogs = this.getMyWorklogs.bind(this)
-        this.getWorklogList = this.getWorklogList.bind(this)
+        this.manageTasks = this.manageTasks.bind(this)
+        this.getMyTasks = this.getMyTasks.bind(this)
+        this.getTaskList = this.getTaskList.bind(this)
         this.commitWorklog = this.commitWorklog.bind(this)
         this.updateWorklog = this.updateWorklog.bind(this)
         this.deleteWorklogs = this.deleteWorklogs.bind(this)
@@ -56,23 +56,23 @@ class Worklog extends Base {
     }
 
     // 获取管理日志列表
-    async manageWorklogs(req, res, next) {
-        await this.getWorklogList(req, res, next, true)
+    async manageTasks(req, res, next) {
+        await this.getTaskList(req, res, next, true)
     }
   
     // 获取我的日志列表
-    async getMyWorklogs(req, res, next) {  
-        await this.getWorklogList(req, res, next, false)
+    async getMyTasks(req, res, next) {  
+        await this.getTaskList(req, res, next, false)
     }
 
     // 获取日志列表
-    async getWorklogList(req, res, next, allusers) {
+    async getTaskList(req, res, next, allusers) {
 
         try {
             let params = await this.extractQueryParams(req)
             let pageIndex = params.pageIndex || 0
 
-            const countPerPage = 12
+            const countPerPage = 10
 
             let whereClause = ''
             const userID = this.getUserID(req)
@@ -209,4 +209,4 @@ class Worklog extends Base {
 }
 
 
-export default new Worklog()
+export default new Task()

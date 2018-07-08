@@ -1,9 +1,9 @@
 extends layouts/_layout.pug
 
 block variables
-	- var activePage = 'my-worklogs'
+	- var activePage = 'my-tasks'
 	- var activeGroup = 'forms'
-	- var title = '我的工作日志'
+	- var title = '我的任务'
 	- var icon = 'fa-bars'
 
 block title
@@ -20,11 +20,11 @@ block content
 			li.breadcrumb-item
 				i.fa.fa-home.fa-lg
 			li.breadcrumb-item
-				| 日志
+				| 任务
 			li.breadcrumb-item
-				a(href="#") 日志列表
+				a(href="#") #{title}
 
-	.modal.fade#editDialog(aria-hide="true")
+	.modal.fade#editTaskDialog(aria-hide="true")
 		.modal-dialog(role='dialog', style="width:1400px;max-width:1400px;top:50px;")
 			.modal-content
 				.modal-header
@@ -84,41 +84,25 @@ block content
 					.btn-group
 						div
 							ul.pagination
-								- var currPage = parseInt(pageIndex)
-								- var prevPage = currPage - 1
-								- var nextPage = currPage + 1 
 								if pageIndex == 0
 									li.page-item.disabled
-										a.page-link(href=`${activePage}?pageIndex=${0}`)
-											i.fa.fa-angle-double-left
-									li.page-item.disabled
-										a.page-link(href=`${activePage}?pageIndex=${prevPage}`)
-											i.fa.fa-angle-left
+										a.page-link(href=`${activePage}?pageIndex=${0}`) «
 								else
 									li.page-item
-										a.page-link(href=`${activePage}?pageIndex=${0}`)
-											i.fa.fa-angle-double-left
-									li.page-item
-										a.page-link(href=`${activePage}?pageIndex=${prevPage}`)
-											i.fa.fa-angle-left
-
-								li.page-item.disabled
-									a.page-link(href=`${activePage}?pageIndex=${currPage}`) #{currPage+1}
-
+										a.page-link(href=`${activePage}?pageIndex=${0}`) «								
+								- for (var i = 0; i < pageCount; i++)
+									if i == pageIndex
+										li.page-item.active
+											a.page-link(href=`${activePage}?pageIndex=${i}`) #{i+1}
+									else
+										li.page-item
+											a.page-link(href=`${activePage}?pageIndex=${i}`) #{i+1}
 								if pageIndex == pageCount - 1
 									li.page-item.disabled
-										a.page-link(href=`${activePage}?pageIndex=${nextPage}`)
-											i.fa.fa-angle-right
-									li.page-item.disabled
-										a.page-link(href=`${activePage}?pageIndex=${pageCount - 1}`)
-											i.fa.fa-angle-double-right
+										a.page-link(href=`${activePage}?pageIndex=${pageCount - 1}`) »
 								else
 									li.page-item
-										a.page-link(href=`${activePage}?pageIndex=${nextPage}`)
-											i.fa.fa-angle-right
-									li.page-item
-										a.page-link(href=`${activePage}?pageIndex=${pageCount - 1}`)
-											i.fa.fa-angle-double-right
+										a.page-link(href=`${activePage}?pageIndex=${pageCount - 1}`) »								
 
 block specific-js
 	script(type='text/javascript', src="js/plugins/bootstrap-datepicker/js/bootstrap-datepicker.min.js")

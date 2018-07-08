@@ -3,6 +3,7 @@
 import express from 'express';
 import Home from '../controller/home';
 import Worklog from '../controller/worklog';
+import Task from '../controller/task';
 import User from '../controller/user';
 import Check from '../middlewares/check'
 
@@ -17,6 +18,8 @@ router.post('/update-worklog', Check.checkLogin, Worklog.updateWorklog)
 router.delete('/delete-worklogs', Check.checkLogin, Worklog.deleteWorklogs)
 
 router.get('/manage-worklogs', Check.checkAdmin, Worklog.manageWorklogs)
+
+router.get('/manage-tasks', Check.checkAdmin, Task.manageTasks)
 
 router.post('/login', User.login)
 router.get('/logout', User.logout)
