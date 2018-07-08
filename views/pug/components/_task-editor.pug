@@ -1,0 +1,54 @@
+
+
+.form-group.col-md-2
+    label.control-label.worklog-edit-label 任务类型
+    select.form-control.customSelect#taskType
+        optgroup(label="选择任务类型")
+            - for (var i = 0; i < workTypes.length; i++)
+                option #{workTypes[i].name}
+
+.form-group.col-md-2
+    label.control-label.worklog-edit-label 所属型号
+    select.form-control.customSelect#model
+        optgroup(label="选择所属型号")
+            - for (var i = 0; i < models.length; i++)
+                option #{models[i].name}
+
+.form-group.col-md-2
+    label.control-label 开始时间
+    input.form-control.datepicker#beginTime(type="text",placeholder="选择日期")
+
+.form-group.col-md-2
+    label.control-label 预计完成时间
+    input.form-control.datepicker#endTime(type="text",placeholder="选择日期")
+
+.form-group.col-md-2
+    label.control-label 工作量(人时=人天*8)
+    select.form-control.customSelect-tags#personHours
+        optgroup(label="选择或录入工作量(人时)")
+            option 0.5
+            option 1.0
+            option 1.5
+            option 2.0
+            option 2.5
+            option 3.0
+            option 3.5
+            option 4.0
+            option 4.5
+            option 5.5
+            option 6.0
+
+.form-group.col-md-2
+    label.control-label.worklog-edit-label 建议执行人
+    select.form-control.customSelect#executor
+        optgroup(label="选择任务执行人")
+            - for (var i = 0; i < users.length; i++)
+                option(value=`${users[i].id}`) #{users[i].name}
+
+.form-group.col-md-12
+    label.form-control-label(for='taskName') 任务名称
+    input#taskName.form-control.input-no-empty(type='text',placeholder="请输入任务的名称")
+
+.form-group.col-md-12
+    label(for='workContent') 任务描述
+    textarea#taskContent.form-control.input-no-empty(rows='8',placeholder='请输入任务的详细描述')

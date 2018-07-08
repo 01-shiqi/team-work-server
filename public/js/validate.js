@@ -69,11 +69,25 @@ function checkInput(worklog){
     return true
 }
 
+/* 
+ * 为select2控件的输入区域设置值
+ */
+function setSelect2Value(selector, value){
+
+    // 如果值不在select的列表中，则先把值添加至列表
+    if(!existOption(selector, value)) {
+        $(selector).append("<option value='"+ value +"' selected>"+ value +"</option>")
+        $(selector).trigger('change')
+    }
+    
+    $(selector).val(value)
+}
+
 /**
  * 初始化日期选择器
  */
 function initDatePicker() {
-    $('#worklogDate').datepicker({
+    $('.datepicker').datepicker({
         language: "zh-CN",
         weekStart: 1,
         todayBtn: true,
@@ -82,8 +96,16 @@ function initDatePicker() {
         format: 'yyyy-mm-dd',
         daysOfWeekHighlighted: '0, 6'
     })
-    
-    var now = new Date()
-    $('#worklogDate').datepicker('setDate', now)
-    $('#worklogDate').datepicker('setEndDate', now)
 }
+
+// 初始化编辑对话框
+function initEditDialog() {
+    // 对话框加载完成后的事件
+    $('.editDialog').on('shown.bs.modal', function() {
+        $('.customSelect').select2({ tags: false })
+        $('.customSelect-tags').select2({ tags: true })
+    })    
+}
+
+initDatePicker()
+initEditDialog()

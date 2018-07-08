@@ -11,7 +11,7 @@ class Task extends Base {
     constructor() {
         super()
 
-        this.writeWorklog = this.writeWorklog.bind(this)
+        this.createTask = this.createTask.bind(this)
         this.manageTasks = this.manageTasks.bind(this)
         this.getMyTasks = this.getMyTasks.bind(this)
         this.getTaskList = this.getTaskList.bind(this)
@@ -21,6 +21,44 @@ class Task extends Base {
         this.loadBasicInfo = this.loadBasicInfo.bind(this)
         this.loadAllBasicInfos = this.loadAllBasicInfos.bind(this)
     }
+
+   // 创建任务
+   async createTask(req, res, next) {
+
+    try {
+        let bodyData = await this.extractStringData(req)
+        let task = JSON.parse(bodyData)
+        const id = this.uuid()
+        const userID = this.getUserID(req)          
+        var sqlSource = []
+        sqlSource.push(id)
+        sqlSource.push(task.type)
+        sqlSource.push(task.model)
+        sqlSource.push(task.beginTime)
+        sqlSource.push(task.endTime)
+        sqlSource.push(task.personHours)
+        sqlSource.push(task.executor)
+        sqlSource.push(task.name)
+        sqlSource.push(task.content)
+        sqlSource.push('已创建')
+
+        var now = moment().format('YYYY-MM-DD hh:mm:ss')
+        sqlSource.push(now)
+        sqlSource.push(userID)
+        sqlSource.push(now)
+        sqlSource.push(userID)
+
+        var sql = 'insert into tw_task ' + 
+                  'values(?,?,?,?, ?,?,?,?, ?,?,?,?, ?,?)'
+
+        let succeed = await this.executeSql(sql, sqlSource)
+        this.sendSucceed(res)
+    }
+    catch (error) {
+        logger.error(error)
+        this.sendFailed(res, error.message)
+    }
+}
 
     async writeWorklog(req, res, next) {
         let basicInfos = await this.loadAllBasicInfos()
@@ -42,6 +80,21 @@ class Task extends Base {
         }
     }
 
+    /**
+     * 加载普通用户信息
+     * @param {*} tableName 
+     */
+    async loadUsers() {
+        try {
+            var sql = 'select id, true_name as name from tw_user where role >= 10 order by name'
+            var basicInfos = await this.queryArray(sql)
+            return basicInfos
+        }
+        catch (error) {
+            return []
+        }
+    }
+
     async loadAllBasicInfos() {
 
         let basicInfos = {}
@@ -51,6 +104,7 @@ class Task extends Base {
         basicInfos.models = await this.loadBasicInfo('tw_model')
         basicInfos.workPlaces = await this.loadBasicInfo('tw_work_place')
         basicInfos.workObjects = await this.loadBasicInfo('tw_work_object')
+        basicInfos.users = await this.loadUsers()
 
         return basicInfos
     }
@@ -72,7 +126,7 @@ class Task extends Base {
             let params = await this.extractQueryParams(req)
             let pageIndex = params.pageIndex || 0
 
-            const countPerPage = 10
+            const countPerPage = 12
 
             let whereClause = ''
             const userID = this.getUserID(req)
@@ -83,30 +137,30 @@ class Task extends Base {
                 whereClause = ' where ' + whereClause
             }
 
-            let totalCountSql = 'select count(*) as value from tw_worklog ' + whereClause
+            let totalCountSql = 'select count(*) as value from tw_task ' + whereClause
             let totalCount = await this.queryValue(totalCountSql)
 
             let startIndex = pageIndex * countPerPage
 
             let pageCount = Math.ceil(totalCount / countPerPage)
 
-            let sql = 'select tw_worklog.id, work_date as workDate, work_begin_time as workBeginTime, work_time_length as workTimeLength, work_type as workType, model, work_place as workPlace, work_object as workObject, work_content as workContent '
+            let sql = 'select tw_task.id, type, name, content, state, model, begin_time as beginTime, end_time as endTime, person_hours as personHours '
             
             if(allusers) {
-                sql += ', tw_user.true_name as trueName from tw_worklog left join tw_user on tw_worklog.user_id = tw_user.id '
+                sql += ', tw_user.true_name as executorName from tw_task left join tw_user on tw_task.executor_id = tw_user.id '
             } else {
-                sql += ', null as trueName from tw_worklog '
+                sql += ', null as executorName from tw_task '
             }
 
             sql += whereClause 
-                + ' order by workDate desc, trueName, workBeginTime '
+                + ' order by created_at desc '
                 + ' limit ' + startIndex + ',' + countPerPage
 
             let resultData = await this.loadAllBasicInfos()
-            resultData.worklogs = await this.queryArray(sql)
+            resultData.tasks = await this.queryArray(sql)
             resultData.pageCount = pageCount
             resultData.pageIndex = pageIndex
-            let viewName = allusers ? 'manage-worklogs' : 'my-worklogs'
+            let viewName = allusers ? 'manage-tasks' : 'my-tasks'
             res.render(viewName,  this.appendUserInfo(req, resultData))
         }
         catch (error) {

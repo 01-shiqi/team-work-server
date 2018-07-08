@@ -24,85 +24,80 @@ block content
 			li.breadcrumb-item
 				a(href="#") #{title}
 
-	.modal.fade#editTaskDialog(aria-hide="true")
-		.modal-dialog(role='dialog', style="width:1400px;max-width:1400px;top:50px;")
+	.modal.fade.editDialog#create-task-dialog(aria-hide="true")
+		.modal-dialog(role='dialog', style="width:1000px;max-width:1000px;top:50px;")
 			.modal-content
 				.modal-header
-					h5.modal-title 修改日志
+					h5.modal-title 创建任务
 					button.close(type='button', data-dismiss='modal', aria-label='Close')
 						span(aria-hidden='true') ×
 				.modal-body
 					form.row
-						include ./components/_worklog-editor
+						include ./components/_task-editor
 				.modal-footer
-					button.btn.btn-primary#btn-closeDialog(type='button') 确定
+					button.btn.btn-primary#btn-commit(type='button') 确定
 					button.btn.btn-secondary(type='button', data-dismiss='modal') 取消
 
 	.row
 		.col-md-12
 			.tile
-				.mailbox-controls
+				p
+					a.btn.btn-primary.icon-btn#btn-create-task
+						i.fa.fa-plus
+						| 创建任务
 
-					.animated-checkbox
-						label
-							input#cb-select-all(type="checkbox")
-							span.label-text
-					.btn-group
-						button.btn.btn-primary.btn-sm#btn-delete-worklogs(type='button')
-							i.fa.fa-trash-o
-							
-
-				.table-responsive.mailbox-messages
-					table.table.table-hover
-						tbody
-							- for (var i = 0; i < worklogs.length; i++)
-								tr(id=`${worklogs[i].id}`)
-									td
-										.animated-checkbox
-											label
-												input.cb-worklog-item(type="checkbox", data-id=`${worklogs[i].id}`)
-												span.label-text 
-									td #{i + 1}
-									td(class=`td${0}`) #{worklogs[i].workDate}
-									if role == 0
-										td(class=`td${99}`) #{worklogs[i].trueName}
-									td(class=`td${1}`) #{worklogs[i].workBeginTime}
-									td(class=`td${2}`) #{worklogs[i].workTimeLength.toFixed(1)}
-									td(class=`td${3}`) #{worklogs[i].workType}
-									td(class=`td${4}`) #{worklogs[i].model}
-									td(class=`td${5}`) #{worklogs[i].workPlace}
-									td(class=`td${6}`) #{worklogs[i].workObject}
-									td(class=`td${7}`) 
-										.td-textarea #{worklogs[i].workContent}
-									td
-										.animated-checkbox
-											label
-												button.btn.btn-primary.btn-sm.btn-editWorklog(type='button', value=`${worklogs[i].id}`)
+				table.table.table-hover
+					thead
+						tr
+							th
+								.animated-checkbox
+									label
+										input#cb-select-all(type="checkbox")
+										span.label-text 
+							th #
+							th 任务类型
+							th 所属型号
+							th 开始时间
+							th 完成时间
+							th 人时
+							th 当前状态
+							th 执行人
+							th 任务名称
+							th 任务内容
+							th
+								.animated-checkbox
+									label
+										button.btn.btn-primary.btn-sm#btn-delete-tasks(type='button')
+											i.fa.fa-trash-o
+					tbody
+						- for (var i = 0; i < tasks.length; i++)
+							tr.table-info(id=`${tasks[i].id}`)
+								td
+									.animated-checkbox
+										label
+											input.cb-worklog-item(type="checkbox", data-id=`${tasks[i].id}`)
+											span.label-text 
+								td #{i + 1}
+								td(class=`td${0}`) #{tasks[i].type}
+								td(class=`td${1}`) #{tasks[i].model}
+								td(class=`td${2}`) #{tasks[i].beginTime}
+								td(class=`td${3}`) #{tasks[i].endTime}
+								td(class=`td${4}`) #{tasks[i].personHours}
+								td(class=`td${5}`) #{tasks[i].state}
+								td(class=`td${6}`) #{tasks[i].executorName}
+								td(class=`td${7}`) #{tasks[i].name}
+								td(class=`td${8}`) 
+									.td-textarea#td-task-content #{tasks[i].content}
+								td
+									.animated-checkbox
+										label
+											.btn-group
+												button.btn.btn-primary.btn-sm.btn-editWorklog(type='button', value=`${tasks[i].id}`)
+													i.fa.fa-hand-o-right
+												button.btn.btn-primary.btn-sm.btn-editWorklog(type='button', value=`${tasks[i].id}`)
 													i.fa.fa-edit
 
-				.text-right
-					.btn-group
-						div
-							ul.pagination
-								if pageIndex == 0
-									li.page-item.disabled
-										a.page-link(href=`${activePage}?pageIndex=${0}`) «
-								else
-									li.page-item
-										a.page-link(href=`${activePage}?pageIndex=${0}`) «								
-								- for (var i = 0; i < pageCount; i++)
-									if i == pageIndex
-										li.page-item.active
-											a.page-link(href=`${activePage}?pageIndex=${i}`) #{i+1}
-									else
-										li.page-item
-											a.page-link(href=`${activePage}?pageIndex=${i}`) #{i+1}
-								if pageIndex == pageCount - 1
-									li.page-item.disabled
-										a.page-link(href=`${activePage}?pageIndex=${pageCount - 1}`) »
-								else
-									li.page-item
-										a.page-link(href=`${activePage}?pageIndex=${pageCount - 1}`) »								
+				include ./components/_pagination						
 
 block specific-js
 	script(type='text/javascript', src="js/plugins/bootstrap-datepicker/js/bootstrap-datepicker.min.js")
@@ -139,6 +134,16 @@ block specific-js
 			$('#editDialog').modal()
 		})
 
+		$('#btn-create-task').click(function(){
+			$('#create-task-dialog').modal()
+		})
+
+		
+		// 设置日期的当前时间和截至时间
+		var now = new Date()
+		$('#beginTime').datepicker('setDate', now)
+		$('#endTime').datepicker('setDate', now)
+
 		// 判断selector中是否存在html为value的option
 		function existOption(selector, value) {
 			let box = $(selector).find('option')
@@ -151,72 +156,67 @@ block specific-js
 			return exist
 		}
 
-		// 为select2控件的输入区域设置值
-		function setSelect2Value(selector, value){
-
-			// 如果值不在select的列表中，则先把值添加至列表
-			if(!existOption(selector, value)) {
-				$(selector).append("<option value='"+ value +"' selected>"+ value +"</option>")
-				$(selector).trigger('change')
+		function getTask() {
+			let task = {
+				type: $('#taskType').val(),
+				model: $('#model').val(),
+				beginTime: $('#beginTime').val(),
+				endTime: $('#endTime').val(),
+				personHours: $('#personHours').val(), 
+				executor: $('#executor').val(), 
+				name: $('#taskName').val(), 
+				content: $('#taskContent').val(),
 			}
 			
-			$(selector).val(value)
+			return task
 		}
 
-		// 对话框加载完成后的事件
-		$('#editDialog').on('shown.bs.modal', function() {
-			$('.customSelect').select2({ tags: false })
-			$('.customSelect-tags').select2({ tags: true })
+		$(".input-no-empty").bind("input propertychange change",function(event) {
+			if($(this).val() != '') {
+				$(this).removeClass('is-invalid')
+			}
 		})
 
-		initDatePicker()
+		function checkTaskInputValid(task) {
+			if(!task.name){
+				$('#taskName').addClass('is-invalid')
+				return false
+			}
 
-		$('#btn-closeDialog').click(function(){
+			if(!task.content){
+				$('#taskContent').addClass('is-invalid')
+				return false
+			}
+			return true
+		}
 
-			let worklog = getWorklog()
+		$('#btn-commit').click(function(){
+
+			let task = getTask()
 			
 			// 验证数据
-			if(!checkInput(worklog)){
+			if(!checkTaskInputValid(task)){
 				return;
 			}
 
-			let itemValues = []
-			itemValues.push(worklog.workDate)
-			itemValues.push(worklog.workBeginTime)
-			itemValues.push(worklog.workTimeLength)
-			itemValues.push(worklog.workType)
-			itemValues.push(worklog.model)
-			itemValues.push(worklog.workPlace)
-			itemValues.push(worklog.workObject)
-			itemValues.push(worklog.workContent)
-
-			let worklogID = $('#editDialog').attr('data-worklogID')
-			itemValues.push(worklogID)
-
 			//- 向后台发送更新数据请求
 			$.ajax({
-				url: "/update-worklog/",
+				url: "/create-task/",
 				type: "post",
-				data: JSON.stringify(itemValues),
+				data: JSON.stringify(task),
 				dataType: "json",
 				success: function(res){
 					if(res.succeed) {
-						//- 更新前台页面的值
-						for(var i = 0; i < 7; ++i) {
-							itemValues.push($("#"+ worklogID + " .td" + i).html())
-							$("#"+ worklogID + " .td" + i).html(itemValues[i])
-						}
-						$("#"+ worklogID + " .td-textarea").html(itemValues[i])
-
-						$('#editDialog').modal('hide')
+						//- 更新任务列表
+						$('#create-task-dialog').modal('hide')
+						window.location.reload()
 					} else {
-						swal("日志修改", "日志修改失败！ 原因：" + res.error, "error")
+						swal("创建任务", "任务创建失败！ 原因：" + res.error, "error")
 					}
-
 				},
 
 				error: function(res){
-					swal("日志修改", "日志修改失败！ 原因：" + res.error, "error")
+					swal("创建任务", "任务创建失败！ 原因：" + res.error, "error")
 				}
 			})
 		})

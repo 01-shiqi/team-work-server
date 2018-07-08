@@ -24,7 +24,7 @@ block content
 			li.breadcrumb-item
 				a(href="#") 日志列表
 
-	.modal.fade#editDialog(aria-hide="true")
+	.modal.fade.editDialog#edit-worklog-dialog(aria-hide="true")
 		.modal-dialog(role='dialog', style="width:1400px;max-width:1400px;top:50px;")
 			.modal-content
 				.modal-header
@@ -80,45 +80,8 @@ block content
 												button.btn.btn-primary.btn-sm.btn-editWorklog(type='button', value=`${worklogs[i].id}`)
 													i.fa.fa-edit
 
-				.text-right
-					.btn-group
-						div
-							ul.pagination
-								- var currPage = parseInt(pageIndex)
-								- var prevPage = currPage - 1
-								- var nextPage = currPage + 1 
-								if pageIndex == 0
-									li.page-item.disabled
-										a.page-link(href=`${activePage}?pageIndex=${0}`)
-											i.fa.fa-angle-double-left
-									li.page-item.disabled
-										a.page-link(href=`${activePage}?pageIndex=${prevPage}`)
-											i.fa.fa-angle-left
-								else
-									li.page-item
-										a.page-link(href=`${activePage}?pageIndex=${0}`)
-											i.fa.fa-angle-double-left
-									li.page-item
-										a.page-link(href=`${activePage}?pageIndex=${prevPage}`)
-											i.fa.fa-angle-left
-
-								li.page-item.disabled
-									a.page-link(href=`${activePage}?pageIndex=${currPage}`) #{currPage+1}
-
-								if pageIndex == pageCount - 1
-									li.page-item.disabled
-										a.page-link(href=`${activePage}?pageIndex=${nextPage}`)
-											i.fa.fa-angle-right
-									li.page-item.disabled
-										a.page-link(href=`${activePage}?pageIndex=${pageCount - 1}`)
-											i.fa.fa-angle-double-right
-								else
-									li.page-item
-										a.page-link(href=`${activePage}?pageIndex=${nextPage}`)
-											i.fa.fa-angle-right
-									li.page-item
-										a.page-link(href=`${activePage}?pageIndex=${pageCount - 1}`)
-											i.fa.fa-angle-double-right
+				include ./components/_pagination
+				
 
 block specific-js
 	script(type='text/javascript', src="js/plugins/bootstrap-datepicker/js/bootstrap-datepicker.min.js")
@@ -132,9 +95,9 @@ block specific-js
 		$('.btn-editWorklog').click(function(){
 
 			let worklogID = $(this).val()
-			$('#editDialog').attr('data-worklogID', worklogID)
+			$('#edit-worklog-dialog').attr('data-worklogID', worklogID)
 
-			worklogID = $('#editDialog').attr('data-worklogID')
+			worklogID = $('#edit-worklog-dialog').attr('data-worklogID')
 
 			let itemValues = []
 			for(var i = 0; i < 7; ++i) {
@@ -152,7 +115,7 @@ block specific-js
 			setSelect2Value('#workObject', itemValues[index++])
 			$('#workContent').val(itemValues[index++])
 
-			$('#editDialog').modal()
+			$('#edit-worklog-dialog').modal()
 		})
 
 		// 判断selector中是否存在html为value的option
@@ -167,25 +130,10 @@ block specific-js
 			return exist
 		}
 
-		// 为select2控件的输入区域设置值
-		function setSelect2Value(selector, value){
-
-			// 如果值不在select的列表中，则先把值添加至列表
-			if(!existOption(selector, value)) {
-				$(selector).append("<option value='"+ value +"' selected>"+ value +"</option>")
-				$(selector).trigger('change')
-			}
-			
-			$(selector).val(value)
-		}
-
-		// 对话框加载完成后的事件
-		$('#editDialog').on('shown.bs.modal', function() {
-			$('.customSelect').select2({ tags: false })
-			$('.customSelect-tags').select2({ tags: true })
-		})
-
-		initDatePicker()
+		// 设置日期的当前时间和截至时间
+		var now = new Date()
+		$('#worklogDate').datepicker('setDate', now)
+		$('#worklogDate').datepicker('setEndDate', now)
 
 		$('#btn-closeDialog').click(function(){
 
@@ -206,7 +154,7 @@ block specific-js
 			itemValues.push(worklog.workObject)
 			itemValues.push(worklog.workContent)
 
-			let worklogID = $('#editDialog').attr('data-worklogID')
+			let worklogID = $('#edit-worklog-dialog').attr('data-worklogID')
 			itemValues.push(worklogID)
 
 			//- 向后台发送更新数据请求
@@ -224,7 +172,7 @@ block specific-js
 						}
 						$("#"+ worklogID + " .td-textarea").html(itemValues[i])
 
-						$('#editDialog').modal('hide')
+						$('#edit-worklog-dialog').modal('hide')
 					} else {
 						swal("日志修改", "日志修改失败！ 原因：" + res.error, "error")
 					}

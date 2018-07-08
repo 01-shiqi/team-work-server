@@ -20,6 +20,8 @@ router.delete('/delete-worklogs', Check.checkLogin, Worklog.deleteWorklogs)
 router.get('/manage-worklogs', Check.checkAdmin, Worklog.manageWorklogs)
 
 router.get('/manage-tasks', Check.checkAdmin, Task.manageTasks)
+router.post('/create-task', Check.checkAdmin, Task.createTask)
+
 
 router.post('/login', User.login)
 router.get('/logout', User.logout)
