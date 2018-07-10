@@ -69,6 +69,20 @@ function checkInput(worklog){
     return true
 }
 
+/**
+ * 判断selector中是否存在html为value的option
+ */
+function existOption(selector, value) {
+    let box = $(selector).find('option')
+    let exist = false
+    for(let i=0; i<box.length; i++){
+        if($(selector).find('option').eq(i).html() == value) {
+            exist = true
+        }
+    }
+    return exist
+}
+
 /* 
  * 为select2控件的输入区域设置值
  */

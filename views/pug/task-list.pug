@@ -24,7 +24,7 @@ block content
 			li.breadcrumb-item
 				a(href="#") #{title}
 
-	.modal.fade.editDialog#create-task-dialog(aria-hide="true")
+	.modal.fade.editDialog#task-dialog(aria-hide="true")
 		.modal-dialog(role='dialog', style="width:1000px;max-width:1000px;top:50px;")
 			.modal-content
 				.modal-header
@@ -86,7 +86,7 @@ block content
 								td(class=`td${4}`) #{tasks[i].endTime}
 								td(class=`td${5}`) #{tasks[i].personHours}
 								td(class=`td${6}`) #{tasks[i].state}
-								td(class=`td${7}`) #{tasks[i].executorName}
+								td(class=`td${7}`, data-id=`${tasks[i].executorID}`) #{tasks[i].executorName}
 								td(class=`td${8}`) #{tasks[i].name}
 								td(class=`td${9}`) 
 									.td-textarea#td-task-content #{tasks[i].content}
@@ -94,9 +94,9 @@ block content
 									.animated-checkbox
 										label
 											.btn-group
-												button.btn.btn-primary.btn-sm.btn-editWorklog(type='button', value=`${tasks[i].id}`)
+												button.btn.btn-primary.btn-sm.btn-check-task(type='button', value=`${tasks[i].id}`)
 													i.fa.fa-hand-o-right
-												button.btn.btn-primary.btn-sm.btn-editWorklog(type='button', value=`${tasks[i].id}`)
+												button.btn.btn-primary.btn-sm.btn-edit-task(type='button', value=`${tasks[i].id}`)
 													i.fa.fa-edit
 
 				include ./components/_pagination						
@@ -110,34 +110,37 @@ block specific-js
 	script(type='text/javascript', src="js/plugins/bootstrap-datepicker/locales/bootstrap-datepicker.zh-CN.min.js", charset="UTF-8")
 	script(type='text/javascript', src="js/validate.js")
 	script(type="text/javascript").
-		$('.btn-editWorklog').click(function(){
 
-			let worklogID = $(this).val()
-			$('#editDialog').attr('data-worklogID', worklogID)
+		// 获取 表格单元格的内容
+		function getTableCellData(trID, tdIndex) {
+			return $("#"+ trID + " .td" + tdIndex).html()
+		}
 
-			worklogID = $('#editDialog').attr('data-worklogID')
+		// 获取 表格单元格的ID
+		function getTableCellID(trID, tdIndex) {
+			return $("#"+ trID + " .td" + tdIndex).attr('data-id')
+		}
 
-			let itemValues = []
-			for(var i = 0; i < 7; ++i) {
-				itemValues.push($("#"+ worklogID + " .td" + i).html())
-			}
-			itemValues.push($("#"+ worklogID + " .td-textarea").html())
+		// 编辑任务
+		$('.btn-edit-task').click(function(){
 
-			let index = 0;
-			$('#worklogDate').val(itemValues[index++])
-			$('#workBeginTime').val(itemValues[index++])
-			setSelect2Value('#workTimeLength', itemValues[index++])
-			$('#workType').val(itemValues[index++])
-			$('#model').val(itemValues[index++])
-			setSelect2Value('#workPlace', itemValues[index++])
-			setSelect2Value('#workObject', itemValues[index++])
-			$('#workContent').val(itemValues[index++])
+			let taskID = $(this).val()
 
-			$('#editDialog').modal()
+			setSelect2Value('#taskType', getTableCellData(taskID, 1))
+			setSelect2Value('#model', getTableCellData(taskID, 2))
+			$('#beginTime').val(getTableCellData(taskID, 3))
+			$('#endTime').val(getTableCellData(taskID, 4))
+			setSelect2Value('#personHours', getTableCellData(taskID, 5))
+			let executorID = getTableCellID(taskID, 7)
+			setSelect2Value('#executorName', executorID)
+			$('#taskName').val(getTableCellData(taskID, 8))
+			$('#taskContent').val(getTableCellData(taskID, '-textarea'))
+
+			$('#task-dialog').modal()
 		})
 
 		$('#btn-create-task').click(function(){
-			$('#create-task-dialog').modal()
+			$('#task-dialog').modal()
 		})
 
 		
@@ -146,18 +149,6 @@ block specific-js
 		$('#beginTime').datepicker('setDate', now)
 		$('#endTime').datepicker('setDate', now)
 
-		// 判断selector中是否存在html为value的option
-		function existOption(selector, value) {
-			let box = $(selector).find('option')
-			let exist = false
-			for(let i=0; i<box.length; i++){
-				if($(selector).find('option').eq(i).html() == value) {
-					exist = true
-				}
-			}
-			return exist
-		}
-
 		function getTask() {
 			let task = {
 				type: $('#taskType').val(),
@@ -165,7 +156,7 @@ block specific-js
 				beginTime: $('#beginTime').val(),
 				endTime: $('#endTime').val(),
 				personHours: $('#personHours').val(), 
-				executor: $('#executor').val(), 
+				executor: $('#executorName').val(), 
 				name: $('#taskName').val(), 
 				content: $('#taskContent').val(),
 			}
@@ -210,7 +201,7 @@ block specific-js
 				success: function(res){
 					if(res.succeed) {
 						//- 更新任务列表
-						$('#create-task-dialog').modal('hide')
+						$('#task-dialog').modal('hide')
 						window.location.reload()
 					} else {
 						swal("创建任务", "任务创建失败！ 原因：" + res.error, "error")

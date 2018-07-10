@@ -145,7 +145,7 @@ class Task extends Base {
             let pageCount = Math.ceil(totalCount / countPerPage)
 
             let sql = 'select tw_task.id, type, name, content, state, model, begin_time as beginTime, end_time as endTime, person_hours as personHours '
-            sql += ', b.true_name as executorName '
+            sql += ', b.true_name as executorName, b.id as executorID '
             if(allusers) {
                 sql += ', c.true_name as creatorName '
             } 
