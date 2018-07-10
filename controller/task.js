@@ -145,11 +145,14 @@ class Task extends Base {
             let pageCount = Math.ceil(totalCount / countPerPage)
 
             let sql = 'select tw_task.id, type, name, content, state, model, begin_time as beginTime, end_time as endTime, person_hours as personHours '
-            
+            sql += ', b.true_name as executorName '
             if(allusers) {
-                sql += ', tw_user.true_name as executorName from tw_task left join tw_user on tw_task.executor_id = tw_user.id '
-            } else {
-                sql += ', null as executorName from tw_task '
+                sql += ', c.true_name as creatorName '
+            } 
+
+            sql += ' from tw_task left join tw_user b on (tw_task.executor_id = b.id) '
+            if(allusers) {
+                sql += ' left join tw_user c on (tw_task.created_by = c.id) '
             }
 
             sql += whereClause 

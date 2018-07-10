@@ -55,6 +55,7 @@ block content
 										input#cb-select-all(type="checkbox")
 										span.label-text 
 							th #
+							th 创建人
 							th 任务类型
 							th 所属型号
 							th 开始时间
@@ -78,15 +79,16 @@ block content
 											input.cb-worklog-item(type="checkbox", data-id=`${tasks[i].id}`)
 											span.label-text 
 								td #{i + 1}
-								td(class=`td${0}`) #{tasks[i].type}
-								td(class=`td${1}`) #{tasks[i].model}
-								td(class=`td${2}`) #{tasks[i].beginTime}
-								td(class=`td${3}`) #{tasks[i].endTime}
-								td(class=`td${4}`) #{tasks[i].personHours}
-								td(class=`td${5}`) #{tasks[i].state}
-								td(class=`td${6}`) #{tasks[i].executorName}
-								td(class=`td${7}`) #{tasks[i].name}
-								td(class=`td${8}`) 
+								td(class=`td${0}`) #{tasks[i].creatorName}
+								td(class=`td${1}`) #{tasks[i].type}
+								td(class=`td${2}`) #{tasks[i].model}
+								td(class=`td${3}`) #{tasks[i].beginTime}
+								td(class=`td${4}`) #{tasks[i].endTime}
+								td(class=`td${5}`) #{tasks[i].personHours}
+								td(class=`td${6}`) #{tasks[i].state}
+								td(class=`td${7}`) #{tasks[i].executorName}
+								td(class=`td${8}`) #{tasks[i].name}
+								td(class=`td${9}`) 
 									.td-textarea#td-task-content #{tasks[i].content}
 								td
 									.animated-checkbox
