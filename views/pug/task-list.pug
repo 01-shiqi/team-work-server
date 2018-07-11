@@ -76,7 +76,7 @@ block content
 								td
 									.animated-checkbox
 										label
-											input.cb-worklog-item(type="checkbox", data-id=`${tasks[i].id}`)
+											input.cb-task-item(type="checkbox", data-id=`${tasks[i].id}`)
 											span.label-text 
 								td #{i + 1}
 								td(class=`td${0}`) #{tasks[i].creatorName}
@@ -136,11 +136,54 @@ block specific-js
 			$('#taskName').val(getTableCellData(taskID, 8))
 			$('#taskContent').val(getTableCellData(taskID, '-textarea'))
 
+			$('#task-dialog').attr('data-task-id', taskID)
+			$('#task-dialog').attr('data-is-create-dialog', false)
 			$('#task-dialog').modal()
 		})
 
+		// 创建任务
 		$('#btn-create-task').click(function(){
+			$('#task-dialog').attr('data-task-id', null)
+			$('#task-dialog').attr('data-is-create-dialog', true)
 			$('#task-dialog').modal()
+		})
+
+		// 删除选中的任务
+		$('#btn-delete-tasks').click(function(){
+			let ids = []
+			$(".cb-task-item:checked").each(function(index){
+				ids.push($(this).attr('data-id'))				
+			})
+
+			if(ids.length <= 0){
+				return
+			}
+
+			//- 从后台删除
+			$.ajax({
+				url: "/delete-tasks/",
+				type: "delete",
+				data: JSON.stringify(ids),
+				dataType: "json",
+				success: function(res){
+					if(res.succeed) {
+						// 删除界面上的日志记录
+						for(let i = 0; i < ids.length; ++i) {
+							$('#' + ids[i]).remove()
+						}
+
+						swal("任务删除", "成功删除" + ids.length + "条任务！", "info")
+						window.location.reload()
+					} else {
+						swal("任务删除", "任务删除失败！ 原因：" + res.error, "error")
+					}
+
+				},
+
+				error: function(res){
+					swal("任务删除", "任务删除失败！ 原因：" + res.error, "error")
+				}
+			})
 		})
 
 		
@@ -151,6 +194,7 @@ block specific-js
 
 		function getTask() {
 			let task = {
+				id: $('#task-dialog').attr('data-task-id'),
 				type: $('#taskType').val(),
 				model: $('#model').val(),
 				beginTime: $('#beginTime').val(),
@@ -192,9 +236,12 @@ block specific-js
 				return;
 			}
 
+			let isCreateTask = $('#task-dialog').attr('data-is-create-dialog')
+			let url = isCreateTask == "true" ? 'create-task' : 'update-task'
+
 			//- 向后台发送更新数据请求
 			$.ajax({
-				url: "/create-task/",
+				url: "/" + url + "/",
 				type: "post",
 				data: JSON.stringify(task),
 				dataType: "json",
@@ -218,46 +265,10 @@ block specific-js
 		$('#cb-select-all').click(function(){
 
 			var allChecked = this.checked
-			$(".cb-worklog-item").each(function(){
+			$(".cb-task-item").each(function(){
 				this.checked = allChecked
 			})
 		})
 
-		//- 删除选中的日志
-		$('#btn-delete-worklogs').click(function(){
-			let ids = []
-			$(".cb-worklog-item:checked").each(function(index){
-				ids.push($(this).attr('data-id'))				
-			})
-
-			if(ids.length <= 0){
-				return
-			}
-
-			//- 从后台删除
-			$.ajax({
-				url: "/delete-worklogs/",
-				type: "delete",
-				data: JSON.stringify(ids),
-				dataType: "json",
-				success: function(res){
-					if(res.succeed) {
-						// 删除界面上的日志记录
-						for(let i = 0; i < ids.length; ++i) {
-							$('#' + ids[i]).remove()
-						}
-
-						swal("日志删除", "成功删除" + ids.length + "条日志！", "info")
-					} else {
-						swal("日志删除", "日志删除失败！ 原因：" + res.error, "error")
-					}
-
-				},
-
-				error: function(res){
-					swal("日志删除", "日志删除失败！ 原因：" + res.error, "error")
-				}
-			})
-		})
 
 		

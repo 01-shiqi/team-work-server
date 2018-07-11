@@ -11,54 +11,54 @@ class Task extends Base {
     constructor() {
         super()
 
-        this.createTask = this.createTask.bind(this)
         this.manageTasks = this.manageTasks.bind(this)
+        this.createTask = this.createTask.bind(this)
+        this.updateTask = this.updateTask.bind(this)
+        this.deleteTasks = this.deleteTasks.bind(this)
         this.getMyTasks = this.getMyTasks.bind(this)
         this.getTaskList = this.getTaskList.bind(this)
         this.commitWorklog = this.commitWorklog.bind(this)
-        this.updateWorklog = this.updateWorklog.bind(this)
-        this.deleteWorklogs = this.deleteWorklogs.bind(this)
         this.loadBasicInfo = this.loadBasicInfo.bind(this)
         this.loadAllBasicInfos = this.loadAllBasicInfos.bind(this)
     }
 
-   // 创建任务
-   async createTask(req, res, next) {
+    // 创建任务
+    async createTask(req, res, next) {
 
-    try {
-        let bodyData = await this.extractStringData(req)
-        let task = JSON.parse(bodyData)
-        const id = this.uuid()
-        const userID = this.getUserID(req)          
-        var sqlSource = []
-        sqlSource.push(id)
-        sqlSource.push(task.type)
-        sqlSource.push(task.model)
-        sqlSource.push(task.beginTime)
-        sqlSource.push(task.endTime)
-        sqlSource.push(task.personHours)
-        sqlSource.push(task.executor)
-        sqlSource.push(task.name)
-        sqlSource.push(task.content)
-        sqlSource.push('已创建')
+        try {
+            let bodyData = await this.extractStringData(req)
+            let task = JSON.parse(bodyData)
+            const id = this.uuid()
+            const userID = this.getUserID(req)
+            var sqlSource = []
+            sqlSource.push(id)
+            sqlSource.push(task.type)
+            sqlSource.push(task.model)
+            sqlSource.push(task.beginTime)
+            sqlSource.push(task.endTime)
+            sqlSource.push(task.personHours)
+            sqlSource.push(task.executor)
+            sqlSource.push(task.name)
+            sqlSource.push(task.content)
+            sqlSource.push('已创建')
 
-        var now = moment().format('YYYY-MM-DD hh:mm:ss')
-        sqlSource.push(now)
-        sqlSource.push(userID)
-        sqlSource.push(now)
-        sqlSource.push(userID)
+            var now = moment().format('YYYY-MM-DD hh:mm:ss')
+            sqlSource.push(now)
+            sqlSource.push(userID)
+            sqlSource.push(now)
+            sqlSource.push(userID)
 
-        var sql = 'insert into tw_task ' + 
-                  'values(?,?,?,?, ?,?,?,?, ?,?,?,?, ?,?)'
+            var sql = 'insert into tw_task ' +
+                'values(?,?,?,?, ?,?,?,?, ?,?,?,?, ?,?)'
 
-        let succeed = await this.executeSql(sql, sqlSource)
-        this.sendSucceed(res)
+            let succeed = await this.executeSql(sql, sqlSource)
+            this.sendSucceed(res)
+        }
+        catch (error) {
+            logger.error(error)
+            this.sendFailed(res, error.message)
+        }
     }
-    catch (error) {
-        logger.error(error)
-        this.sendFailed(res, error.message)
-    }
-}
 
     async writeWorklog(req, res, next) {
         let basicInfos = await this.loadAllBasicInfos()
@@ -71,7 +71,7 @@ class Task extends Base {
      */
     async loadBasicInfo(tableName) {
         try {
-            var sql = 'select `name` from ' + tableName +  ' order by `order`'
+            var sql = 'select `name` from ' + tableName + ' order by `order`'
             var basicInfos = await this.queryArray(sql)
             return basicInfos
         }
@@ -113,9 +113,9 @@ class Task extends Base {
     async manageTasks(req, res, next) {
         await this.getTaskList(req, res, next, true)
     }
-  
+
     // 获取我的日志列表
-    async getMyTasks(req, res, next) {  
+    async getMyTasks(req, res, next) {
         await this.getTaskList(req, res, next, false)
     }
 
@@ -130,10 +130,10 @@ class Task extends Base {
 
             let whereClause = ''
             const userID = this.getUserID(req)
-            if(userID && !allusers){
+            if (userID && !allusers) {
                 whereClause += this.genStrCondition('user_id', userID);
             }
-            if(whereClause != '') {
+            if (whereClause != '') {
                 whereClause = ' where ' + whereClause
             }
 
@@ -146,16 +146,16 @@ class Task extends Base {
 
             let sql = 'select tw_task.id, type, name, content, state, model, begin_time as beginTime, end_time as endTime, person_hours as personHours '
             sql += ', b.true_name as executorName, b.id as executorID '
-            if(allusers) {
+            if (allusers) {
                 sql += ', c.true_name as creatorName '
-            } 
+            }
 
             sql += ' from tw_task left join tw_user b on (tw_task.executor_id = b.id) '
-            if(allusers) {
+            if (allusers) {
                 sql += ' left join tw_user c on (tw_task.created_by = c.id) '
             }
 
-            sql += whereClause 
+            sql += whereClause
                 + ' order by created_at desc '
                 + ' limit ' + startIndex + ',' + countPerPage
 
@@ -164,7 +164,7 @@ class Task extends Base {
             resultData.pageCount = pageCount
             resultData.pageIndex = pageIndex
             let viewName = allusers ? 'manage-tasks' : 'my-tasks'
-            res.render(viewName,  this.appendUserInfo(req, resultData))
+            res.render(viewName, this.appendUserInfo(req, resultData))
         }
         catch (error) {
             logger.error(error)
@@ -179,7 +179,7 @@ class Task extends Base {
             let bodyData = await this.extractStringData(req)
             let worklog = JSON.parse(bodyData)
             const id = this.uuid()
-            const userID = this.getUserID(req)          
+            const userID = this.getUserID(req)
             var sqlSource = []
             sqlSource.push(id)
             sqlSource.push(userID)
@@ -196,8 +196,8 @@ class Task extends Base {
             sqlSource.push(now)
             sqlSource.push(now)
 
-            var sql = 'insert into tw_worklog (id, user_id, work_date, work_begin_time, work_time_length, work_type, model, work_place, work_object, work_content, created_at, updated_at) ' + 
-                      'values(?,?,?,?,?,?,?,?,?,?,?,?)'
+            var sql = 'insert into tw_worklog (id, user_id, work_date, work_begin_time, work_time_length, work_type, model, work_place, work_object, work_content, created_at, updated_at) ' +
+                'values(?,?,?,?,?,?,?,?,?,?,?,?)'
 
             let succeed = await this.executeSql(sql, sqlSource)
             this.sendSucceed(res)
@@ -208,28 +208,32 @@ class Task extends Base {
         }
     }
 
-    // 修改日志
-    async updateWorklog(req, res, next) {
+    // 修改任务
+    async updateTask(req, res, next) {
 
         try {
             let bodyData = await this.extractStringData(req)
-            let worklogItems = JSON.parse(bodyData)
-            
-            let worklogID = worklogItems[worklogItems.length - 1]
+            let task = JSON.parse(bodyData)
+            const id = this.uuid()
+            const userID = this.getUserID(req)
+            var sqlSource = []
+            sqlSource.push(task.type)
+            sqlSource.push(task.model)
+            sqlSource.push(task.beginTime)
+            sqlSource.push(task.endTime)
+            sqlSource.push(task.personHours)
+            sqlSource.push(task.executor)
+            sqlSource.push(task.name)
+            sqlSource.push(task.content)
 
-            let sql = 'update tw_worklog set work_date=? , work_begin_time=?, work_time_length=?, work_type=?, model=?, work_place=?, work_object=?, work_content=?, updated_at=? where ' 
-                    + this.genStrCondition('id', worklogID)
+            var now = moment().format('YYYY-MM-DD hh:mm:ss')
+            sqlSource.push(now)
+            sqlSource.push(userID)
 
-            // 最后一个参数worklogID不添加至sqlData中
-            let sqlData = []
-            for(var i = 0; i < worklogItems.length - 1; ++i){
-                sqlData.push(worklogItems[i])
-            }
-            let now = moment().format('YYYY-MM-DD hh:mm:ss')
-            sqlData.push(now)
-            sqlData.push(worklogID)
+            let sql = 'update tw_task set type=? , model=?, begin_time=?, end_time=?, person_hours=?, executor_id=?, name=?, content=?, updated_at=?, updated_by=? where '
+                + this.genStrCondition('id', task.id)
 
-            let succeed = await this.executeSql(sql, sqlData);
+            let succeed = await this.executeSql(sql, sqlSource);
             this.sendSucceed(res)
         }
         catch (error) {
@@ -238,22 +242,22 @@ class Task extends Base {
         }
     }
 
-    // 删除日志
-    async deleteWorklogs(req, res, next) {
+    // 删除任务
+    async deleteTasks(req, res, next) {
         try {
             let bodyData = await this.extractStringData(req)
             let ids = JSON.parse(bodyData)
 
             let deletingIds = ''
-            for(let i = 0; i < ids.length; ++i) {
+            for (let i = 0; i < ids.length; ++i) {
                 let deletingId = '\'' + ids[i] + '\''
                 deletingIds += deletingId
-                if(i < ids.length - 1) {
+                if (i < ids.length - 1) {
                     deletingIds += ','
                 }
             }
 
-            let sql = 'delete from tw_worklog where id in ( ' + deletingIds + ' )';
+            let sql = 'delete from tw_task where id in ( ' + deletingIds + ' )';
 
             let succeed = await this.executeSql(sql);
             this.sendSucceed(res)
