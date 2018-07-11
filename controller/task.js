@@ -14,6 +14,7 @@ class Task extends Base {
         this.manageTasks = this.manageTasks.bind(this)
         this.createTask = this.createTask.bind(this)
         this.updateTask = this.updateTask.bind(this)
+        this.verifyTask = this.verifyTask.bind(this)
         this.deleteTasks = this.deleteTasks.bind(this)
         this.getMyTasks = this.getMyTasks.bind(this)
         this.getTaskList = this.getTaskList.bind(this)
@@ -231,6 +232,37 @@ class Task extends Base {
             sqlSource.push(userID)
 
             let sql = 'update tw_task set type=? , model=?, begin_time=?, end_time=?, person_hours=?, executor_id=?, name=?, content=?, updated_at=?, updated_by=? where '
+                + this.genStrCondition('id', task.id)
+
+            let succeed = await this.executeSql(sql, sqlSource);
+            this.sendSucceed(res)
+        }
+        catch (error) {
+            logger.error(error)
+            this.sendFailed(res, error.message)
+        }
+    }
+
+    
+    /**
+     * 审核任务
+     */
+    async verifyTask(req, res, next) {
+
+        try {
+            let bodyData = await this.extractStringData(req)
+            let task = JSON.parse(bodyData)
+            const id = this.uuid()
+            const userID = this.getUserID(req)
+            var sqlSource = []
+            sqlSource.push(task.executor)
+            sqlSource.push('已下发')
+
+            var now = moment().format('YYYY-MM-DD hh:mm:ss')
+            sqlSource.push(now)
+            sqlSource.push(userID)
+
+            let sql = 'update tw_task set executor_id=?, state=?, verified_at=?, verified_by=? where '
                 + this.genStrCondition('id', task.id)
 
             let succeed = await this.executeSql(sql, sqlSource);

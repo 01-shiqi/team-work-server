@@ -121,11 +121,8 @@ block specific-js
 			return $("#"+ trID + " .td" + tdIndex).attr('data-id')
 		}
 
-		// 编辑任务
-		$('.btn-edit-task').click(function(){
-
-			let taskID = $(this).val()
-
+		// 设置任务对话框内容
+		function setEditTaskDialogContent(taskID) {
 			setSelect2Value('#taskType', getTableCellData(taskID, 1))
 			setSelect2Value('#model', getTableCellData(taskID, 2))
 			$('#beginTime').val(getTableCellData(taskID, 3))
@@ -136,7 +133,21 @@ block specific-js
 			$('#taskContent').val(getTableCellData(taskID, '-textarea'))
 
 			$('#task-dialog').attr('data-task-id', taskID)
-			$('#task-dialog').attr('data-is-create-dialog', false)
+		}
+
+		// 编辑任务
+		$('.btn-edit-task').click(function(){
+			let taskID = $(this).val()
+			setEditTaskDialogContent(taskID)
+			$('#task-dialog').attr('data-edit-task-mode', 'update-task')
+			$('#task-dialog').modal()
+		})
+
+		// 审核任务
+		$('.btn-verify-task').click(function(){
+			let taskID = $(this).val()
+			setEditTaskDialogContent(taskID)
+			$('#task-dialog').attr('data-edit-task-mode', 'verify-task')
 			$('#task-dialog').modal()
 		})
 
@@ -150,7 +161,7 @@ block specific-js
 			$('#taskName').val('')
 			$('#taskContent').val('')
 			$('#task-dialog').attr('data-task-id', null)
-			$('#task-dialog').attr('data-is-create-dialog', true)
+			$('#task-dialog').attr('data-edit-task-mode', 'create-task')
 			$('#task-dialog').modal()
 		})
 
@@ -242,12 +253,11 @@ block specific-js
 				return;
 			}
 
-			let isCreateTask = $('#task-dialog').attr('data-is-create-dialog')
-			let url = isCreateTask == "true" ? 'create-task' : 'update-task'
+			let editTaskMode = $('#task-dialog').attr('data-edit-task-mode')
 
 			//- 向后台发送更新数据请求
 			$.ajax({
-				url: "/" + url + "/",
+				url: "/" + editTaskMode + "/",
 				type: "post",
 				data: JSON.stringify(task),
 				dataType: "json",

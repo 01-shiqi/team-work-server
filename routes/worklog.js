@@ -22,6 +22,7 @@ router.get('/manage-worklogs', Check.checkAdmin, Worklog.manageWorklogs)
 router.get('/manage-tasks', Check.checkAdmin, Task.manageTasks)
 router.post('/create-task', Check.checkAdmin, Task.createTask)
 router.post('/update-task', Check.checkAdmin, Task.updateTask)
+router.post('/verify-task', Check.checkAdmin, Task.verifyTask)
 router.delete('/delete-tasks', Check.checkAdmin, Task.deleteTasks)
 
 
