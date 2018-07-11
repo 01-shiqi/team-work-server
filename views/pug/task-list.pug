@@ -94,7 +94,7 @@ block content
 									.animated-checkbox
 										label
 											.btn-group
-												button.btn.btn-primary.btn-sm.btn-check-task(type='button', value=`${tasks[i].id}`)
+												button.btn.btn-primary.btn-sm.btn-verify-task(type='button', value=`${tasks[i].id}`)
 													i.fa.fa-hand-o-right
 												button.btn.btn-primary.btn-sm.btn-edit-task(type='button', value=`${tasks[i].id}`)
 													i.fa.fa-edit
@@ -131,8 +131,7 @@ block specific-js
 			$('#beginTime').val(getTableCellData(taskID, 3))
 			$('#endTime').val(getTableCellData(taskID, 4))
 			setSelect2Value('#personHours', getTableCellData(taskID, 5))
-			let executorID = getTableCellID(taskID, 7)
-			setSelect2Value('#executorName', executorID)
+			$('#executor').val(getTableCellID(taskID, 7))
 			$('#taskName').val(getTableCellData(taskID, 8))
 			$('#taskContent').val(getTableCellData(taskID, '-textarea'))
 
@@ -143,6 +142,13 @@ block specific-js
 
 		// 创建任务
 		$('#btn-create-task').click(function(){
+			// 设置日期的当前时间和截至时间
+			var now = new Date()
+			$('#beginTime').datepicker('setDate', now)
+			$('#endTime').datepicker('setDate', now)
+
+			$('#taskName').val('')
+			$('#taskContent').val('')
 			$('#task-dialog').attr('data-task-id', null)
 			$('#task-dialog').attr('data-is-create-dialog', true)
 			$('#task-dialog').modal()
@@ -200,7 +206,7 @@ block specific-js
 				beginTime: $('#beginTime').val(),
 				endTime: $('#endTime').val(),
 				personHours: $('#personHours').val(), 
-				executor: $('#executorName').val(), 
+				executor: $('#executor').val(), 
 				name: $('#taskName').val(), 
 				content: $('#taskContent').val(),
 			}
