@@ -72,7 +72,13 @@ block content
 											i.fa.fa-trash-o
 					tbody
 						- for (var i = 0; i < tasks.length; i++)
-							tr.table-info(id=`${tasks[i].id}`)
+							if tasks[i].state == '已创建'
+								- var trClass = 'table-info'
+							else if tasks[i].state == '已下发'
+								- var trClass = 'table-warning'
+							else
+								- var trClass = 'table-error'
+							tr(class=trClass, id=`${tasks[i].id}`)
 								td
 									.animated-checkbox
 										label
