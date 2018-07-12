@@ -46,6 +46,9 @@ class Base {
         this.getID = this.getID.bind(this)
 
         this.appendUserInfo = this.appendUserInfo.bind(this)
+
+        this.isSuperAdmin = this.isSuperAdmin.bind(this)
+        this.isAdmin = this.isAdmin.bind(this)
     }
 
 
@@ -81,7 +84,7 @@ class Base {
      * @param {*} req 
      */
     getUserID(req) {
-        return req.session.user_id;
+        return req.session.user_id
     }
 
     /**
@@ -89,7 +92,7 @@ class Base {
      * @param {*} req 
      */
     getID(req) {
-        return req.params.id;
+        return req.params.id
     }
 
     /**
@@ -101,7 +104,25 @@ class Base {
     }
 
     extractParams(req) {
-        return req.params;
+        return req.params
+    }
+
+    /**
+     * 是否为管理员
+     * @param {} req 
+     */
+    isAdmin(req) {
+        let role = req.session.role
+        return role < 10
+    }
+
+    /**
+     * 是否为超级管理员
+     * @param {*} req 
+     */
+    isSuperAdmin(req) {
+        let role = req.session.role
+        return role == 0
     }
 
     /**

@@ -64,7 +64,7 @@ block content
 												span.label-text 
 									td #{i + 1}
 									td(class=`td${0}`) #{worklogs[i].workDate}
-									if role == 0
+									if role < 10
 										td(class=`td${99}`) #{worklogs[i].trueName}
 									td(class=`td${1}`) #{worklogs[i].workBeginTime}
 									td(class=`td${2}`) #{worklogs[i].workTimeLength.toFixed(1)}

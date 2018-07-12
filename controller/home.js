@@ -14,7 +14,7 @@ class Home extends Base {
     }
 
     async getIndex(req, res, next) {
-        if(req.session.role == 0) {
+        if(this.isAdmin(req)) {
             res.redirect('/manage-worklogs')
         } else {
             res.redirect('/write-worklog')

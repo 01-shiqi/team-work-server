@@ -49,7 +49,7 @@ class Task extends Base {
             sqlSource.push(now)
             sqlSource.push(userID)
 
-            var sql = 'insert into tw_task ' +
+            var sql = 'insert into tw_task (id, type, model, begin_time, end_time, person_hours, executor_id, name, content, state, created_at, created_by, updated_at, updated_by)' +
                 'values(?,?,?,?, ?,?,?,?, ?,?,?,?, ?,?)'
 
             let succeed = await this.executeSql(sql, sqlSource)
