@@ -61,6 +61,7 @@ block content
 							th 开始时间
 							th 完成时间
 							th 人时
+							th 进度
 							th 当前状态
 							th 执行人
 							th 任务名称
@@ -73,11 +74,25 @@ block content
 					tbody
 						- for (var i = 0; i < tasks.length; i++)
 							if tasks[i].state == '已创建'
-								- var trClass = 'table-warning'
+								- var trClass = 'table-xxxx'
 							else if tasks[i].state == '已下发'
-								- var trClass = 'table-info'
+								- var trClass = 'table-success'
 							else
 								- var trClass = 'table-error'
+							- var now = new Date()
+							- var endTime = tasks[i].endTime
+							- var endDate = new Date(endTime.replace(/\-/g, "\/"))
+							if tasks[i].state != '已创建'
+								if tasks[i].progress == 100 && now > endDate
+									- var trClass = 'table-warning'
+									- tasks[i].state = '超期完成'
+								else if now > endDate
+									- var trClass = 'table-danger'
+									- tasks[i].state = '已超期'
+								else if tasks[i].progress == 100
+									- var trClass = 'table-info'
+									- tasks[i].state = '已完成'
+
 							tr(class=trClass, id=`${tasks[i].id}`)
 								td
 									.animated-checkbox
@@ -91,11 +106,12 @@ block content
 								td(class=`td${3}`) #{tasks[i].beginTime}
 								td(class=`td${4}`) #{tasks[i].endTime}
 								td(class=`td${5}`) #{tasks[i].personHours}
-								td(class=`td${6}`) #{tasks[i].state}
-								td(class=`td${7}`, data-id=`${tasks[i].executorID}`) #{tasks[i].executorName}
-								td(class=`td${8}`)
+								td(class=`td${6}`) #{tasks[i].progress} %
+								td(class=`td${7}`) #{tasks[i].state}
+								td(class=`td${8}`, data-id=`${tasks[i].executorID}`) #{tasks[i].executorName}
+								td(class=`td${9}`)
 									.td-textarea.td-task-name #{tasks[i].name}
-								td(class=`td${9}`) 
+								td(class=`td${10}`) 
 									.td-textarea.td-task-content #{tasks[i].content}
 								td
 									.animated-checkbox
@@ -136,13 +152,32 @@ block specific-js
 			$('#beginTime').val(getTableCellData(taskID, 3))
 			$('#endTime').val(getTableCellData(taskID, 4))
 			setSelect2Value('#personHours', getTableCellData(taskID, 5))
-			$('#executor').val(getTableCellID(taskID, 7))
+			$('#executor').val(getTableCellID(taskID, 8))
 			$('#taskName').val(getTableCellData(taskID, '-task-name'))
 			$('#taskContent').val(getTableCellData(taskID, '-task-content'))
 
 			$('#task-dialog').attr('data-task-id', taskID)
-			$('#task-dialog').attr('data-task-state', getTableCellData(taskID, 6))
+			$('#task-dialog').attr('data-task-state', getTableCellData(taskID, 7))
 		}
+		
+		// 根据对话框中的内容生成task对象
+		function getTask() {
+			let task = {
+				id: $('#task-dialog').attr('data-task-id'),
+				type: $('#taskType').val(),
+				model: $('#model').val(),
+				beginTime: $('#beginTime').val(),
+				endTime: $('#endTime').val(),
+				personHours: $('#personHours').val(), 
+				state: $('#task-dialog').attr('data-task-state'),  
+				executor: $('#executor').val(), 
+				name: $('#taskName').val(), 
+				content: $('#taskContent').val(),
+			}
+			
+			return task
+		}
+
 
 		// 修改任务
 		$('.btn-edit-task').click(function(){
@@ -221,23 +256,6 @@ block specific-js
 		var now = new Date()
 		$('#beginTime').datepicker('setDate', now)
 		$('#endTime').datepicker('setDate', now)
-
-		function getTask() {
-			let task = {
-				id: $('#task-dialog').attr('data-task-id'),
-				type: $('#taskType').val(),
-				model: $('#model').val(),
-				beginTime: $('#beginTime').val(),
-				endTime: $('#endTime').val(),
-				personHours: $('#personHours').val(), 
-				state: $('#task-dialog').attr('data-task-state'),  
-				executor: $('#executor').val(), 
-				name: $('#taskName').val(), 
-				content: $('#taskContent').val(),
-			}
-			
-			return task
-		}
 
 		$(".input-no-empty").bind("input propertychange change",function(event) {
 			if($(this).val() != '') {

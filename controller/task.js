@@ -18,7 +18,6 @@ class Task extends Base {
         this.deleteTasks = this.deleteTasks.bind(this)
         this.getMyTasks = this.getMyTasks.bind(this)
         this.getTaskList = this.getTaskList.bind(this)
-        this.commitWorklog = this.commitWorklog.bind(this)
         this.loadBasicInfo = this.loadBasicInfo.bind(this)
         this.loadAllBasicInfos = this.loadAllBasicInfos.bind(this)
     }
@@ -110,17 +109,17 @@ class Task extends Base {
         return basicInfos
     }
 
-    // 获取管理日志列表
+    // 获取任务列表
     async manageTasks(req, res, next) {
         await this.getTaskList(req, res, next, true)
     }
 
-    // 获取我的日志列表
+    // 获取我的任务列表
     async getMyTasks(req, res, next) {
         await this.getTaskList(req, res, next, false)
     }
 
-    // 获取日志列表
+    // 获取任务列表
     async getTaskList(req, res, next, allusers) {
 
         try {
@@ -145,7 +144,7 @@ class Task extends Base {
 
             let pageCount = Math.ceil(totalCount / countPerPage)
 
-            let sql = 'select tw_task.id, type, name, content, state, model, begin_time as beginTime, end_time as endTime, person_hours as personHours '
+            let sql = 'select tw_task.id, type, name, content, state, model, begin_time as beginTime, end_time as endTime, person_hours as personHours, progress '
             sql += ', b.true_name as executorName, b.id as executorID '
             if (allusers) {
                 sql += ', c.true_name as creatorName '
@@ -166,42 +165,6 @@ class Task extends Base {
             resultData.pageIndex = pageIndex
             let viewName = allusers ? 'manage-tasks' : 'my-tasks'
             res.render(viewName, this.appendUserInfo(req, resultData))
-        }
-        catch (error) {
-            logger.error(error)
-            this.sendFailed(res, error.message)
-        }
-    }
-
-    // 新增日志
-    async commitWorklog(req, res, next) {
-
-        try {
-            let bodyData = await this.extractStringData(req)
-            let worklog = JSON.parse(bodyData)
-            const id = this.uuid()
-            const userID = this.getUserID(req)
-            var sqlSource = []
-            sqlSource.push(id)
-            sqlSource.push(userID)
-            sqlSource.push(worklog.workDate)
-            sqlSource.push(worklog.workBeginTime)
-            sqlSource.push(worklog.workTimeLength)
-            sqlSource.push(worklog.workType)
-            sqlSource.push(worklog.model)
-            sqlSource.push(worklog.workPlace)
-            sqlSource.push(worklog.workObject)
-            sqlSource.push(worklog.workContent)
-
-            var now = moment().format('YYYY-MM-DD hh:mm:ss')
-            sqlSource.push(now)
-            sqlSource.push(now)
-
-            var sql = 'insert into tw_worklog (id, user_id, work_date, work_begin_time, work_time_length, work_type, model, work_place, work_object, work_content, created_at, updated_at) ' +
-                'values(?,?,?,?,?,?,?,?,?,?,?,?)'
-
-            let succeed = await this.executeSql(sql, sqlSource)
-            this.sendSucceed(res)
         }
         catch (error) {
             logger.error(error)

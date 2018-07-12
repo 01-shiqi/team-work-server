@@ -15242,7 +15242,7 @@ be a descendant of the grid when it is being dragged.
 }
 
 .td-task-content {
-  width: 200px;
+  width: 150px;
 }
 
 #btn-delete-tasks {
