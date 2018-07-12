@@ -76,7 +76,7 @@ block content
 							if tasks[i].state == '已创建'
 								- var trClass = 'table-xxxx'
 							else if tasks[i].state == '已下发'
-								- var trClass = 'table-success'
+								- var trClass = 'table-info'
 							else
 								- var trClass = 'table-error'
 							- var now = new Date()
@@ -90,7 +90,7 @@ block content
 									- var trClass = 'table-danger'
 									- tasks[i].state = '已超期'
 								else if tasks[i].progress == 100
-									- var trClass = 'table-info'
+									- var trClass = 'table-success'
 									- tasks[i].state = '已完成'
 
 							tr(class=trClass, id=`${tasks[i].id}`)
