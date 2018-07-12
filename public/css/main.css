@@ -15237,7 +15237,11 @@ be a descendant of the grid when it is being dragged.
   white-space: nowrap;
 }
 
-#td-task-content {
+.td-task-name {
+  width: 100px;
+}
+
+.td-task-content {
   width: 200px;
 }
 

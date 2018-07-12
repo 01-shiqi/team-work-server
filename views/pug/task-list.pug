@@ -93,9 +93,10 @@ block content
 								td(class=`td${5}`) #{tasks[i].personHours}
 								td(class=`td${6}`) #{tasks[i].state}
 								td(class=`td${7}`, data-id=`${tasks[i].executorID}`) #{tasks[i].executorName}
-								td(class=`td${8}`) #{tasks[i].name}
+								td(class=`td${8}`)
+									.td-textarea.td-task-name #{tasks[i].name}
 								td(class=`td${9}`) 
-									.td-textarea#td-task-content #{tasks[i].content}
+									.td-textarea.td-task-content #{tasks[i].content}
 								td
 									.animated-checkbox
 										label
@@ -136,10 +137,11 @@ block specific-js
 			$('#endTime').val(getTableCellData(taskID, 4))
 			setSelect2Value('#personHours', getTableCellData(taskID, 5))
 			$('#executor').val(getTableCellID(taskID, 7))
-			$('#taskName').val(getTableCellData(taskID, 8))
-			$('#taskContent').val(getTableCellData(taskID, '-textarea'))
+			$('#taskName').val(getTableCellData(taskID, '-task-name'))
+			$('#taskContent').val(getTableCellData(taskID, '-task-content'))
 
 			$('#task-dialog').attr('data-task-id', taskID)
+			$('#task-dialog').attr('data-task-state', getTableCellData(taskID, 6))
 		}
 
 		// 修改任务
@@ -170,6 +172,7 @@ block specific-js
 			$('#taskName').val('')
 			$('#taskContent').val('')
 			$('#task-dialog').attr('data-task-id', null)
+			$('#task-dialog').attr('data-task-state', null)
 			$('#task-dialog').attr('data-edit-task-mode', 'create-task')
 			$('#task-dialog-title').html('创建任务')
 			$('#task-dialog').modal()
@@ -227,6 +230,7 @@ block specific-js
 				beginTime: $('#beginTime').val(),
 				endTime: $('#endTime').val(),
 				personHours: $('#personHours').val(), 
+				state: $('#task-dialog').attr('data-task-state'),  
 				executor: $('#executor').val(), 
 				name: $('#taskName').val(), 
 				content: $('#taskContent').val(),

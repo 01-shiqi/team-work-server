@@ -74,7 +74,11 @@
     white-space: nowrap;
 }
 
-#td-task-content {
+.td-task-name {
+    width: 100px;
+}
+
+.td-task-content {
     width: 200px;
 }
 
