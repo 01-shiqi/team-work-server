@@ -54,7 +54,7 @@ class Check{
 			res.redirect('/login')
 			return
 
-		} else if(req.session.role != 0) {
+		} else if(req.session.role >= 10) {
 			res.send({ result: '权限不足' })
 			return
 		}

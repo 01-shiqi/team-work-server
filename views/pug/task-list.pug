@@ -28,7 +28,7 @@ block content
 		.modal-dialog(role='dialog', style="width:1000px;max-width:1000px;top:50px;")
 			.modal-content
 				.modal-header
-					h5.modal-title 创建任务
+					h5.modal-title#task-dialog-title 创建任务
 					button.close(type='button', data-dismiss='modal', aria-label='Close')
 						span(aria-hidden='true') ×
 				.modal-body
@@ -100,8 +100,9 @@ block content
 									.animated-checkbox
 										label
 											.btn-group
-												button.btn.btn-primary.btn-sm.btn-verify-task(type='button', value=`${tasks[i].id}`)
-													i.fa.fa-hand-o-right
+												if role == 0
+													button.btn.btn-primary.btn-sm.btn-verify-task(type='button', value=`${tasks[i].id}`)
+														i.fa.fa-hand-o-right
 												button.btn.btn-primary.btn-sm.btn-edit-task(type='button', value=`${tasks[i].id}`)
 													i.fa.fa-edit
 
@@ -141,11 +142,12 @@ block specific-js
 			$('#task-dialog').attr('data-task-id', taskID)
 		}
 
-		// 编辑任务
+		// 修改任务
 		$('.btn-edit-task').click(function(){
 			let taskID = $(this).val()
 			setEditTaskDialogContent(taskID)
 			$('#task-dialog').attr('data-edit-task-mode', 'update-task')
+			$('#task-dialog-title').html('修改任务')
 			$('#task-dialog').modal()
 		})
 
@@ -154,6 +156,7 @@ block specific-js
 			let taskID = $(this).val()
 			setEditTaskDialogContent(taskID)
 			$('#task-dialog').attr('data-edit-task-mode', 'verify-task')
+			$('#task-dialog-title').html('审核任务')
 			$('#task-dialog').modal()
 		})
 
@@ -168,6 +171,7 @@ block specific-js
 			$('#taskContent').val('')
 			$('#task-dialog').attr('data-task-id', null)
 			$('#task-dialog').attr('data-edit-task-mode', 'create-task')
+			$('#task-dialog-title').html('创建任务')
 			$('#task-dialog').modal()
 		})
 
@@ -261,6 +265,8 @@ block specific-js
 
 			let editTaskMode = $('#task-dialog').attr('data-edit-task-mode')
 
+			let messageTitle = $('#task-dialog-title').html()
+
 			//- 向后台发送更新数据请求
 			$.ajax({
 				url: "/" + editTaskMode + "/",
@@ -273,12 +279,12 @@ block specific-js
 						$('#task-dialog').modal('hide')
 						window.location.reload()
 					} else {
-						swal("创建任务", "任务创建失败！ 原因：" + res.error, "error")
+						swal(messageTitle, messageTitle + "失败！ 原因：" + res.error, "error")
 					}
 				},
 
 				error: function(res){
-					swal("创建任务", "任务创建失败！ 原因：" + res.error, "error")
+					swal(messageTitle, messageTitle + "失败！ 原因：" + res.error, "error")
 				}
 			})
 		})

@@ -215,6 +215,11 @@ class Task extends Base {
         try {
             let bodyData = await this.extractStringData(req)
             let task = JSON.parse(bodyData)
+
+            if(task.state != '已创建' && !this.isSuperAdmin(req)) {
+                this.sendFailed(res, '任务已下发，无法修改')
+            }
+
             const id = this.uuid()
             const userID = this.getUserID(req)
             var sqlSource = []
