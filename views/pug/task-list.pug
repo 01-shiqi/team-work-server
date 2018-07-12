@@ -41,10 +41,33 @@ block content
 	.row
 		.col-md-12
 			.tile
-				p
-					a.btn.btn-primary.icon-btn#btn-create-task
-						i.fa.fa-plus
-						| 创建任务
+				.row
+					.col-lg-1
+						p
+							a.btn.btn-primary.icon-btn#btn-create-task
+								i.fa.fa-plus
+								| 创建任务
+					.col-lg-11
+						.bs-component(style='margin-left: 5px;')
+							.btn-group.btn-group-toggle(data-toggle="buttons")
+								label.btn.btn-primary.active
+									input#option1(type="radio" name="options" autocomplete="off" checked="")
+									|  所有
+								label.btn.btn-primary
+									input#option2(type="radio" name="options" autocomplete="off")
+									|  已创建
+								label.btn.btn-primary
+									input#option3(type="radio" name="options" autocomplete="off")
+									|  已下发
+								label.btn.btn-primary
+									input#option3(type="radio" name="options" autocomplete="off")
+									|  已完成
+								label.btn.btn-primary
+									input#option3(type="radio" name="options" autocomplete="off")
+									|  已超期
+								label.btn.btn-primary
+									input#option3(type="radio" name="options" autocomplete="off")
+									|  超期完成
 
 				table.table.table-hover
 					thead
