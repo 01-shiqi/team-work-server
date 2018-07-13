@@ -1,240 +1,333 @@
 extends layouts/_layout.pug
 
 block variables
-	- var activePage = 'basic-table'
-	- var activeGroup = 'tables'
+	- var activePage = 'my-tasks'
+	- var activeGroup = 'forms'
+	- var title = '我的任务'
+	- var icon = 'fa-bars'
 
 block title
-	title Basic Tables - Vali Admin
+	title Team Work
 
 block content
 	.app-title
 		div
 			h1
-				i.fa.fa-th-list
-				|  Basic Tables
-			p Basic bootstrap tables
+				i.fa(class=`${icon}`)
+				|  #{title}
 
 		ul.app-breadcrumb.breadcrumb
 			li.breadcrumb-item
 				i.fa.fa-home.fa-lg
 			li.breadcrumb-item
-				| Tables
-			li.breadcrumb-item.active
-				a(href="#") Simple Tables
+				| 任务
+			li.breadcrumb-item
+				a(href="#") #{title}
+
+	.modal.fade.editDialog#task-dialog(aria-hide="true")
+		.modal-dialog(role='dialog', style="width:1000px;max-width:1000px;top:50px;")
+			.modal-content
+				.modal-header
+					h5.modal-title#task-dialog-title 创建任务
+					button.close(type='button', data-dismiss='modal', aria-label='Close')
+						span(aria-hidden='true') ×
+				.modal-body
+					form.row
+						include ./components/_task-editor
+				.modal-footer
+					button.btn.btn-primary#btn-commit(type='button') 确定
+					button.btn.btn-secondary(type='button', data-dismiss='modal') 取消
 
 	.row
-		.col-md-6
+		.col-md-12
 			.tile
-				h3.tile-title Simple Table
-				table.table
-					thead
-						tr
-							th #
-							th First Name
-							th Last Name
-							th Username
-					tbody
-						tr
-							td 1
-							td Mark
-							td Otto
-							td @mdo
-						tr
-							td 2
-							td Jacob
-							td Thornton
-							td @fat
-						tr
-							td 3
-							td Larry
-							td the Bird
-							td @twitter
+				.row
+					.col-lg-11
+						.bs-component(style='margin-left: 5px;margin-bottom:10px;')
+							.btn-group.btn-group-toggle(data-toggle="buttons")
+								label.btn.btn-primary.active
+									input#option1(type="radio" name="options" autocomplete="off" checked="")
+									|  所有
+								label.btn.btn-primary
+									input#option3(type="radio" name="options" autocomplete="off")
+									|  已下发
+								label.btn.btn-primary
+									input#option3(type="radio" name="options" autocomplete="off")
+									|  已超期
+								label.btn.btn-primary
+									input#option3(type="radio" name="options" autocomplete="off")
+									|  已完成
+								label.btn.btn-primary
+									input#option3(type="radio" name="options" autocomplete="off")
+									|  超期完成
 
-		.col-md-6
-			.tile
-				h3.tile-title Striped Table
-				table.table.table-striped
-					thead
-						tr
-							th #
-							th First Name
-							th Last Name
-							th Username
-					tbody
-						tr
-							td 1
-							td Mark
-							td Otto
-							td @mdo
-						tr
-							td 2
-							td Jacob
-							td Thornton
-							td @fat
-						tr
-							td 3
-							td Larry
-							td the Bird
-							td @twitter
-		.clearfix
-
-		.col-md-6
-			.tile
-				h3.tile-title Bordered Table
-				table.table.table-bordered
-					thead
-						tr
-							th #
-							th First Name
-							th Last Name
-							th Username
-					tbody
-						tr
-							td 1
-							td Mark
-							td Otto
-							td @mdo
-						tr
-							td 2
-							td Jacob
-							td Thornton
-							td @fat
-						tr
-							td 3
-							td Larry
-							td the Bird
-							td @twitter
-
-		.col-md-6
-			.tile
-				h3.tile-title Table Hover
 				table.table.table-hover
 					thead
 						tr
+							th
+								.animated-checkbox
+									label
+										input#cb-select-all(type="checkbox")
+										span.label-text 
 							th #
-							th First Name
-							th Last Name
-							th Username
+							th 任务类型
+							th 所属型号
+							th 开始时间
+							th 完成时间
+							th 进度
+							th 当前状态
+							th 任务名称
+							th 任务内容
+							th
+								.animated-checkbox
+									label
+										button.btn.btn-primary.btn-sm#btn-delete-tasks(type='button')
+											i.fa.fa-trash-o
 					tbody
-						tr
-							td 1
-							td Mark
-							td Otto
-							td @mdo
-						tr
-							td 2
-							td Jacob
-							td Thornton
-							td @fat
-						tr
-							td 3
-							td Larry
-							td the Bird
-							td @twitter
-		.clearfix
+						- for (var i = 0; i < tasks.length; i++)
+							if tasks[i].state == '已创建'
+								- var trClass = 'table-xxxx'
+							else if tasks[i].state == '已下发'
+								- var trClass = 'table-info'
+							else
+								- var trClass = 'table-error'
+							- var now = new Date()
+							- var endTime = tasks[i].endTime
+							- var endDate = new Date(endTime.replace(/\-/g, "\/"))
+							if tasks[i].state != '已创建'
+								if tasks[i].progress == 100 && now > endDate
+									- var trClass = 'table-warning'
+									- tasks[i].state = '超期完成'
+								else if now > endDate
+									- var trClass = 'table-danger'
+									- tasks[i].state = '已超期'
+								else if tasks[i].progress == 100
+									- var trClass = 'table-success'
+									- tasks[i].state = '已完成'
 
-		.col-md-6
-			.tile
-				h3.tile-title Condensed Table
-				table.table.table-sm
-					thead
-						tr
-							th #
-							th First Name
-							th Last Name
-							th Username
-					tbody
-						tr
-							td 1
-							td Mark
-							td Otto
-							td @mdo
-						tr
-							td 2
-							td Jacob
-							td Thornton
-							td @fat
-						tr
-							td 3
-							td Larry
-							td the Bird
-							td @twitter
-						tr
-							td 4
-							td Jacob
-							td Thornton
-							td @fat
-						tr
-							td 5
-							td Mark
-							td Otto
-							td @mdo
+							tr(class=trClass, id=`${tasks[i].id}`)
+								td
+									.animated-checkbox
+										label
+											input.cb-task-item(type="checkbox", data-id=`${tasks[i].id}`)
+											span.label-text 
+								td #{i + 1}
+								td(class=`td${1}`) #{tasks[i].type}
+								td(class=`td${2}`) #{tasks[i].model}
+								td(class=`td${3}`) #{tasks[i].beginTime}
+								td(class=`td${4}`) #{tasks[i].endTime}
+								td(class=`td${6}`) #{tasks[i].progress} %
+								td(class=`td${7}`) #{tasks[i].state}
+								td(class=`td${9}`)
+									.td-textarea.td-task-name #{tasks[i].name}
+								td(class=`td${10}`) 
+									.td-textarea.td-task-content #{tasks[i].content}
+								td
+									.animated-checkbox
+										label
+											.btn-group
+												if role == 0
+													button.btn.btn-primary.btn-sm.btn-verify-task(type='button', value=`${tasks[i].id}`)
+														i.fa.fa-hand-o-right
+												button.btn.btn-primary.btn-sm.btn-edit-task(type='button', value=`${tasks[i].id}`)
+													i.fa.fa-edit
 
-		.col-md-6
-			.tile
-				h3.tile-title Contextual Classes
-				table.table
-					thead
-						tr
-							th #
-							th First Name
-							th Last Name
-							th Username
-					tbody
-						tr.table-info
-							td 1
-							td Mark
-							td Otto
-							td @mdo
-						tr.table-success
-							td 2
-							td Jacob
-							td Thornton
-							td @fat
-						tr.table-danger
-							td 3
-							td Larry
-							td the Bird
-							td @twitter
-						tr.table-warning
-							td 4
-							td Jacob
-							td Thornton
-							td @fat
+				include ./components/_pagination						
 
-		.clearfix
+block specific-js
+	script(type='text/javascript', src="js/plugins/bootstrap-datepicker/js/bootstrap-datepicker.min.js")
+	script(type='text/javascript', src="js/plugins/select2.min.js")
+	script(type='text/javascript', src="js/plugins/sweetalert.min.js")
+	script(type='text/javascript', src="js/plugins/bootstrap-notify.min.js")
+	script(type='text/javascript', src="js/plugins/bootstrap-datepicker/js/bootstrap-datepicker.min.js")
+	script(type='text/javascript', src="js/plugins/bootstrap-datepicker/locales/bootstrap-datepicker.zh-CN.min.js", charset="UTF-8")
+	script(type='text/javascript', src="js/validate.js")
+	script(type="text/javascript").
 
-		.col-md-12
-			.tile
-				h3.tile-title Responsive Table
-				.table-responsive
-					table.table
-						thead
-							tr
-								th #
-								th First Name
-								th Last Name
-								th Username
-						tbody
-							tr
-								td 1
-								td Mark
-								td Otto
-								td @mdo
-							tr
-								td 2
-								td Jacob
-								td Thornton
-								td @fat
-							tr
-								td 3
-								td Larry
-								td the Bird
-								td @twitter
-							tr
-								td 4
-								td Jacob
-								td Thornton
-								td @fat
+		// 获取 表格单元格的内容
+		function getTableCellData(trID, tdIndex) {
+			return $("#"+ trID + " .td" + tdIndex).html()
+		}
 
+		// 获取 表格单元格的ID
+		function getTableCellID(trID, tdIndex) {
+			return $("#"+ trID + " .td" + tdIndex).attr('data-id')
+		}
+
+		// 设置任务对话框内容
+		function setEditTaskDialogContent(taskID) {
+			setSelect2Value('#taskType', getTableCellData(taskID, 1))
+			setSelect2Value('#model', getTableCellData(taskID, 2))
+			$('#beginTime').val(getTableCellData(taskID, 3))
+			$('#endTime').val(getTableCellData(taskID, 4))
+			setSelect2Value('#personHours', getTableCellData(taskID, 5))
+			$('#executor').val(getTableCellID(taskID, 8))
+			$('#taskName').val(getTableCellData(taskID, '-task-name'))
+			$('#taskContent').val(getTableCellData(taskID, '-task-content'))
+
+			$('#task-dialog').attr('data-task-id', taskID)
+			$('#task-dialog').attr('data-task-state', getTableCellData(taskID, 7))
+		}
+		
+		// 根据对话框中的内容生成task对象
+		function getTask() {
+			let task = {
+				id: $('#task-dialog').attr('data-task-id'),
+				type: $('#taskType').val(),
+				model: $('#model').val(),
+				beginTime: $('#beginTime').val(),
+				endTime: $('#endTime').val(),
+				personHours: $('#personHours').val(), 
+				state: $('#task-dialog').attr('data-task-state'),  
+				executor: $('#executor').val(), 
+				name: $('#taskName').val(), 
+				content: $('#taskContent').val(),
+			}
+			
+			return task
+		}
+
+
+		// 修改任务
+		$('.btn-edit-task').click(function(){
+			let taskID = $(this).val()
+			setEditTaskDialogContent(taskID)
+			$('#task-dialog').attr('data-edit-task-mode', 'update-task')
+			$('#task-dialog-title').html('修改任务')
+			$('#task-dialog').modal()
+		})
+
+		// 审核任务
+		$('.btn-verify-task').click(function(){
+			let taskID = $(this).val()
+			setEditTaskDialogContent(taskID)
+			$('#task-dialog').attr('data-edit-task-mode', 'verify-task')
+			$('#task-dialog-title').html('审核任务')
+			$('#task-dialog').modal()
+		})
+
+		// 创建任务
+		$('#btn-create-task').click(function(){
+			// 设置日期的当前时间和截至时间
+			var now = new Date()
+			$('#beginTime').datepicker('setDate', now)
+			$('#endTime').datepicker('setDate', now)
+
+			$('#taskName').val('')
+			$('#taskContent').val('')
+			$('#task-dialog').attr('data-task-id', null)
+			$('#task-dialog').attr('data-task-state', null)
+			$('#task-dialog').attr('data-edit-task-mode', 'create-task')
+			$('#task-dialog-title').html('创建任务')
+			$('#task-dialog').modal()
+		})
+
+		// 删除选中的任务
+		$('#btn-delete-tasks').click(function(){
+			let ids = []
+			$(".cb-task-item:checked").each(function(index){
+				ids.push($(this).attr('data-id'))				
+			})
+
+			if(ids.length <= 0){
+				return
+			}
+
+			//- 从后台删除
+			$.ajax({
+				url: "/delete-tasks/",
+				type: "delete",
+				data: JSON.stringify(ids),
+				dataType: "json",
+				success: function(res){
+					if(res.succeed) {
+						// 删除界面上的日志记录
+						for(let i = 0; i < ids.length; ++i) {
+							$('#' + ids[i]).remove()
+						}
+
+						swal("任务删除", "成功删除" + ids.length + "条任务！", "info")
+						window.location.reload()
+					} else {
+						swal("任务删除", "任务删除失败！ 原因：" + res.error, "error")
+					}
+
+				},
+
+				error: function(res){
+					swal("任务删除", "任务删除失败！ 原因：" + res.error, "error")
+				}
+			})
+		})
+
+		
+		// 设置日期的当前时间和截至时间
+		var now = new Date()
+		$('#beginTime').datepicker('setDate', now)
+		$('#endTime').datepicker('setDate', now)
+
+		$(".input-no-empty").bind("input propertychange change",function(event) {
+			if($(this).val() != '') {
+				$(this).removeClass('is-invalid')
+			}
+		})
+
+		function checkTaskInputValid(task) {
+			if(!task.name){
+				$('#taskName').addClass('is-invalid')
+				return false
+			}
+
+			if(!task.content){
+				$('#taskContent').addClass('is-invalid')
+				return false
+			}
+			return true
+		}
+
+		$('#btn-commit').click(function(){
+
+			let task = getTask()
+			
+			// 验证数据
+			if(!checkTaskInputValid(task)){
+				return;
+			}
+
+			let editTaskMode = $('#task-dialog').attr('data-edit-task-mode')
+
+			let messageTitle = $('#task-dialog-title').html()
+
+			//- 向后台发送更新数据请求
+			$.ajax({
+				url: "/" + editTaskMode + "/",
+				type: "post",
+				data: JSON.stringify(task),
+				dataType: "json",
+				success: function(res){
+					if(res.succeed) {
+						//- 更新任务列表
+						$('#task-dialog').modal('hide')
+						window.location.reload()
+					} else {
+						swal(messageTitle, messageTitle + "失败！ 原因：" + res.error, "error")
+					}
+				},
+
+				error: function(res){
+					swal(messageTitle, messageTitle + "失败！ 原因：" + res.error, "error")
+				}
+			})
+		})
+
+		//- 全选或取消全选
+		$('#cb-select-all').click(function(){
+
+			var allChecked = this.checked
+			$(".cb-task-item").each(function(){
+				this.checked = allChecked
+			})
+		})
+
+
+		

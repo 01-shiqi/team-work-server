@@ -131,7 +131,8 @@ class Task extends Base {
             let whereClause = ''
             const userID = this.getUserID(req)
             if (userID && !allusers) {
-                whereClause += this.genStrCondition('user_id', userID);
+                whereClause += this.genStrCondition('executor_id', userID)
+                whereClause += ' and state != \'' + '已创建' + '\' '
             }
             if (whereClause != '') {
                 whereClause = ' where ' + whereClause
