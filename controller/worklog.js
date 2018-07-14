@@ -20,21 +20,25 @@ class Worklog extends Base {
         this.deleteWorklogs = this.deleteWorklogs.bind(this)
         this.loadBasicInfo = this.loadBasicInfo.bind(this)
         this.loadAllBasicInfos = this.loadAllBasicInfos.bind(this)
-        this.loadMyTasks = this.loadMyTasks.bind(this)
+        this.loadTasks = this.loadTasks.bind(this)
     }
 
     async writeWorklog(req, res, next) {
-        let basicInfos = await this.loadAllBasicInfos(req)
+        let basicInfos = await this.loadAllBasicInfos(req, false)
         res.render('write-worklog', this.appendUserInfo(req, basicInfos))
     }
 
     /**
      * 加载我的任务信息
      */
-    async loadMyTasks(userID) {
+    async loadTasks(userID, allExecutors) {
         try {
-            var sql = 'select id, `name`, model, type as type, work_object as workObject, work_place as workPlace from tw_task where state != \'已创建\' and progress != 100 and ' + this.genStrCondition('executor_id', userID) +  ' order by `name`'
-            var tasks = await this.queryArray(sql)
+            let sql = 'select id, `name`, model, type as type, work_object as workObject, work_place as workPlace from tw_task where state != \'已创建\' and progress != 100 '
+            if(!allExecutors) {
+                sql += ' and ' + this.genStrCondition('executor_id', userID)
+            }
+            sql += ' order by `name`'
+            let tasks = await this.queryArray(sql)
             return tasks
         }
         catch (error) {
@@ -57,7 +61,7 @@ class Worklog extends Base {
         }
     }
 
-    async loadAllBasicInfos(req) {
+    async loadAllBasicInfos(req, allUsers) {
 
         let basicInfos = {}
 
@@ -68,7 +72,7 @@ class Worklog extends Base {
         basicInfos.workObjects = await this.loadBasicInfo('tw_work_object')
 
         const userID = this.getUserID(req)
-        basicInfos.tasks = await this.loadMyTasks(userID)
+        basicInfos.tasks = await this.loadTasks(userID, allUsers)
 
         return basicInfos
     }
@@ -120,7 +124,7 @@ class Worklog extends Base {
                 + ' order by workDate desc, trueName, workBeginTime '
                 + ' limit ' + startIndex + ',' + countPerPage
 
-            let resultData = await this.loadAllBasicInfos(req)
+            let resultData = await this.loadAllBasicInfos(req, allusers)
             resultData.worklogs = await this.queryArray(sql)
             resultData.pageCount = pageCount
             resultData.pageIndex = pageIndex
