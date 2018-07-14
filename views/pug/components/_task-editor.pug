@@ -1,28 +1,43 @@
 
 
-.form-group.col-md-2
+.form-group.col-md-3
     label.control-label.worklog-edit-label 任务类型
     select.form-control.customSelect#taskType
         optgroup(label="选择任务类型")
             - for (var i = 0; i < workTypes.length; i++)
                 option #{workTypes[i].name}
 
-.form-group.col-md-2
+.form-group.col-md-3
     label.control-label.worklog-edit-label 所属型号
     select.form-control.customSelect#model
         optgroup(label="选择所属型号")
             - for (var i = 0; i < models.length; i++)
                 option #{models[i].name}
 
-.form-group.col-md-2
+.form-group.col-md-3
+    label.control-label.worklog-edit-label 工作对象
+    select.form-control.customSelect-tags#workObject(placeholder="选择或录入工作对象，如XXXX系统、XXXX软件")
+        optgroup(label="选择或录入工作对象")
+            - for (var i = 0; i < workObjects.length; i++)
+                option #{workObjects[i].name}
+
+.form-group.col-md-3
+    label.control-label.worklog-edit-label 工作地点
+    select.form-control.customSelect-tags#workPlace
+        optgroup(label="选择或录入工作地点")
+            - for (var i = 0; i < workPlaces.length; i++)
+                option #{workPlaces[i].name}
+
+
+.form-group.col-md-3
     label.control-label 开始时间
     input.form-control.datepicker#beginTime(type="text",placeholder="选择日期")
 
-.form-group.col-md-2
+.form-group.col-md-3
     label.control-label 预计完成时间
     input.form-control.datepicker#endTime(type="text",placeholder="选择日期")
 
-.form-group.col-md-2
+.form-group.col-md-3
     label.control-label 工作量(人时=人天*8)
     select.form-control.customSelect-tags#personHours
         optgroup(label="选择或录入工作量(人时)")
@@ -38,7 +53,7 @@
             option 5.5
             option 6.0
 
-.form-group.col-md-2
+.form-group.col-md-3
     label.control-label.worklog-edit-label 建议执行人
     select.form-control.customSelect#executor
         optgroup(label="选择任务执行人")
@@ -51,4 +66,4 @@
 
 .form-group.col-md-12
     label(for='taskContent') 任务描述
-    textarea#taskContent.form-control.input-no-empty(rows='8',placeholder='请输入任务的详细描述')
+    textarea#taskContent.form-control.input-no-empty(rows='6',placeholder='请输入任务的详细描述')

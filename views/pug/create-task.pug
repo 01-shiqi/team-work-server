@@ -1,0 +1,114 @@
+extends layouts/_layout.pug
+
+block variables
+	- var activePage = 'create-task'
+	- var activeGroup = 'forms'
+
+block title
+	title Team Work
+
+block content
+	.app-title
+		div
+			h1
+				i.fa.fa-plus
+				|  创建任务
+
+		ul.app-breadcrumb.breadcrumb
+			li.breadcrumb-item
+				i.fa.fa-home.fa-lg
+			li.breadcrumb-item
+				| 任务
+			li.breadcrumb-item
+				a(href="#") 创建任务
+
+	.row
+		.col-md-12
+			.tile
+
+				.tile-body
+					form.row
+						include ./components/_task-editor				
+						.form-group.col-md-12.align-center
+							button.btn.btn-primary.btn-lg.btn-block#btn-create-task(type='button',href="#") 提交
+
+
+block specific-js
+	script(type='text/javascript', src="js/plugins/bootstrap-notify.min.js")
+	script(type='text/javascript', src="js/plugins/sweetalert.min.js")
+	script(type='text/javascript', src="js/plugins/bootstrap-datepicker/js/bootstrap-datepicker.min.js")
+	script(type='text/javascript', src="js/plugins/bootstrap-datepicker/locales/bootstrap-datepicker.zh-CN.min.js", charset="UTF-8")
+	script(type='text/javascript', src="js/plugins/select2.min.js")
+	script(type='text/javascript', src="js/validate.js")
+	script(type='text/javascript', src="js/_task.js")
+	script(type="text/javascript").
+
+		$('#btn-create-task').click(function(){
+
+			let task = getTask()
+			
+			// 验证数据
+			if(!checkTaskInputValid(task)){
+				return;
+			}
+
+			let messageTitle = '创建任务'
+
+			//- 向后台发送更新数据请求
+			$.ajax({
+				url: 'create-task',
+				type: "post",
+				data: JSON.stringify(task),
+				dataType: "json",
+				success: function(res){
+					if(res.succeed) {
+						swal(messageTitle, messageTitle + "成功。", "success");
+					} else {
+						swal(messageTitle, messageTitle + "失败！ 原因：" + res.error, "error")
+					}
+				},
+
+				error: function(res){
+					swal(messageTitle, messageTitle + "失败！ 原因：" + res.error, "error")
+				}
+			})
+		})
+
+		
+
+		// 设置日期的当前时间和截至时间
+		var now = new Date()
+		$('#worklogDate').datepicker('setDate', now)
+		$('#worklogDate').datepicker('setEndDate', now)
+
+		$('#btnCommitWorklog').click(function(){
+
+			let worklog = getWorklog()
+			
+			// 验证数据
+			if(!checkInput(worklog)){
+				return;
+			}
+
+			$.ajax({
+				url: "/write-worklog/",
+				type: "post",
+				data: JSON.stringify(worklog),
+				dataType: "json",
+				success: function(res){
+					if(res.succeed) {
+						swal("添加成功", "日志添加成功。", "success");
+					} else {
+						swal("添加失败", "日志添加失败！ 原因：" + res.error, "error");
+					}
+
+				},
+
+				error: function(res){
+					swal("添加失败", "日志添加失败！ 原因：" + res.error, "error");
+				}
+			});
+		});
+
+		$('.customSelect').select2({ tags: false })
+		$('.customSelect-tags').select2({ tags: true })

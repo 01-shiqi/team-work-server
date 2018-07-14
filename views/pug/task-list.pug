@@ -25,7 +25,7 @@ block content
 				a(href="#") #{title}
 
 	.modal.fade.editDialog#task-dialog(aria-hide="true")
-		.modal-dialog(role='dialog', style="width:1000px;max-width:1000px;top:50px;")
+		.modal-dialog(role='dialog', style="width:1200px;max-width:1200px;top:50px;")
 			.modal-content
 				.modal-header
 					h5.modal-title#task-dialog-title 创建任务
@@ -42,17 +42,12 @@ block content
 		.col-md-12
 			.tile
 				.row
-					.col-lg-1
-						p
-							a.btn.btn-primary.icon-btn#btn-create-task
-								i.fa.fa-plus
-								| 创建任务
 					.col-lg-11
-						.bs-component(style='margin-left: 5px;')
+						.bs-component(style='margin-bottom:10px;')
 							.btn-group.btn-group-toggle(data-toggle="buttons")
 								label.btn.btn-primary.active
 									input#option1(type="radio" name="options" autocomplete="off" checked="")
-									|  所有
+									|  所有任务
 								label.btn.btn-primary
 									input#option2(type="radio" name="options" autocomplete="off")
 									|  已创建
@@ -116,7 +111,7 @@ block content
 									- var trClass = 'table-success'
 									- tasks[i].state = '已完成'
 
-							tr(class=trClass, id=`${tasks[i].id}`)
+							tr(class=trClass, id=`${tasks[i].id}`, data-work-object=`${tasks[i].workObject}`, data-work-place=`${tasks[i].workPlace}`)
 								td
 									.animated-checkbox
 										label
@@ -168,10 +163,18 @@ block specific-js
 			return $("#"+ trID + " .td" + tdIndex).attr('data-id')
 		}
 
+		// 获取 表格 行的属性数据
+		function getTableRowData(trID, dataID) {
+			return $("#"+ trID).attr(dataID)
+		}
+
 		// 设置任务对话框内容
 		function setEditTaskDialogContent(taskID) {
 			setSelect2Value('#taskType', getTableCellData(taskID, 1))
 			setSelect2Value('#model', getTableCellData(taskID, 2))
+			setSelect2Value('#workObject', getTableRowData(taskID, 'data-work-object'))
+			setSelect2Value('#workPlace', getTableRowData(taskID, 'data-work-place'))
+
 			$('#beginTime').val(getTableCellData(taskID, 3))
 			$('#endTime').val(getTableCellData(taskID, 4))
 			setSelect2Value('#personHours', getTableCellData(taskID, 5))
@@ -189,6 +192,8 @@ block specific-js
 				id: $('#task-dialog').attr('data-task-id'),
 				type: $('#taskType').val(),
 				model: $('#model').val(),
+				workObject: $('#workObject').val(),
+				workPlace: $('#workPlace').val(),
 				beginTime: $('#beginTime').val(),
 				endTime: $('#endTime').val(),
 				personHours: $('#personHours').val(), 
@@ -220,22 +225,6 @@ block specific-js
 			$('#task-dialog').modal()
 		})
 
-		// 创建任务
-		$('#btn-create-task').click(function(){
-			// 设置日期的当前时间和截至时间
-			var now = new Date()
-			$('#beginTime').datepicker('setDate', now)
-			$('#endTime').datepicker('setDate', now)
-
-			$('#taskName').val('')
-			$('#taskContent').val('')
-			$('#task-dialog').attr('data-task-id', null)
-			$('#task-dialog').attr('data-task-state', null)
-			$('#task-dialog').attr('data-edit-task-mode', 'create-task')
-			$('#task-dialog-title').html('创建任务')
-			$('#task-dialog').modal()
-		})
-
 		// 删除选中的任务
 		$('#btn-delete-tasks').click(function(){
 			let ids = []
@@ -261,7 +250,7 @@ block specific-js
 						}
 
 						swal("任务删除", "成功删除" + ids.length + "条任务！", "info")
-						window.location.reload()
+						//- window.location.reload()
 					} else {
 						swal("任务删除", "任务删除失败！ 原因：" + res.error, "error")
 					}
@@ -302,8 +291,9 @@ block specific-js
 		$('#btn-commit').click(function(){
 
 			let task = getTask()
+			task.id = $('#task-dialog').attr('data-task-id')
 			
-			// 验证数据
+			//- 验证数据
 			if(!checkTaskInputValid(task)){
 				return;
 			}

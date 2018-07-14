@@ -12,6 +12,7 @@ class Task extends Base {
         super()
 
         this.manageTasks = this.manageTasks.bind(this)
+        this.getCreateTask = this.getCreateTask.bind(this)
         this.createTask = this.createTask.bind(this)
         this.updateTask = this.updateTask.bind(this)
         this.verifyTask = this.verifyTask.bind(this)
@@ -20,6 +21,17 @@ class Task extends Base {
         this.getTaskList = this.getTaskList.bind(this)
         this.loadBasicInfo = this.loadBasicInfo.bind(this)
         this.loadAllBasicInfos = this.loadAllBasicInfos.bind(this)
+    }
+
+    /**
+     * 获取创建任务的页面
+     * @param {*} req 
+     * @param {*} res 
+     * @param {*} next 
+     */
+    async getCreateTask(req, res, next) {
+        let basicInfos = await this.loadAllBasicInfos()
+        res.render('create-task', this.appendUserInfo(req, basicInfos))
     }
 
     // 创建任务
@@ -34,6 +46,8 @@ class Task extends Base {
             sqlSource.push(id)
             sqlSource.push(task.type)
             sqlSource.push(task.model)
+            sqlSource.push(task.workObject)
+            sqlSource.push(task.workPlace)
             sqlSource.push(task.beginTime)
             sqlSource.push(task.endTime)
             sqlSource.push(task.personHours)
@@ -48,8 +62,8 @@ class Task extends Base {
             sqlSource.push(now)
             sqlSource.push(userID)
 
-            var sql = 'insert into tw_task (id, type, model, begin_time, end_time, person_hours, executor_id, name, content, state, created_at, created_by, updated_at, updated_by)' +
-                'values(?,?,?,?, ?,?,?,?, ?,?,?,?, ?,?)'
+            var sql = 'insert into tw_task (id, type, model, work_object, work_place, begin_time, end_time, person_hours, executor_id, name, content, state, created_at, created_by, updated_at, updated_by)' +
+                'values(?,?,?,?, ?,?, ?,?,?,?, ?,?,?,?, ?,?)'
 
             let succeed = await this.executeSql(sql, sqlSource)
             this.sendSucceed(res)
@@ -145,7 +159,7 @@ class Task extends Base {
 
             let pageCount = Math.ceil(totalCount / countPerPage)
 
-            let sql = 'select tw_task.id, type, name, content, state, model, begin_time as beginTime, end_time as endTime, person_hours as personHours, progress '
+            let sql = 'select tw_task.id, type, name, content, state, model, work_object as workObject, work_place as workPlace, begin_time as beginTime, end_time as endTime, person_hours as personHours, progress '
             sql += ', b.true_name as executorName, b.id as executorID '
             if (allusers) {
                 sql += ', c.true_name as creatorName '
@@ -190,6 +204,8 @@ class Task extends Base {
             var sqlSource = []
             sqlSource.push(task.type)
             sqlSource.push(task.model)
+            sqlSource.push(task.workObject)
+            sqlSource.push(task.workPlace)
             sqlSource.push(task.beginTime)
             sqlSource.push(task.endTime)
             sqlSource.push(task.personHours)
@@ -201,7 +217,7 @@ class Task extends Base {
             sqlSource.push(now)
             sqlSource.push(userID)
 
-            let sql = 'update tw_task set type=? , model=?, begin_time=?, end_time=?, person_hours=?, executor_id=?, name=?, content=?, updated_at=?, updated_by=? where '
+            let sql = 'update tw_task set type=? , model=?, work_object=?, work_place=?, begin_time=?, end_time=?, person_hours=?, executor_id=?, name=?, content=?, updated_at=?, updated_by=? where '
                 + this.genStrCondition('id', task.id)
 
             let succeed = await this.executeSql(sql, sqlSource);
