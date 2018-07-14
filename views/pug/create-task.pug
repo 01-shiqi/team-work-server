@@ -74,41 +74,5 @@ block specific-js
 			})
 		})
 
-		
-
-		// 设置日期的当前时间和截至时间
-		var now = new Date()
-		$('#worklogDate').datepicker('setDate', now)
-		$('#worklogDate').datepicker('setEndDate', now)
-
-		$('#btnCommitWorklog').click(function(){
-
-			let worklog = getWorklog()
-			
-			// 验证数据
-			if(!checkInput(worklog)){
-				return;
-			}
-
-			$.ajax({
-				url: "/write-worklog/",
-				type: "post",
-				data: JSON.stringify(worklog),
-				dataType: "json",
-				success: function(res){
-					if(res.succeed) {
-						swal("添加成功", "日志添加成功。", "success");
-					} else {
-						swal("添加失败", "日志添加失败！ 原因：" + res.error, "error");
-					}
-
-				},
-
-				error: function(res){
-					swal("添加失败", "日志添加失败！ 原因：" + res.error, "error");
-				}
-			});
-		});
-
 		$('.customSelect').select2({ tags: false })
 		$('.customSelect-tags').select2({ tags: true })

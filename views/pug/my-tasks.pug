@@ -25,7 +25,7 @@ block content
 				a(href="#") #{title}
 
 	.modal.fade.editDialog#task-dialog(aria-hide="true")
-		.modal-dialog(role='dialog', style="width:1000px;max-width:1000px;top:50px;")
+		.modal-dialog(role='dialog', style="width:1200px;max-width:1200px;top:50px;")
 			.modal-content
 				.modal-header
 					h5.modal-title#task-dialog-title 创建任务
@@ -78,11 +78,6 @@ block content
 							th 当前状态
 							th 任务名称
 							th 任务内容
-							th
-								.animated-checkbox
-									label
-										button.btn.btn-primary.btn-sm#btn-delete-tasks(type='button')
-											i.fa.fa-trash-o
 					tbody
 						- for (var i = 0; i < tasks.length; i++)
 							if tasks[i].state == '已创建'
@@ -126,11 +121,8 @@ block content
 									.animated-checkbox
 										label
 											.btn-group
-												if role == 0
-													button.btn.btn-primary.btn-sm.btn-verify-task(type='button', value=`${tasks[i].id}`)
-														i.fa.fa-hand-o-right
-												button.btn.btn-primary.btn-sm.btn-edit-task(type='button', value=`${tasks[i].id}`)
-													i.fa.fa-edit
+												button.btn.btn-primary.btn-sm.btn-browse-task(type='button', value=`${tasks[i].id}`)
+													i.fa.fa-binoculars
 
 				include ./components/_pagination						
 
@@ -187,77 +179,14 @@ block specific-js
 			return task
 		}
 
-
-		// 修改任务
-		$('.btn-edit-task').click(function(){
+		// 查看任务信息
+		$('.btn-browse-task').click(function(){
 			let taskID = $(this).val()
 			setEditTaskDialogContent(taskID)
 			$('#task-dialog').attr('data-edit-task-mode', 'update-task')
-			$('#task-dialog-title').html('修改任务')
+			$('#task-dialog-title').html('查看任务')
+			$('.form-control').attr('disabled', true)
 			$('#task-dialog').modal()
-		})
-
-		// 审核任务
-		$('.btn-verify-task').click(function(){
-			let taskID = $(this).val()
-			setEditTaskDialogContent(taskID)
-			$('#task-dialog').attr('data-edit-task-mode', 'verify-task')
-			$('#task-dialog-title').html('审核任务')
-			$('#task-dialog').modal()
-		})
-
-		// 创建任务
-		$('#btn-create-task').click(function(){
-			// 设置日期的当前时间和截至时间
-			var now = new Date()
-			$('#beginTime').datepicker('setDate', now)
-			$('#endTime').datepicker('setDate', now)
-
-			$('#taskName').val('')
-			$('#taskContent').val('')
-			$('#task-dialog').attr('data-task-id', null)
-			$('#task-dialog').attr('data-task-state', null)
-			$('#task-dialog').attr('data-edit-task-mode', 'create-task')
-			$('#task-dialog-title').html('创建任务')
-			$('#task-dialog').modal()
-		})
-
-		// 删除选中的任务
-		$('#btn-delete-tasks').click(function(){
-			let ids = []
-			$(".cb-task-item:checked").each(function(index){
-				ids.push($(this).attr('data-id'))				
-			})
-
-			if(ids.length <= 0){
-				return
-			}
-
-			//- 从后台删除
-			$.ajax({
-				url: "/delete-tasks/",
-				type: "delete",
-				data: JSON.stringify(ids),
-				dataType: "json",
-				success: function(res){
-					if(res.succeed) {
-						// 删除界面上的日志记录
-						for(let i = 0; i < ids.length; ++i) {
-							$('#' + ids[i]).remove()
-						}
-
-						swal("任务删除", "成功删除" + ids.length + "条任务！", "info")
-						window.location.reload()
-					} else {
-						swal("任务删除", "任务删除失败！ 原因：" + res.error, "error")
-					}
-
-				},
-
-				error: function(res){
-					swal("任务删除", "任务删除失败！ 原因：" + res.error, "error")
-				}
-			})
 		})
 
 		

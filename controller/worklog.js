@@ -20,11 +20,26 @@ class Worklog extends Base {
         this.deleteWorklogs = this.deleteWorklogs.bind(this)
         this.loadBasicInfo = this.loadBasicInfo.bind(this)
         this.loadAllBasicInfos = this.loadAllBasicInfos.bind(this)
+        this.loadMyTasks = this.loadMyTasks.bind(this)
     }
 
     async writeWorklog(req, res, next) {
-        let basicInfos = await this.loadAllBasicInfos()
+        let basicInfos = await this.loadAllBasicInfos(req)
         res.render('write-worklog', this.appendUserInfo(req, basicInfos))
+    }
+
+    /**
+     * 加载我的任务信息
+     */
+    async loadMyTasks(userID) {
+        try {
+            var sql = 'select id, `name`, model, type as type, work_object as workObject, work_place as workPlace from tw_task where state != \'已创建\' and progress != 100 and ' + this.genStrCondition('executor_id', userID) +  ' order by `name`'
+            var tasks = await this.queryArray(sql)
+            return tasks
+        }
+        catch (error) {
+            return []
+        }
     }
 
     /**
@@ -42,7 +57,7 @@ class Worklog extends Base {
         }
     }
 
-    async loadAllBasicInfos() {
+    async loadAllBasicInfos(req) {
 
         let basicInfos = {}
 
@@ -51,6 +66,9 @@ class Worklog extends Base {
         basicInfos.models = await this.loadBasicInfo('tw_model')
         basicInfos.workPlaces = await this.loadBasicInfo('tw_work_place')
         basicInfos.workObjects = await this.loadBasicInfo('tw_work_object')
+
+        const userID = this.getUserID(req)
+        basicInfos.tasks = await this.loadMyTasks(userID)
 
         return basicInfos
     }
@@ -90,7 +108,7 @@ class Worklog extends Base {
 
             let pageCount = Math.ceil(totalCount / countPerPage)
 
-            let sql = 'select tw_worklog.id, work_date as workDate, work_begin_time as workBeginTime, work_time_length as workTimeLength, work_type as workType, model, work_place as workPlace, work_object as workObject, work_content as workContent '
+            let sql = 'select tw_worklog.id, work_date as workDate, work_begin_time as workBeginTime, work_time_length as workTimeLength, work_type as workType, model, work_place as workPlace, work_object as workObject, work_content as workContent, task_id as taskID'
             
             if(allusers) {
                 sql += ', tw_user.true_name as trueName from tw_worklog left join tw_user on tw_worklog.user_id = tw_user.id '
@@ -102,7 +120,7 @@ class Worklog extends Base {
                 + ' order by workDate desc, trueName, workBeginTime '
                 + ' limit ' + startIndex + ',' + countPerPage
 
-            let resultData = await this.loadAllBasicInfos()
+            let resultData = await this.loadAllBasicInfos(req)
             resultData.worklogs = await this.queryArray(sql)
             resultData.pageCount = pageCount
             resultData.pageIndex = pageIndex
@@ -134,13 +152,14 @@ class Worklog extends Base {
             sqlSource.push(worklog.workPlace)
             sqlSource.push(worklog.workObject)
             sqlSource.push(worklog.workContent)
+            sqlSource.push(worklog.taskID)
 
             var now = moment().format('YYYY-MM-DD hh:mm:ss')
             sqlSource.push(now)
             sqlSource.push(now)
 
-            var sql = 'insert into tw_worklog (id, user_id, work_date, work_begin_time, work_time_length, work_type, model, work_place, work_object, work_content, created_at, updated_at) ' + 
-                      'values(?,?,?,?,?,?,?,?,?,?,?,?)'
+            var sql = 'insert into tw_worklog (id, user_id, work_date, work_begin_time, work_time_length, work_type, model, work_place, work_object, work_content, task_id, created_at, updated_at) ' + 
+                      'values(?,?,?,?,?,?,?,?,?,?,?,?,?)'
 
             let succeed = await this.executeSql(sql, sqlSource)
             this.sendSucceed(res)
@@ -160,7 +179,7 @@ class Worklog extends Base {
             
             let worklogID = worklogItems[worklogItems.length - 1]
 
-            let sql = 'update tw_worklog set work_date=? , work_begin_time=?, work_time_length=?, work_type=?, model=?, work_place=?, work_object=?, work_content=?, updated_at=? where ' 
+            let sql = 'update tw_worklog set work_date=? , work_begin_time=?, work_time_length=?, work_type=?, model=?, work_place=?, work_object=?, work_content=?, task_id=?, updated_at=? where ' 
                     + this.genStrCondition('id', worklogID)
 
             // 最后一个参数worklogID不添加至sqlData中

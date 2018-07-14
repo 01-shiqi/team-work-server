@@ -98,13 +98,14 @@ block content
 							else
 								- var trClass = 'table-error'
 							- var now = new Date()
+							- var today = new Date(now.getFullYear(), now.getMonth(), now.getDate())
 							- var endTime = tasks[i].endTime
 							- var endDate = new Date(endTime.replace(/\-/g, "\/"))
 							if tasks[i].state != '已创建'
-								if tasks[i].progress == 100 && now > endDate
+								if tasks[i].progress == 100 && endDate < today
 									- var trClass = 'table-warning'
 									- tasks[i].state = '超期完成'
-								else if now > endDate
+								else if endDate < today
 									- var trClass = 'table-danger'
 									- tasks[i].state = '已超期'
 								else if tasks[i].progress == 100

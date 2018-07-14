@@ -8,6 +8,7 @@ function getWorklog(){
         workPlace: $('#workPlace').val(), 
         workObject: $('#workObject').val(), 
         workContent: $('#workContent').val(),
+        taskID: $('#task').val(), 
     }
     
     return worklog
@@ -95,6 +96,7 @@ function setSelect2Value(selector, value){
     }
     
     $(selector).val(value)
+    $(selector).trigger('change')
 }
 
 /**

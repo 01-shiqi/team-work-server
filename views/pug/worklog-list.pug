@@ -56,7 +56,7 @@ block content
 					table.table.table-hover
 						tbody
 							- for (var i = 0; i < worklogs.length; i++)
-								tr(id=`${worklogs[i].id}`)
+								tr(id=`${worklogs[i].id}`, data-task-id=`${worklogs[i].taskID}`)
 									td
 										.animated-checkbox
 											label
@@ -91,6 +91,7 @@ block specific-js
 	script(type='text/javascript', src="js/plugins/bootstrap-datepicker/js/bootstrap-datepicker.min.js")
 	script(type='text/javascript', src="js/plugins/bootstrap-datepicker/locales/bootstrap-datepicker.zh-CN.min.js", charset="UTF-8")
 	script(type='text/javascript', src="js/validate.js")
+	script(type='text/javascript', src="js/_worklog.js")
 	script(type="text/javascript").
 		$('.btn-editWorklog').click(function(){
 
@@ -106,6 +107,7 @@ block specific-js
 			itemValues.push($("#"+ worklogID + " .td-textarea").html())
 
 			let index = 0;
+			setSelect2Value('#task', $("#"+ worklogID).data('task-id'))
 			$('#worklogDate').val(itemValues[index++])
 			$('#workBeginTime').val(itemValues[index++])
 			setSelect2Value('#workTimeLength', itemValues[index++])
@@ -141,6 +143,7 @@ block specific-js
 			itemValues.push(worklog.workPlace)
 			itemValues.push(worklog.workObject)
 			itemValues.push(worklog.workContent)
+			itemValues.push(worklog.taskID)
 
 			let worklogID = $('#edit-worklog-dialog').attr('data-worklogID')
 			itemValues.push(worklogID)
@@ -158,6 +161,7 @@ block specific-js
 							itemValues.push($("#"+ worklogID + " .td" + i).html())
 							$("#"+ worklogID + " .td" + i).html(itemValues[i])
 						}
+						$("#"+ worklogID).data('task-id', worklog.taskID)
 						$("#"+ worklogID + " .td-textarea").html(itemValues[i])
 
 						$('#edit-worklog-dialog').modal('hide')

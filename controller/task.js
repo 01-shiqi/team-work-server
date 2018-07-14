@@ -74,11 +74,6 @@ class Task extends Base {
         }
     }
 
-    async writeWorklog(req, res, next) {
-        let basicInfos = await this.loadAllBasicInfos()
-        res.render('write-worklog', this.appendUserInfo(req, basicInfos))
-    }
-
     /**
      * 加载基本信息
      * @param {*} tableName 
