@@ -81,7 +81,7 @@ block content
 					tbody
 						- for (var i = 0; i < tasks.length; i++)
 							if tasks[i].state == '已创建'
-								- var trClass = 'table-xxxx'
+								- var trClass = 'table-created'
 							else if tasks[i].state == '已下发'
 								- var trClass = 'table-info'
 							else

@@ -93,3 +93,20 @@
 #btn-login {
     font-size: 18px;
 }
+
+
+
+.table-created,
+.table-created > th,
+.table-created > td {
+  background-color: #ececf6;
+}
+
+.table-hover .table-created:hover {
+  background-color: #e1e1f0;
+}
+
+.table-hover .table-created:hover > td,
+.table-hover .table-created:hover > th {
+  background-color: #e1e1f0;
+}
