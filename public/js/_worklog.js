@@ -17,4 +17,5 @@ $("#task").bind("change", function(){
     setSelect2Value('#workType', getOptionData(index, 'type'))
     setSelect2Value('#workObject', getOptionData(index, 'work-object'))
     setSelect2Value('#workPlace', getOptionData(index, 'work-place'))
+    setSelect2Value('#taskProgress', getOptionData(index, 'task-progress'))
 })

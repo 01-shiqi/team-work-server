@@ -56,7 +56,7 @@ block content
 					table.table.table-hover
 						tbody
 							- for (var i = 0; i < worklogs.length; i++)
-								tr(id=`${worklogs[i].id}`, data-task-id=`${worklogs[i].taskID}`)
+								tr(id=`${worklogs[i].id}`, data-task-id=`${worklogs[i].taskID}`, data-task-progress=`${worklogs[i].taskProgress}`)
 									td
 										.animated-checkbox
 											label
@@ -108,6 +108,8 @@ block specific-js
 
 			let index = 0;
 			setSelect2Value('#task', $("#"+ worklogID).data('task-id'))
+			setSelect2Value('#taskProgress', $("#"+ worklogID).data('task-progress'))
+
 			$('#worklogDate').val(itemValues[index++])
 			$('#workBeginTime').val(itemValues[index++])
 			setSelect2Value('#workTimeLength', itemValues[index++])
@@ -117,8 +119,23 @@ block specific-js
 			setSelect2Value('#workObject', itemValues[index++])
 			$('#workContent').val(itemValues[index++])
 
+
 			$('#edit-worklog-dialog').modal()
 		})
+
+		// 更新表格行的内容
+		function updateTableRowData(worklog) {
+			let index = 0
+			$("#"+ worklog.id + " .td" + index++).html(worklog.workDate)
+			$("#"+ worklog.id + " .td" + index++).html(worklog.workBeginTime)
+			$("#"+ worklog.id + " .td" + index++).html(worklog.workTimeLength)
+			$("#"+ worklog.id + " .td" + index++).html(worklog.workType)
+			$("#"+ worklog.id + " .td" + index++).html(worklog.model)
+			$("#"+ worklog.id + " .td" + index++).html(worklog.workPlace)
+			$("#"+ worklog.id + " .td" + index++).html(worklog.workObject)
+			$("#"+ worklog.id + " .td-textarea").html(worklog.workContent)
+			$("#"+ worklog.id).data('task-id', worklog.taskID)
+		}
 
 		// 设置日期的当前时间和截至时间
 		var now = new Date()
@@ -128,41 +145,23 @@ block specific-js
 		$('#btn-closeDialog').click(function(){
 
 			let worklog = getWorklog()
+			worklog.id = $('#edit-worklog-dialog').attr('data-worklogID')
 			
 			// 验证数据
 			if(!checkInput(worklog)){
 				return;
 			}
 
-			let itemValues = []
-			itemValues.push(worklog.workDate)
-			itemValues.push(worklog.workBeginTime)
-			itemValues.push(worklog.workTimeLength)
-			itemValues.push(worklog.workType)
-			itemValues.push(worklog.model)
-			itemValues.push(worklog.workPlace)
-			itemValues.push(worklog.workObject)
-			itemValues.push(worklog.workContent)
-			itemValues.push(worklog.taskID)
-
-			let worklogID = $('#edit-worklog-dialog').attr('data-worklogID')
-			itemValues.push(worklogID)
-
 			//- 向后台发送更新数据请求
 			$.ajax({
 				url: "/update-worklog/",
 				type: "post",
-				data: JSON.stringify(itemValues),
+				data: JSON.stringify(worklog),
 				dataType: "json",
 				success: function(res){
 					if(res.succeed) {
 						//- 更新前台页面的值
-						for(var i = 0; i < 7; ++i) {
-							itemValues.push($("#"+ worklogID + " .td" + i).html())
-							$("#"+ worklogID + " .td" + i).html(itemValues[i])
-						}
-						$("#"+ worklogID).data('task-id', worklog.taskID)
-						$("#"+ worklogID + " .td-textarea").html(itemValues[i])
+						updateTableRowData(worklog)
 
 						$('#edit-worklog-dialog').modal('hide')
 					} else {

@@ -9,6 +9,7 @@ function getWorklog(){
         workObject: $('#workObject').val(), 
         workContent: $('#workContent').val(),
         taskID: $('#task').val(), 
+        taskProgress: $('#taskProgress').val()
     }
     
     return worklog
