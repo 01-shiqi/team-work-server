@@ -86,10 +86,10 @@ table.table.table-hover
                                         i.fa.fa-edit
                                 if role == 0
                                     button.btn.btn-primary.btn-sm.btn-verify-task(type='button', value=`${tasks[i].id}`, data-toggle='tooltip', title='审核任务')
-                                        i.fa.fa-hand-o-right
+                                        i.fa.fa-thumb-tack
                                 if role < 10
                                     button.btn.btn-primary.btn-sm.btn-close-task(type='button', value=`${tasks[i].id}`, data-toggle='tooltip', title='关闭任务')
-                                        i.fa.fa-thumb-tack
+                                        i.fa.fa-ban
                                 if role >= 10
                                     button.btn.btn-primary.btn-sm.btn-browse-task(type='button', value=`${tasks[i].id}`, data-toggle='tooltip', title='查看任务')
-                                        i.fa.fa-binoculars
+                                        i.fa.fa-info
