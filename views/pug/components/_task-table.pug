@@ -1,0 +1,87 @@
+table.table.table-hover
+    thead
+        tr
+            th
+                .animated-checkbox
+                    label
+                        input#cb-select-all(type="checkbox")
+                        span.label-text 
+            th #
+            if role < 10
+                th 创建人
+            th 任务类型
+            th 所属型号
+            th 开始时间
+            th 计划完成时间
+            if role < 10
+                th 人时
+            th 进度
+            th 当前状态
+            if role < 10
+                th 执行人
+            th 任务名称
+            th 任务内容
+            th
+                .animated-checkbox
+                    label
+                        button.btn.btn-primary.btn-sm#btn-delete-tasks(type='button')
+                            i.fa.fa-trash-o
+    tbody
+        - for (var i = 0; i < tasks.length; i++)
+            if tasks[i].state == '已创建'
+                - var trClass = 'table-created'
+            else if tasks[i].state == '已下发'
+                - var trClass = 'table-info'
+            else
+                - var trClass = 'table-error'
+            - var now = new Date()
+            - var today = new Date(now.getFullYear(), now.getMonth(), now.getDate())
+            - var endTime = tasks[i].endTime
+            - var endDate = new Date(endTime.replace(/\-/g, "\/"))
+            if tasks[i].state != '已创建'
+                if tasks[i].progress == 100 && endDate < today
+                    - var trClass = 'table-warning'
+                    - tasks[i].state = '超期完成'
+                else if endDate < today
+                    - var trClass = 'table-danger'
+                    - tasks[i].state = '已超期'
+                else if tasks[i].progress == 100
+                    - var trClass = 'table-success'
+                    - tasks[i].state = '已完成'
+
+            tr(class=trClass, id=`${tasks[i].id}`, data-work-object=`${tasks[i].workObject}`, data-work-place=`${tasks[i].workPlace}`)
+                td
+                    .animated-checkbox
+                        label
+                            input.cb-task-item(type="checkbox", data-id=`${tasks[i].id}`)
+                            span.label-text 
+                td #{i + 1}
+                if role < 10
+                    td(class=`td${0}`) #{tasks[i].creatorName}
+                td(class=`td${1}`) #{tasks[i].type}
+                td(class=`td${2}`) #{tasks[i].model}
+                td(class=`td${3}`) #{tasks[i].beginTime}
+                td(class=`td${4}`) #{tasks[i].endTime}
+                if role < 10
+                    td(class=`td${5}`) #{tasks[i].personHours}
+                td(class=`td${6}`) #{tasks[i].progress} %
+                td(class=`td${7}`) #{tasks[i].state}
+                if role < 10
+                    td(class=`td${8}`, data-id=`${tasks[i].executorID}`) #{tasks[i].executorName}
+                td(class=`td${9}`)
+                    .td-textarea.td-task-name #{tasks[i].name}
+                td(class=`td${10}`) 
+                    .td-textarea.td-task-content #{tasks[i].content}
+                td
+                    .animated-checkbox
+                        label
+                            .btn-group
+                                if role == 0
+                                    button.btn.btn-primary.btn-sm.btn-verify-task(type='button', value=`${tasks[i].id}`)
+                                        i.fa.fa-hand-o-right
+                                if role < 10
+                                    button.btn.btn-primary.btn-sm.btn-edit-task(type='button', value=`${tasks[i].id}`)
+                                        i.fa.fa-edit
+                                if role >= 10
+                                    button.btn.btn-primary.btn-sm.btn-browse-task(type='button', value=`${tasks[i].id}`)
+                                        i.fa.fa-binoculars
