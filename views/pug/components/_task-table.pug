@@ -23,10 +23,11 @@ table.table.table-hover
             if role >= 10
                 th 任务内容
             th
-                .animated-checkbox
-                    label
-                        button.btn.btn-primary.btn-sm#btn-delete-tasks(type='button')
-                            i.fa.fa-trash-o
+                if role < 10
+                    .animated-checkbox
+                        label
+                            button.btn.btn-primary.btn-sm#btn-delete-tasks(type='button')
+                                i.fa.fa-trash-o
     tbody
         - for (var i = 0; i < tasks.length; i++)
             - var now = new Date()

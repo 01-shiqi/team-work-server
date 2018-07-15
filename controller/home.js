@@ -15,9 +15,9 @@ class Home extends Base {
 
     async getIndex(req, res, next) {
         if(this.isAdmin(req)) {
-            res.redirect('/manage-worklogs')
+            res.redirect('/manage-tasks')
         } else {
-            res.redirect('/write-worklog')
+            res.redirect('/my-tasks')
         }
         // res.render('index', this.appendUserInfo(req))
     }
