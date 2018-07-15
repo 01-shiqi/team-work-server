@@ -196,29 +196,34 @@ block specific-js
 				return
 			}
 
-			//- 从后台删除
-			$.ajax({
-				url: "/delete-worklogs/",
-				type: "delete",
-				data: JSON.stringify(ids),
-				dataType: "json",
-				success: function(res){
-					if(res.succeed) {
-						// 删除界面上的日志记录
-						for(let i = 0; i < ids.length; ++i) {
-							$('#' + ids[i]).remove()
+			confirmDelete(ids.length, function(isConfirm){
+				if(!isConfirm) {
+					return
+				}
+				//- 从后台删除
+				$.ajax({
+					url: "/delete-worklogs/",
+					type: "delete",
+					data: JSON.stringify(ids),
+					dataType: "json",
+					success: function(res){
+						if(res.succeed) {
+							// 删除界面上的日志记录
+							for(let i = 0; i < ids.length; ++i) {
+								$('#' + ids[i]).remove()
+							}
+
+							swal("日志删除", "成功删除" + ids.length + "条日志！", "info")
+						} else {
+							swal("日志删除", "日志删除失败！ 原因：" + res.error, "error")
 						}
 
-						swal("日志删除", "成功删除" + ids.length + "条日志！", "info")
-					} else {
+					},
+
+					error: function(res){
 						swal("日志删除", "日志删除失败！ 原因：" + res.error, "error")
 					}
-
-				},
-
-				error: function(res){
-					swal("日志删除", "日志删除失败！ 原因：" + res.error, "error")
-				}
+				})
 			})
 		})
 

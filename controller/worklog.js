@@ -93,12 +93,17 @@ class Worklog extends Base {
      * @param {*} taskProgress 
      */
     async updateTaskProgress(taskID, taskProgress) {
-        
-        let sql = 'update tw_task set progress=? where ' 
-                + this.genStrCondition('id', taskID)
-
         let sqlData = []
         sqlData.push(taskProgress)
+
+        let sql = 'update tw_task set progress=? ' 
+        if(taskProgress >= 100) {
+            sql += ', actual_end_time=? '
+            let now = moment().format('YYYY-MM-DD')
+            sqlData.push(now)
+        }
+        sql += ' where ' + this.genStrCondition('id', taskID)
+
         let succeed = await this.executeSql(sql, sqlData)
 
         if(!succeed) {

@@ -28,26 +28,27 @@ table.table.table-hover
                             i.fa.fa-trash-o
     tbody
         - for (var i = 0; i < tasks.length; i++)
-            if tasks[i].state == '已创建'
-                - var trClass = 'table-created'
-            else if tasks[i].state == '已下发'
-                - var trClass = 'table-info'
-            else
-                - var trClass = 'table-error'
             - var now = new Date()
             - var today = new Date(now.getFullYear(), now.getMonth(), now.getDate())
-            - var endTime = tasks[i].endTime
-            - var endDate = new Date(endTime.replace(/\-/g, "\/"))
-            if tasks[i].state != '已创建'
-                if tasks[i].progress == 100 && endDate < today
-                    - var trClass = 'table-warning'
-                    - tasks[i].state = '超期完成'
-                else if endDate < today
-                    - var trClass = 'table-danger'
-                    - tasks[i].state = '已超期'
-                else if tasks[i].progress == 100
-                    - var trClass = 'table-success'
-                    - tasks[i].state = '已完成'
+            - var planEndTime = tasks[i].endTime
+            - var actualEndTime = tasks[i].actualEndTime
+            - var planEndDate = new Date(planEndTime.replace(/\-/g, "\/"))
+            - var actualEndDate = actualEndTime == null ? null : new Date(actualEndTime.replace(/\-/g, "\/"))
+            if tasks[i].progress == 100 && actualEndDate != null && actualEndDate <= planEndDate
+                - var trClass = 'table-success'
+                - tasks[i].state = '已完成'
+            else if tasks[i].progress == 100 && actualEndDate != null && actualEndDate > planEndDate
+                - var trClass = 'table-warning'
+                - tasks[i].state = '超期完成'
+            else if planEndDate < today
+                - var trClass = 'table-danger'
+                - tasks[i].state = '已超期'    
+            else if tasks[i].state == '已创建'
+                - var trClass = 'table-created'
+            else if tasks[i].state == '已下发'
+                - var trClass = 'table-info'       
+            else
+                - var trClass = 'table-error'
 
             tr(class=trClass, id=`${tasks[i].id}`, data-work-object=`${tasks[i].workObject}`, data-work-place=`${tasks[i].workPlace}`)
                 td

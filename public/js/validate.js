@@ -15,6 +15,23 @@ function getWorklog(){
     return worklog
 }
 
+/**
+ * 删除确认提示
+ * @param {*} count 
+ */
+function confirmDelete(count, func) {
+    swal({
+        title: "删除确认",
+        text: "确认要删除选中的" + count + "条记录吗？",
+        type: "warning",
+        showCancelButton: true,
+        confirmButtonText: "删除",
+        cancelButtonText: "取消",
+        closeOnConfirm: true,
+        closeOnCancel: true
+    }, func)
+}
+
 
 function showWarning(msg){
     $.notify({
