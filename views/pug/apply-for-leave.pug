@@ -1,0 +1,89 @@
+extends layouts/_layout.pug
+
+block variables
+	- var activePage = 'apply-for-leave'
+	- var activeGroup = 'forms'
+
+block title
+	title Team Work
+
+block content
+	.app-title
+		div
+			h1
+				i.fa.fa-edit
+				|  休假申请
+
+		ul.app-breadcrumb.breadcrumb
+			li.breadcrumb-item
+				i.fa.fa-home.fa-lg
+			li.breadcrumb-item
+				| 休假
+			li.breadcrumb-item
+				a(href="#") 休假申请
+
+	.row
+		.col-md-12
+			.tile
+				.tile-body
+					form.row
+						include ./components/_worklog-editor				
+						.form-group.col-md-12.align-center
+							button.btn.btn-primary.btn-lg.btn-block#btnCommitWorklog(type='button',href="#") 提交
+
+
+block specific-js
+	script(type='text/javascript', src="js/plugins/bootstrap-notify.min.js")
+	script(type='text/javascript', src="js/plugins/sweetalert.min.js")
+	script(type='text/javascript', src="js/plugins/bootstrap-datepicker/js/bootstrap-datepicker.min.js")
+	script(type='text/javascript', src="js/plugins/bootstrap-datepicker/locales/bootstrap-datepicker.zh-CN.min.js", charset="UTF-8")
+	script(type='text/javascript', src="js/plugins/select2.min.js")
+	script(type='text/javascript', src="js/validate.js")
+	script(type='text/javascript', src="js/_worklog.js")
+	script(type="text/javascript").
+		$('#sl').click(function(){
+			$('#tl').loadingBtn();
+			$('#tb').loadingBtn({ text : "Signing In"});
+		})
+
+		$('#el').click(function(){
+			$('#tl').loadingBtnComplete();
+			$('#tb').loadingBtnComplete({ html : "Sign In"});
+		})
+
+		// 设置日期的当前时间和截至时间
+		var now = new Date()
+		$('#worklogDate').datepicker('setDate', now)
+		$('#worklogDate').datepicker('setEndDate', now)
+
+		$('#btnCommitWorklog').click(function(){
+
+			let worklog = getWorklog()
+			
+			// 验证数据
+			if(!checkInput(worklog)){
+				return;
+			}
+
+			$.ajax({
+				url: "/write-worklog/",
+				type: "post",
+				data: JSON.stringify(worklog),
+				dataType: "json",
+				success: function(res){
+					if(res.succeed) {
+						swal("添加成功", "日志添加成功。", "success");
+					} else {
+						swal("添加失败", "日志添加失败！ 原因：" + res.error, "error");
+					}
+
+				},
+
+				error: function(res){
+					swal("添加失败", "日志添加失败！ 原因：" + res.error, "error");
+				}
+			});
+		});
+
+		$('.customSelect').select2({ tags: false })
+		$('.customSelect-tags').select2({ tags: true })
