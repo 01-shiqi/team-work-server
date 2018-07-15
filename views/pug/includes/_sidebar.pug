@@ -26,8 +26,8 @@ aside.app-sidebar
 					span.app-menu__label 日志管理
 
 			li
-				a.app-menu__item(href='verify-trips' class={'active': activePage == 'verify-trips'})
-					i.app-menu__icon.fa.fa-briefcase
+				a.app-menu__item(href='manage-trips' class={'active': activePage == 'manage-trips'})
+					i.app-menu__icon.fa.fa-paper-plane-o
 					span.app-menu__label 出差审批
 
 			li
@@ -53,8 +53,13 @@ aside.app-sidebar
 
 			li
 				a.app-menu__item(href='apply-for-trip' class={'active': activePage == 'apply-for-trip'})
-					i.app-menu__icon.fa.fa-briefcase
+					i.app-menu__icon.fa.fa-plane
 					span.app-menu__label 申请出差
+
+			li
+				a.app-menu__item(href='my-trips' class={'active': activePage == 'my-trips'})
+					i.app-menu__icon.fa.fa-paper-plane-o
+					span.app-menu__label 出差记录
 
 			li
 				a.app-menu__item(href='apply-for-leave' class={'active': activePage == 'apply-for-leave'})
