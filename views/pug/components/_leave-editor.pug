@@ -1,0 +1,33 @@
+.form-group.col-md-3
+    label.control-label.worklog-edit-label 休假类型
+    select.form-control.customSelect-tags#leaveType
+        optgroup(label="选择休假类型")
+            option 年假
+            option 事假
+            option 病假
+            option 产假
+
+.form-group.col-md-3
+    label.control-label 开始日期
+    input.form-control.datepicker#beginDate(type="text",placeholder="选择开始日期")
+
+.form-group.col-md-3
+    label.control-label 结束日期
+    input.form-control.datepicker#endDate(type="text",placeholder="选择结束日期")
+
+.form-group.col-md-3
+    label.control-label.worklog-edit-label 休假天数
+    select.form-control.customSelect-tags#leaveDays
+        optgroup(label="选择或录入休假天数")
+            option 0.5
+            option 1.0
+            option 1.5
+            option 2.0
+            option 2.5
+            option 3.0
+            option 3.5
+            option 4.0
+
+.form-group.col-md-12
+    label(for='description') 请假说明
+    textarea#description.form-control(rows='2')

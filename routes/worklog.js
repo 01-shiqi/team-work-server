@@ -4,6 +4,7 @@ import express from 'express';
 import Home from '../controller/home';
 import Worklog from '../controller/worklog';
 import Task from '../controller/task';
+import Leave from '../controller/leave';
 import User from '../controller/user';
 import Check from '../middlewares/check'
 
@@ -16,7 +17,6 @@ router.post('/write-worklog', Check.checkLogin, Worklog.commitWorklog)
 router.get('/my-worklogs', Check.checkLogin, Worklog.getMyWorklogs)
 router.post('/update-worklog', Check.checkLogin, Worklog.updateWorklog)
 router.delete('/delete-worklogs', Check.checkLogin, Worklog.deleteWorklogs)
-
 router.get('/manage-worklogs', Check.checkAdmin, Worklog.manageWorklogs)
 
 router.get('/manage-tasks', Check.checkAdmin, Task.manageTasks)
@@ -28,6 +28,9 @@ router.post('/close-task', Check.checkAdmin, Task.closeTask)
 router.delete('/delete-tasks', Check.checkAdmin, Task.deleteTasks)
 router.get('/my-tasks', Check.checkLogin, Task.getMyTasks)
 
+router.get('/apply-for-leave', Check.checkLogin, Leave.applyForLeave)
+router.post('/create-leave', Check.checkLogin, Leave.createLeave)
+router.delete('/delete-leaves', Check.checkLogin, Leave.deleteLeaves)
 
 router.post('/login', User.login)
 router.get('/logout', User.logout)

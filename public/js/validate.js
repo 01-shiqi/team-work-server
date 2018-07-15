@@ -19,10 +19,10 @@ function getWorklog(){
  * 删除确认提示
  * @param {*} count 
  */
-function confirmDelete(count, func) {
+function confirmDelete(count, message, func) {
     swal({
         title: "删除确认",
-        text: "确认要删除选中的" + count + "条记录吗？",
+        text: "确认要删除选中的" + count + "条记录吗？" + (message == null ? "" : message),
         type: "warning",
         showCancelButton: true,
         confirmButtonText: "删除",
@@ -143,3 +143,6 @@ function initEditDialog() {
 
 initDatePicker()
 initEditDialog()
+
+$('.customSelect').select2({ tags: false })
+$('.customSelect-tags').select2({ tags: true })

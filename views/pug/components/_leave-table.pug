@@ -1,0 +1,53 @@
+table.table.table-hover
+    thead
+        tr
+            th
+                .animated-checkbox
+                    label
+                        input#cb-select-all(type="checkbox")
+                        span.label-text 
+            th #
+            if role < 10
+                th 申请人
+            th 请假类型
+            th 开始日期
+            th 结束日期
+            th 请假天数
+            th 当前状态
+            th 请假说明
+            th
+                .animated-checkbox
+                    label
+                        button.btn.btn-primary.btn-sm#btn-delete-leaves(type='button')
+                            i.fa.fa-trash-o
+    tbody
+        - for (var i = 0; i < leaves.length; i++)
+            tr(id=`${leaves[i].id}`)
+                td
+                    .animated-checkbox
+                        label
+                            input.cb-task-item(type="checkbox", data-id=`${leaves[i].id}`, data-state=`${leaves[i].state}`)
+                            span.label-text 
+                td #{i + 1}
+                if role < 10
+                    td(class=`td${0}`) #{leaves[i].creatorName}
+                td(class=`td${1}`) #{leaves[i].leaveType}
+                td(class=`td${2}`) #{leaves[i].beginDate}
+                td(class=`td${3}`) #{leaves[i].endDate}
+                td(class=`td${4}`) #{leaves[i].leaveDays.toFixed(1)}
+                td(class=`td${5}`) #{leaves[i].state}
+                    td(class=`td${6}`) 
+                        .td-textarea.td-task-content #{leaves[i].description}
+                td
+                    .animated-checkbox
+                        label
+                            .btn-group
+                                if role >= 10
+                                    button.btn.btn-primary.btn-sm.btn-edit-leave(type='button', value=`${leaves[i].id}`, data-toggle='tooltip', title='修改')
+                                        i.fa.fa-edit
+                                if role < 0
+                                    button.btn.btn-primary.btn-sm.btn-verify-leave(type='button', value=`${leaves[i].id}`, data-toggle='tooltip', title='审核')
+                                        i.fa.fa-thumb-tack
+                                if role < 10
+                                    button.btn.btn-primary.btn-sm.btn-close-leave(type='button', value=`${leaves[i].id}`, data-toggle='tooltip', title='批准')
+                                        i.fa.fa-check-square
