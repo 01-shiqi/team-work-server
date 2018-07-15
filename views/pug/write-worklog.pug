@@ -52,6 +52,8 @@ block specific-js
 			$('#tb').loadingBtnComplete({ html : "Sign In"});
 		})
 
+		$('#task').trigger('change')
+
 		// 设置日期的当前时间和截至时间
 		var now = new Date()
 		$('#worklogDate').datepicker('setDate', now)

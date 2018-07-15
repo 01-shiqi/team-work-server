@@ -82,7 +82,7 @@ block specific-js
 			setSelect2Value('#personHours', getTableCellData(taskID, 5))
 			$('#executor').val(getTableCellID(taskID, 8))
 			$('#taskName').val(getTableCellData(taskID, '-task-name'))
-			$('#taskContent').val(getTableCellData(taskID, '-task-content'))
+			$('#taskContent').val(getTableRowData(taskID, 'data-content'))
 
 			$('#task-dialog').attr('data-task-id', taskID)
 			$('#task-dialog').attr('data-task-state', getTableCellData(taskID, 7))
@@ -115,6 +115,7 @@ block specific-js
 			setEditTaskDialogContent(taskID)
 			$('#task-dialog').attr('data-edit-task-mode', 'update-task')
 			$('#task-dialog-title').html('修改任务')
+			$('.form-control').attr('disabled', false)
 			$('#task-dialog').modal()
 		})
 
@@ -124,6 +125,8 @@ block specific-js
 			setEditTaskDialogContent(taskID)
 			$('#task-dialog').attr('data-edit-task-mode', 'verify-task')
 			$('#task-dialog-title').html('审核任务')
+			$('.form-control').attr('disabled', true)
+			$('#executor').attr('disabled', false)
 			$('#task-dialog').modal()
 		})
 

@@ -20,7 +20,8 @@ table.table.table-hover
             if role < 10
                 th 执行人
             th 任务名称
-            th 任务内容
+            if role >= 10
+                th 任务内容
             th
                 .animated-checkbox
                     label
@@ -50,7 +51,7 @@ table.table.table-hover
             else
                 - var trClass = 'table-error'
 
-            tr(class=trClass, id=`${tasks[i].id}`, data-work-object=`${tasks[i].workObject}`, data-work-place=`${tasks[i].workPlace}`)
+            tr(class=trClass, id=`${tasks[i].id}`, data-work-object=`${tasks[i].workObject}`, data-work-place=`${tasks[i].workPlace}`, data-content=`${tasks[i].content}`)
                 td
                     .animated-checkbox
                         label
@@ -71,18 +72,22 @@ table.table.table-hover
                     td(class=`td${8}`, data-id=`${tasks[i].executorID}`) #{tasks[i].executorName}
                 td(class=`td${9}`)
                     .td-textarea.td-task-name #{tasks[i].name}
-                td(class=`td${10}`) 
-                    .td-textarea.td-task-content #{tasks[i].content}
+                if role >= 10
+                    td(class=`td${10}`) 
+                        .td-textarea.td-task-content #{tasks[i].content}
                 td
                     .animated-checkbox
                         label
                             .btn-group
+                                if role < 10
+                                    button.btn.btn-primary.btn-sm.btn-edit-task(type='button', value=`${tasks[i].id}`, data-toggle='tooltip', title='修改任务')
+                                        i.fa.fa-edit
                                 if role == 0
-                                    button.btn.btn-primary.btn-sm.btn-verify-task(type='button', value=`${tasks[i].id}`)
+                                    button.btn.btn-primary.btn-sm.btn-verify-task(type='button', value=`${tasks[i].id}`, data-toggle='tooltip', title='审核任务')
                                         i.fa.fa-hand-o-right
                                 if role < 10
-                                    button.btn.btn-primary.btn-sm.btn-edit-task(type='button', value=`${tasks[i].id}`)
-                                        i.fa.fa-edit
+                                    button.btn.btn-primary.btn-sm.btn-close-task(type='button', value=`${tasks[i].id}`, data-toggle='tooltip', title='关闭任务')
+                                        i.fa.fa-thumb-tack
                                 if role >= 10
-                                    button.btn.btn-primary.btn-sm.btn-browse-task(type='button', value=`${tasks[i].id}`)
+                                    button.btn.btn-primary.btn-sm.btn-browse-task(type='button', value=`${tasks[i].id}`, data-toggle='tooltip', title='查看任务')
                                         i.fa.fa-binoculars
