@@ -22,7 +22,30 @@ table.table.table-hover
                             i.fa.fa-trash-o
     tbody
         - for (var i = 0; i < leaves.length; i++)
-            tr(id=`${leaves[i].id}`)
+
+            if leaves[i].state == '待审核'
+                - var trClass = 'table-danger'
+                - var updateDisabled = false
+                - var verifyDisabled = false
+                - var approveDisabled = false
+            else if leaves[i].state == '待批准'
+                - var trClass = 'table-warning'
+                - var updateDisabled = false
+                - var verifyDisabled = true
+                - var approveDisabled = false
+            else if leaves[i].state == '已完成'
+                - var trClass = 'table-success'
+                - var updateDisabled = true
+                - var verifyDisabled = true
+                - var approveDisabled = true
+            else
+                - var trClass = 'table-closed'
+                - var updateDisabled = true
+                - var verifyDisabled = true
+                - var approveDisabled = true
+
+
+            tr(class=trClass, id=`${leaves[i].id}`)
                 td
                     .animated-checkbox
                         label
@@ -42,11 +65,11 @@ table.table.table-hover
                     .animated-checkbox
                         label
                             .btn-group
-                                button.btn.btn-primary.btn-sm.btn-edit-leave(type='button', value=`${leaves[i].id}`, data-toggle='tooltip', title='修改')
+                                button.btn.btn-primary.btn-sm.btn-edit-leave(type='button', value=`${leaves[i].id}`, data-toggle='tooltip', title='修改', disabled=updateDisabled)
                                     i.fa.fa-edit
                                 if role < 10 && role >= 0
-                                    button.btn.btn-primary.btn-sm.btn-verify-leave(type='button', value=`${leaves[i].id}`, data-toggle='tooltip', title='审核')
+                                    button.btn.btn-primary.btn-sm.btn-verify-leave(type='button', value=`${leaves[i].id}`, data-toggle='tooltip', title='审核', disabled=verifyDisabled)
                                         i.fa.fa-thumb-tack
                                 if role < 0
-                                    button.btn.btn-primary.btn-sm.btn-approve-leave(type='button', value=`${leaves[i].id}`, data-toggle='tooltip', title='批准')
+                                    button.btn.btn-primary.btn-sm.btn-approve-leave(type='button', value=`${leaves[i].id}`, data-toggle='tooltip', title='批准', disabled=approveDisabled)
                                         i.fa.fa-check-square
