@@ -12,10 +12,13 @@ class Leave extends Base {
         super()
 
         this.applyForLeave = this.applyForLeave.bind(this)
+        this.manageLeaves = this.manageLeaves.bind(this)
         this.getMyLeaves = this.getMyLeaves.bind(this)
         this.getLeaveList = this.getLeaveList.bind(this)
         this.createLeave = this.createLeave.bind(this)
         this.updateLeave = this.updateLeave.bind(this)
+        this.verifyLeave = this.verifyLeave.bind(this)
+        this.approveLeave = this.approveLeave.bind(this)
         this.deleteLeaves = this.deleteLeaves.bind(this)
     }
 
@@ -27,6 +30,16 @@ class Leave extends Base {
      */
     async applyForLeave(req, res, next) {
         res.render('apply-for-leave', this.appendUserInfo(req))
+    }
+
+    /**
+     * 请假审批
+     * @param {*} req 
+     * @param {*} res 
+     * @param {*} next 
+     */
+    async manageLeaves(req, res, next) {
+        await this.getLeaveList(req, res, next, true)
     }
 
     /**
@@ -109,7 +122,7 @@ class Leave extends Base {
             sqlSource.push(leave.endDate)
             sqlSource.push(leave.leaveDays)
             sqlSource.push(leave.description)
-            sqlSource.push('已申请')
+            sqlSource.push('待审核')
 
             var now = moment().format('YYYY-MM-DD hh:mm:ss')
             sqlSource.push(now)
@@ -142,7 +155,7 @@ class Leave extends Base {
             let bodyData = await this.extractStringData(req)
             let leave = JSON.parse(bodyData)
 
-            if(leave.state && leave.state != '已申请' && !this.isSuperAdmin(req)) {
+            if(leave.state && leave.state != '待审核' && !this.isSuperAdmin(req)) {
                 this.sendFailed(res, '休假申请已审核，无法修改')
                 return
             }
@@ -160,6 +173,87 @@ class Leave extends Base {
             sqlSource.push(userID)
 
             let sql = 'update tw_leave set leave_type=? , begin_date=?, end_date=?, leave_days=?, description=?, updated_at=?, updated_by=? where '
+                + this.genStrCondition('id', leave.id)
+
+            await this.executeSql(sql, sqlSource);
+            this.sendSucceed(res)
+        }
+        catch (error) {
+            logger.error(error)
+            this.sendFailed(res, error.message)
+        }
+    }
+
+
+
+    /**
+     * 审核休假申请
+     * @param {*} req 
+     * @param {*} res 
+     * @param {*} next 
+     */
+    async verifyLeave(req, res, next) {
+
+        try {
+            let bodyData = await this.extractStringData(req)
+            let leave = JSON.parse(bodyData)
+
+            if(leave.state && leave.state != '待审核') {
+                this.sendFailed(res, '休假申请已审核或已批准')
+                return
+            }
+
+            const userID = this.getUserID(req)
+            let sqlSource = []
+
+            let state = '待批准'
+            if(leave.leaveDays <= 1.0) {
+                state = '已完成'
+            }
+
+            sqlSource.push(state)
+            let now = moment().format('YYYY-MM-DD hh:mm:ss')
+            sqlSource.push(now)
+            sqlSource.push(userID)
+
+            let sql = 'update tw_leave set state=?, verified_at=?, verified_by=? where '
+                + this.genStrCondition('id', leave.id)
+
+            await this.executeSql(sql, sqlSource);
+            this.sendSucceed(res)
+        }
+        catch (error) {
+            logger.error(error)
+            this.sendFailed(res, error.message)
+        }
+    }
+
+    /**
+     * 批准休假申请
+     * @param {*} req 
+     * @param {*} res 
+     * @param {*} next 
+     */
+    async approveLeave(req, res, next) {
+
+        try {
+            let bodyData = await this.extractStringData(req)
+            let leave = JSON.parse(bodyData)
+
+            if(leave.state && leave.state == '已完成') {
+                this.sendFailed(res, '休假申请已批准')
+                return
+            }
+
+            const userID = this.getUserID(req)
+            let sqlSource = []
+
+            sqlSource.push('已完成')
+            let now = moment().format('YYYY-MM-DD hh:mm:ss')
+            sqlSource.push(now)
+            sqlSource.push(userID)
+
+            let sql = 'update tw_leave set state=?, approved_at=?, approved_by=? where '
                 + this.genStrCondition('id', leave.id)
 
             await this.executeSql(sql, sqlSource);

@@ -31,8 +31,8 @@ aside.app-sidebar
 					span.app-menu__label 出差审批
 
 			li
-				a.app-menu__item(href='verify-leaves' class={'active': activePage == 'verify-leaves'})
-					i.app-menu__icon.fa.fa-clock-o
+				a.app-menu__item(href='manage-leaves' class={'active': activePage == 'manage-leaves'})
+					i.app-menu__icon.fa.fa-history
 					span.app-menu__label 休假审批
 
 		if role >= 10
@@ -63,5 +63,5 @@ aside.app-sidebar
 
 			li
 				a.app-menu__item(href='my-leaves' class={'active': activePage == 'my-leaves'})
-					i.app-menu__icon.fa.fa-clock-o
+					i.app-menu__icon.fa.fa-history
 					span.app-menu__label 休假记录

@@ -44,9 +44,9 @@ table.table.table-hover
                             .btn-group
                                 button.btn.btn-primary.btn-sm.btn-edit-leave(type='button', value=`${leaves[i].id}`, data-toggle='tooltip', title='修改')
                                     i.fa.fa-edit
-                                if role < 0
+                                if role < 10 && role >= 0
                                     button.btn.btn-primary.btn-sm.btn-verify-leave(type='button', value=`${leaves[i].id}`, data-toggle='tooltip', title='审核')
                                         i.fa.fa-thumb-tack
-                                if role < 10
-                                    button.btn.btn-primary.btn-sm.btn-close-leave(type='button', value=`${leaves[i].id}`, data-toggle='tooltip', title='批准')
+                                if role < 0
+                                    button.btn.btn-primary.btn-sm.btn-approve-leave(type='button', value=`${leaves[i].id}`, data-toggle='tooltip', title='批准')
                                         i.fa.fa-check-square

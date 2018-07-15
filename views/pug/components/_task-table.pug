@@ -85,7 +85,7 @@ table.table.table-hover
                                 if role < 10
                                     button.btn.btn-primary.btn-sm.btn-edit-task(type='button', value=`${tasks[i].id}`, data-toggle='tooltip', title='修改任务')
                                         i.fa.fa-edit
-                                if role == 0
+                                if role <= 0
                                     button.btn.btn-primary.btn-sm.btn-verify-task(type='button', value=`${tasks[i].id}`, data-toggle='tooltip', title='审核任务')
                                         i.fa.fa-thumb-tack
                                 if role < 10

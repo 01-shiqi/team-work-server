@@ -122,7 +122,7 @@ class Base {
      */
     isSuperAdmin(req) {
         let role = req.session.role
-        return role == 0
+        return role <= 0
     }
 
     /**

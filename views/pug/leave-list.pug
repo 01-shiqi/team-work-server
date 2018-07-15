@@ -1,0 +1,207 @@
+extends layouts/_layout.pug
+
+block variables
+	- var activePage = 'my-leaves'
+	- var activeGroup = 'forms'
+
+block title
+	title Team Work
+
+block content
+	.app-title
+		div
+			h1
+				i.fa(class=`${icon}`)
+				|  #{title}
+
+		ul.app-breadcrumb.breadcrumb
+			li.breadcrumb-item
+				i.fa.fa-home.fa-lg
+			li.breadcrumb-item
+				| 休假
+			li.breadcrumb-item
+				a(href="#")  #{title}
+
+	.modal.fade.editDialog#edit-dialog(aria-hide="true")
+		.modal-dialog(role='dialog', style="width:1200px;max-width:1200px;top:50px;")
+			.modal-content
+				.modal-header
+					h5.modal-title#edit-dialog-title 修改申请记录
+					button.close(type='button', data-dismiss='modal', aria-label='Close')
+						span(aria-hidden='true') ×
+				.modal-body
+					form.row
+						include ./components/_leave-editor
+				.modal-footer
+					button.btn.btn-primary#btn-commit(type='button') 确定
+					button.btn.btn-secondary(type='button', data-dismiss='modal') 取消
+
+	.row
+		.col-md-12
+			.tile
+				include ./components/_leave-table
+				include ./components/_pagination		
+
+block specific-js
+	script(type='text/javascript', src="js/plugins/bootstrap-notify.min.js")
+	script(type='text/javascript', src="js/plugins/sweetalert.min.js")
+	script(type='text/javascript', src="js/plugins/bootstrap-datepicker/js/bootstrap-datepicker.min.js")
+	script(type='text/javascript', src="js/plugins/bootstrap-datepicker/locales/bootstrap-datepicker.zh-CN.min.js", charset="UTF-8")
+	script(type='text/javascript', src="js/plugins/select2.min.js")
+	script(type='text/javascript', src="js/validate.js")
+	script(type='text/javascript', src="js/_table.js")
+	script(type='text/javascript', src="js/_leave.js")
+	script(type="text/javascript").
+		
+		// 获取休假信息
+		function getLeave() {
+			let leave = {
+				leaveType: $('#leaveType').val(),
+				beginDate: $('#beginDate').val(),
+				endDate: $('#endDate').val(),
+				leaveDays: $('#leaveDays').val(),
+				description: $('#description').val(),
+				state: $('#edit-dialog').data('state')
+			}
+
+			return leave
+		}
+
+		// 设置对话框内容
+		function setEditDialogContent(leaveID) {
+			setSelect2Value('#leaveType', getTableCellData(leaveID, 1))
+			$('#beginDate').val(getTableCellData(leaveID, 2))
+			$('#endDate').val(getTableCellData(leaveID, 3))
+			setSelect2Value('#leaveDays', getTableCellData(leaveID, 4))
+			$('#description').val(getTableCellData(leaveID, '-leave-description'))
+
+			$('#edit-dialog').attr('data-id', leaveID)
+			$('#edit-dialog').data('state', getTableCellData(leaveID, 5))
+		}
+
+		// 设置编辑对话框的模式
+		function setEditDialogMode(editMode, title, disabledSelector, enabledSelector) {
+			$('#edit-dialog').attr('data-edit-mode', editMode)
+			$('#edit-dialog-title').html(title)
+			$('#btn-commit').html(title)
+			if (disabledSelector != null) {
+				$(disabledSelector).attr('disabled', true)
+			}
+			if (enabledSelector != null) {
+				$(enabledSelector).attr('disabled', false)
+			}
+		}
+
+		// 修改休假申请
+		$('.btn-edit-leave').click(function(){
+			let leaveID = $(this).val()
+			setEditDialogContent(leaveID)
+			setEditDialogMode('update-leave', '修改休假申请', null, '.form-control')
+			$('#edit-dialog').modal()
+		})
+
+		// 审核休假申请
+		$('.btn-verify-leave').click(function(){
+			let leaveID = $(this).val()
+			setEditDialogContent(leaveID)
+			setEditDialogMode('verify-leave', '审核休假申请', '.form-control', null)
+			$('#edit-dialog').modal()
+		})
+
+		// 批准休假申请
+		$('.btn-approve-leave').click(function(){
+			let leaveID = $(this).val()
+			setEditDialogContent(leaveID)
+			setEditDialogMode('approve-leave', '批准休假申请', '.form-control', null)
+			$('#edit-dialog').modal()
+		})
+
+		// 验证输入的有效性
+		function checkInputValid(leave) {
+			return true
+		}
+
+		// 编辑对话框的确认事件
+		$('#btn-commit').click(function(){
+
+			let leave = getLeave()
+			leave.id = $('#edit-dialog').attr('data-id')
+			
+			//- 验证数据
+			if(!checkInputValid(leave)){
+				return;
+			}
+
+			let editMode = $('#edit-dialog').attr('data-edit-mode')
+
+			let messageTitle = $('#edit-dialog-title').html()
+
+			//- 向后台发送更新数据请求
+			$.ajax({
+				url: "/" + editMode + "/",
+				type: "post",
+				data: JSON.stringify(leave),
+				dataType: "json",
+				success: function(res){
+					if(res.succeed) {
+						//- 更新任务列表
+						$('#edit-dialog').modal('hide')
+						window.location.reload()
+					} else {
+						swal(messageTitle, messageTitle + "失败！ 原因：" + res.error, "error")
+					}
+				},
+
+				error: function(res){
+					swal(messageTitle, messageTitle + "失败！ 原因：" + res.error, "error")
+				}
+			})
+		})
+
+		// 删除选中的休假申请
+		$('#btn-delete-leaves').click(function(){
+			let ids = []
+			$(".cb-task-item:checked").each(function(index){
+				let state = $(this).data('state')
+				if(!state || state == '待审核'){
+					ids.push($(this).data('id'))	
+				}
+			})
+
+			if(ids.length <= 0){
+				return
+			}
+
+			confirmDelete(ids.length, '只能删除待审核状态的休假记录', function(isConfirm){
+				if(!isConfirm) {
+					return
+				}
+				//- 从后台删除
+				$.ajax({
+					url: "/delete-leaves/",
+					type: "delete",
+					data: JSON.stringify(ids),
+					dataType: "json",
+					success: function(res){
+						if(res.succeed) {
+							// 删除界面上的日志记录
+							for(let i = 0; i < ids.length; ++i) {
+								$('#' + ids[i]).remove()
+							}
+
+							swal("删除休假记录", "成功删除" + ids.length + "条休假记录！", "info")
+							//- window.location.reload()
+						} else {
+							swal("删除休假记录", "删除休假记录失败！ 原因：" + res.error, "error")
+						}
+
+					},
+
+					error: function(res){
+						swal("删除休假记录", "删除休假记录失败！ 原因：" + res.error, "error")
+					}
+				})
+			})
+		})
+
+		
