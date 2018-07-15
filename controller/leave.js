@@ -12,18 +12,29 @@ class Leave extends Base {
         super()
 
         this.applyForLeave = this.applyForLeave.bind(this)
+        this.getMyLeaves = this.getMyLeaves.bind(this)
         this.getLeaveList = this.getLeaveList.bind(this)
         this.createLeave = this.createLeave.bind(this)
         this.deleteLeaves = this.deleteLeaves.bind(this)
     }
 
     /**
-     * 休假申请
+     * 申请休假
      * @param {*} req 
      * @param {*} res 
      * @param {*} next 
      */
     async applyForLeave(req, res, next) {
+        res.render('apply-for-leave', this.appendUserInfo(req))
+    }
+
+    /**
+     * 获取我的请假记录
+     * @param {*} req 
+     * @param {*} res 
+     * @param {*} next 
+     */
+    async getMyLeaves(req, res, next) {
         await this.getLeaveList(req, res, next, false)
     }
 
@@ -69,7 +80,7 @@ class Leave extends Base {
             resultData.leaves = await this.queryArray(sql)
             resultData.pageCount = pageCount
             resultData.pageIndex = pageIndex
-            let viewName = allusers ? 'manage-leaves' : 'apply-for-leave'
+            let viewName = allusers ? 'manage-leaves' : 'my-leaves'
             res.render(viewName, this.appendUserInfo(req, resultData))
         }
         catch (error) {
@@ -97,6 +108,7 @@ class Leave extends Base {
             sqlSource.push(leave.endDate)
             sqlSource.push(leave.leaveDays)
             sqlSource.push(leave.description)
+            sqlSource.push('已申请')
 
             var now = moment().format('YYYY-MM-DD hh:mm:ss')
             sqlSource.push(now)
@@ -104,8 +116,8 @@ class Leave extends Base {
             sqlSource.push(now)
             sqlSource.push(userID)
 
-            var sql = 'insert into tw_leave (id, leave_type, begin_date, end_date, leave_days, description, created_at, created_by, updated_at, updated_by)' +
-                'values(?,?,?,?, ?,?,?,?, ?,?)'
+            var sql = 'insert into tw_leave (id, leave_type, begin_date, end_date, leave_days, description, state, created_at, created_by, updated_at, updated_by)' +
+                'values(?,?,?,?, ?,?,?,?, ?,?,?)'
 
             let succeed = await this.executeSql(sql, sqlSource)
             this.sendSucceed(res)

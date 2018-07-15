@@ -31,6 +31,7 @@ router.get('/my-tasks', Check.checkLogin, Task.getMyTasks)
 router.get('/apply-for-leave', Check.checkLogin, Leave.applyForLeave)
 router.post('/create-leave', Check.checkLogin, Leave.createLeave)
 router.delete('/delete-leaves', Check.checkLogin, Leave.deleteLeaves)
+router.get('/my-leaves', Check.checkLogin, Leave.getMyLeaves)
 
 router.post('/login', User.login)
 router.get('/logout', User.logout)

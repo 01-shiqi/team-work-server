@@ -12,7 +12,7 @@ block content
 		div
 			h1
 				i.fa.fa-clock-o
-				|  休假申请
+				|  申请休假
 
 		ul.app-breadcrumb.breadcrumb
 			li.breadcrumb-item
@@ -20,7 +20,7 @@ block content
 			li.breadcrumb-item
 				| 休假
 			li.breadcrumb-item
-				a(href="#") 休假申请
+				a(href="#") 申请休假
 
 	.row
 		.col-md-12
@@ -29,10 +29,7 @@ block content
 					form.row
 						include ./components/_leave-editor				
 						.form-group.col-md-12.align-center
-							button.btn.btn-primary.btn-lg.btn-block#btn-create-leave(type='button',href="#") 提交
-			.tile
-				include ./components/_leave-table
-				include ./components/_pagination		
+							button.btn.btn-primary.btn-lg.btn-block#btn-create-leave(type='button',href="#") 提交		
 
 block specific-js
 	script(type='text/javascript', src="js/plugins/bootstrap-notify.min.js")
@@ -41,7 +38,7 @@ block specific-js
 	script(type='text/javascript', src="js/plugins/bootstrap-datepicker/locales/bootstrap-datepicker.zh-CN.min.js", charset="UTF-8")
 	script(type='text/javascript', src="js/plugins/select2.min.js")
 	script(type='text/javascript', src="js/validate.js")
-	script(type='text/javascript', src="js/_worklog.js")
+	script(type='text/javascript', src="js/_leave.js")
 	script(type="text/javascript").
 
 		// 设置日期的当前时间和截至时间
@@ -51,19 +48,6 @@ block specific-js
 		$('#endDate').datepicker('setDate', now)
 		$('#endDate').datepicker('setBeginDate', now)
 		setSelect2Value('#leaveDays', '1.0')
-		
-		// 获取休假信息
-		function getLeave() {
-			let leave = {
-				leaveType: $('#leaveType').val(),
-				beginDate: $('#beginDate').val(),
-				endDate: $('#endDate').val(),
-				leaveDays: $('#leaveDays').val(),
-				description: $('#description').val()
-			}
-
-			return leave
-		}
 
 		$('#btn-create-leave').click(function(){
 
@@ -88,60 +72,3 @@ block specific-js
 				}
 			});
 		})
-
-		//- 全选或取消全选
-		$('#cb-select-all').click(function(){
-
-			var allChecked = this.checked
-			$(".cb-task-item").each(function(){
-				this.checked = allChecked
-			})
-		})
-
-		// 删除选中的休假申请
-		$('#btn-delete-leaves').click(function(){
-			let ids = []
-			$(".cb-task-item:checked").each(function(index){
-				let state = $(this).data('state')
-				if(!state || state == '已申请'){
-					ids.push($(this).data('id'))	
-				}
-			})
-
-			if(ids.length <= 0){
-				return
-			}
-
-			confirmDelete(ids.length, '只能删除已申请状态的休假记录', function(isConfirm){
-				if(!isConfirm) {
-					return
-				}
-				//- 从后台删除
-				$.ajax({
-					url: "/delete-leaves/",
-					type: "delete",
-					data: JSON.stringify(ids),
-					dataType: "json",
-					success: function(res){
-						if(res.succeed) {
-							// 删除界面上的日志记录
-							for(let i = 0; i < ids.length; ++i) {
-								$('#' + ids[i]).remove()
-							}
-
-							swal("删除休假记录", "成功删除" + ids.length + "条休假记录！", "info")
-							//- window.location.reload()
-						} else {
-							swal("删除休假记录", "删除休假记录失败！ 原因：" + res.error, "error")
-						}
-
-					},
-
-					error: function(res){
-						swal("删除休假记录", "删除休假记录失败！ 原因：" + res.error, "error")
-					}
-				})
-			})
-		})
-
-		
