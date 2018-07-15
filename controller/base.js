@@ -49,7 +49,61 @@ class Base {
 
         this.isSuperAdmin = this.isSuperAdmin.bind(this)
         this.isAdmin = this.isAdmin.bind(this)
+
+        this.loadBasicInfo = this.loadBasicInfo.bind(this)
+        this.loadAllBasicInfos = this.loadAllBasicInfos.bind(this)
+        this.loadTasks = this.loadTasks.bind(this)
     }
+
+
+    /**
+     * 加载我的任务信息
+     */
+    async loadTasks(userID, allExecutors, containClosedState) {
+        try {
+            let sql = 'select id, `name`, model, type as type, work_object as workObject, work_place as workPlace, progress from tw_task where state != \'已创建\' '
+            if(!containClosedState) {
+                sql += ' and state != \'已关闭\' '
+            }
+            if(!allExecutors) {
+                sql += ' and ' + this.genStrCondition('executor_id', userID)
+            }
+            sql += ' order by `name`'
+            let tasks = await this.queryArray(sql)
+            return tasks
+        }
+        catch (error) {
+            return []
+        }
+    }
+
+    /**
+     * 加载基本信息
+     * @param {*} tableName 
+     */
+    async loadBasicInfo(tableName) {
+        try {
+            var sql = 'select `name` from ' + tableName +  ' order by `order`'
+            var basicInfos = await this.queryArray(sql)
+            return basicInfos
+        }
+        catch (error) {
+            return []
+        }
+    }
+
+    async loadAllBasicInfos() {
+
+        let basicInfos = {}
+
+        basicInfos.workTimes = await this.loadBasicInfo('tw_work_time')
+        basicInfos.workTypes = await this.loadBasicInfo('tw_work_type')
+        basicInfos.models = await this.loadBasicInfo('tw_model')
+        basicInfos.workPlaces = await this.loadBasicInfo('tw_work_place')
+        basicInfos.workObjects = await this.loadBasicInfo('tw_work_object')
+
+        return basicInfos
+    }    
 
 
     callFunc(funcName) {

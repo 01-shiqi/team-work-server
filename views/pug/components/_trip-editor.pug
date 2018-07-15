@@ -1,0 +1,69 @@
+            
+.form-group.col-md-12
+    label.control-label.worklog-edit-label 任务名称
+    select.form-control.customSelect#task(placeholder="选择任务")
+        optgroup(label="选择任务")
+            - for (var i = 0; i < tasks.length; i++)
+                option(value=`${tasks[i].id}`, data-model=`${tasks[i].model}`, data-type=`${tasks[i].type}`, data-work-object=`${tasks[i].workObject}`, data-work-place=`${tasks[i].workPlace}`, data-task-progress=`${tasks[i].progress}`) #{tasks[i].name}
+
+.form-group.col-md-3
+    label.control-label.worklog-edit-label 所属型号
+    select.form-control.customSelect#model
+        optgroup(label="选择所属型号")
+            - for (var i = 0; i < models.length; i++)
+                option #{models[i].name}
+
+.form-group.col-md-3
+    label.control-label.worklog-edit-label 工作类型
+    select.form-control.customSelect#workType
+        optgroup(label="选择工作类型")
+            - for (var i = 0; i < workTypes.length; i++)
+                option #{workTypes[i].name}
+
+.form-group.col-md-3
+    label.control-label.worklog-edit-label 工作对象
+    select.form-control.customSelect-tags#workObject(placeholder="选择或录入工作对象，如XXXX系统、XXXX软件")
+        optgroup(label="选择或录入工作对象")
+            - for (var i = 0; i < workObjects.length; i++)
+                option #{workObjects[i].name}
+
+.form-group.col-md-3
+    label.control-label.worklog-edit-label 出差地点
+    select.form-control.customSelect-tags#workPlace
+        optgroup(label="选择或录入工作地点")
+            - for (var i = 0; i < workPlaces.length; i++)
+                option #{workPlaces[i].name}
+
+.form-group.col-md-3
+    label.control-label.worklog-edit-label 休假类型
+    select.form-control.customSelect-tags#leaveType
+        optgroup(label="选择休假类型")
+            option 年假
+            option 事假
+            option 病假
+            option 产假
+
+.form-group.col-md-3
+    label.control-label 开始日期
+    input.form-control.datepicker#beginDate(type="text",placeholder="选择开始日期")
+
+.form-group.col-md-3
+    label.control-label 结束日期
+    input.form-control.datepicker#endDate(type="text",placeholder="选择结束日期")
+
+.form-group.col-md-3
+    label.control-label.worklog-edit-label 休假天数
+    select.form-control.customSelect-tags#leaveDays
+        optgroup(label="选择或录入休假天数")
+            option 0.5
+            option 1.0
+            option 1.5
+            option 2.0
+            option 2.5
+            option 3.0
+            option 3.5
+            option 4.0
+
+.form-group.col-md-12
+    label(for='description') 请假说明
+    textarea#description.form-control(rows='6', placeholder='请输入请假说明或工作交接情况')

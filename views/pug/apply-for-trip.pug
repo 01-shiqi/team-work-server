@@ -1,0 +1,74 @@
+extends layouts/_layout.pug
+
+block variables
+	- var activePage = 'apply-for-trip'
+	- var activeGroup = 'forms'
+
+block title
+	title Team Work
+
+block content
+	.app-title
+		div
+			h1
+				i.fa.fa-clock-o
+				|  申请出差
+
+		ul.app-breadcrumb.breadcrumb
+			li.breadcrumb-item
+				i.fa.fa-home.fa-lg
+			li.breadcrumb-item
+				| 出差
+			li.breadcrumb-item
+				a(href="#") 申请出差
+
+	.row
+		.col-md-12
+			.tile
+				.tile-body
+					form.row
+						include ./components/_trip-editor				
+						.form-group.col-md-12.align-center
+							button.btn.btn-primary.btn-lg.btn-block#btn-create-trip(type='button',href="#") 提交		
+
+block specific-js
+	script(type='text/javascript', src="js/plugins/bootstrap-notify.min.js")
+	script(type='text/javascript', src="js/plugins/sweetalert.min.js")
+	script(type='text/javascript', src="js/plugins/bootstrap-datepicker/js/bootstrap-datepicker.min.js")
+	script(type='text/javascript', src="js/plugins/bootstrap-datepicker/locales/bootstrap-datepicker.zh-CN.min.js", charset="UTF-8")
+	script(type='text/javascript', src="js/plugins/select2.min.js")
+	script(type='text/javascript', src="js/validate.js")
+	script(type='text/javascript', src="js/_trip.js")
+	script(type="text/javascript").
+
+		// 设置日期的当前时间和截至时间
+		var now = new Date()
+		$('#beginDate').datepicker('setDate', now)
+		$('#beginDate').datepicker('setBeginDate', now)
+		$('#endDate').datepicker('setDate', now)
+		$('#endDate').datepicker('setBeginDate', now)
+		setSelect2Value('#leaveDays', '1.0')
+
+		$('#btn-create-trip').click(function(){
+
+			let leave = getTrip()
+
+			$.ajax({
+				url: "/create-trip/",
+				type: "post",
+				data: JSON.stringify(trip),
+				dataType: "json",
+				success: function(res){
+					if(res.succeed) {
+						swal("创建成功", "出差申请创建成功。", "success")
+					} else {
+						swal("创建失败", "出差申请创建失败！ 原因：" + res.error, "error")
+					}
+
+				},
+
+				error: function(res){
+					swal("创建失败", "出差申请创建失败！ 原因：" + res.error, "error")
+				}
+			});
+		})

@@ -5,6 +5,7 @@ import Home from '../controller/home';
 import Worklog from '../controller/worklog';
 import Task from '../controller/task';
 import Leave from '../controller/leave';
+import Trip from '../controller/trip';
 import User from '../controller/user';
 import Check from '../middlewares/check'
 
@@ -36,6 +37,15 @@ router.post('/verify-leave', Check.checkLogin, Leave.verifyLeave)
 router.post('/approve-leave', Check.checkLogin, Leave.approveLeave)
 router.delete('/delete-leaves', Check.checkLogin, Leave.deleteLeaves)
 router.get('/my-leaves', Check.checkLogin, Leave.getMyLeaves)
+
+router.get('/manage-trips', Check.checkAdmin, Trip.manageTrips)
+router.get('/apply-for-trip', Check.checkLogin, Trip.applyForTrip)
+router.post('/create-trip', Check.checkLogin, Trip.createTrip)
+router.post('/update-trip', Check.checkLogin, Trip.updateTrip)
+router.post('/verify-trip', Check.checkLogin, Trip.verifyTrip)
+router.post('/approve-trip', Check.checkLogin, Trip.approveTrip)
+router.delete('/delete-trips', Check.checkLogin, Trip.deleteTrips)
+router.get('/my-trips', Check.checkLogin, Trip.getMyTrips)
 
 router.post('/login', User.login)
 router.get('/logout', User.logout)
