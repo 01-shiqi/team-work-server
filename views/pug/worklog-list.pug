@@ -107,7 +107,7 @@ block specific-js
 			itemValues.push($("#"+ worklogID + " .td-textarea").html())
 
 			let index = 0;
-			setSelect2Value('#task', $("#"+ worklogID).data('task-id'))
+			$('#task').val( $("#"+ worklogID).data('task-id'))
 			setSelect2Value('#taskProgress', $("#"+ worklogID).data('task-progress'))
 
 			$('#worklogDate').val(itemValues[index++])

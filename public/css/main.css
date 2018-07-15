@@ -15271,3 +15271,18 @@ be a descendant of the grid when it is being dragged.
 .table-hover .table-created:hover > th {
   background-color: #e1e1f0;
 }
+
+.table-closed,
+.table-closed > th,
+.table-closed > td {
+  background-color: #c6c8ca;
+}
+
+.table-hover .table-closed:hover {
+  background-color: #b9bbbe;
+}
+
+.table-hover .table-closed:hover > td,
+.table-hover .table-closed:hover > th {
+  background-color: #b9bbbe;
+}

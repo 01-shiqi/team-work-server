@@ -108,14 +108,25 @@ block specific-js
 			return task
 		}
 
+		// 设置任务编辑对话框的模式
+		function setEditTaskDialogMode(editTaskMode, title, disabledSelector, enabledSelector) {
+			$('#task-dialog').attr('data-edit-task-mode', editTaskMode)
+			$('#task-dialog-title').html(title)
+			$('#btn-commit').html(title)
+			if (disabledSelector != null) {
+				$(disabledSelector).attr('disabled', true)
+			}
+			if (enabledSelector != null) {
+				$(enabledSelector).attr('disabled', false)
+			}
+		}
+
 
 		// 修改任务
 		$('.btn-edit-task').click(function(){
 			let taskID = $(this).val()
 			setEditTaskDialogContent(taskID)
-			$('#task-dialog').attr('data-edit-task-mode', 'update-task')
-			$('#task-dialog-title').html('修改任务')
-			$('.form-control').attr('disabled', false)
+			setEditTaskDialogMode('update-task', '修改任务', null, '.form-control')
 			$('#task-dialog').modal()
 		})
 
@@ -123,10 +134,15 @@ block specific-js
 		$('.btn-verify-task').click(function(){
 			let taskID = $(this).val()
 			setEditTaskDialogContent(taskID)
-			$('#task-dialog').attr('data-edit-task-mode', 'verify-task')
-			$('#task-dialog-title').html('审核任务')
-			$('.form-control').attr('disabled', true)
-			$('#executor').attr('disabled', false)
+			setEditTaskDialogMode('verify-task', '审核任务', '.form-control', '#executor')
+			$('#task-dialog').modal()
+		})
+
+		// 关闭任务
+		$('.btn-close-task').click(function(){
+			let taskID = $(this).val()
+			setEditTaskDialogContent(taskID)
+			setEditTaskDialogMode('close-task', '关闭任务', '.form-control', null)
 			$('#task-dialog').modal()
 		})
 

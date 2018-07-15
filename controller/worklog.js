@@ -24,16 +24,21 @@ class Worklog extends Base {
     }
 
     async writeWorklog(req, res, next) {
-        let basicInfos = await this.loadAllBasicInfos(req, false)
+        let basicInfos = await this.loadAllBasicInfos()
+        const userID = this.getUserID(req)
+        basicInfos.tasks = await this.loadTasks(userID, false, false)
         res.render('write-worklog', this.appendUserInfo(req, basicInfos))
     }
 
     /**
      * 加载我的任务信息
      */
-    async loadTasks(userID, allExecutors) {
+    async loadTasks(userID, allExecutors, containClosedState) {
         try {
-            let sql = 'select id, `name`, model, type as type, work_object as workObject, work_place as workPlace, progress from tw_task where state != \'已创建\' and progress != 100 '
+            let sql = 'select id, `name`, model, type as type, work_object as workObject, work_place as workPlace, progress from tw_task where state != \'已创建\' '
+            if(!containClosedState) {
+                sql += ' and state != \'已关闭\' '
+            }
             if(!allExecutors) {
                 sql += ' and ' + this.genStrCondition('executor_id', userID)
             }
@@ -61,7 +66,7 @@ class Worklog extends Base {
         }
     }
 
-    async loadAllBasicInfos(req, allUsers) {
+    async loadAllBasicInfos() {
 
         let basicInfos = {}
 
@@ -70,9 +75,6 @@ class Worklog extends Base {
         basicInfos.models = await this.loadBasicInfo('tw_model')
         basicInfos.workPlaces = await this.loadBasicInfo('tw_work_place')
         basicInfos.workObjects = await this.loadBasicInfo('tw_work_object')
-
-        const userID = this.getUserID(req)
-        basicInfos.tasks = await this.loadTasks(userID, allUsers)
 
         return basicInfos
     }
@@ -150,7 +152,9 @@ class Worklog extends Base {
                 + ' order by workDate desc, trueName, workBeginTime '
                 + ' limit ' + startIndex + ',' + countPerPage
 
-            let resultData = await this.loadAllBasicInfos(req, allusers)
+            let resultData = await this.loadAllBasicInfos()
+            resultData.tasks = await this.loadTasks(userID, allusers, true)
+
             resultData.worklogs = await this.queryArray(sql)
             resultData.pageCount = pageCount
             resultData.pageIndex = pageIndex

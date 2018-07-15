@@ -35,7 +35,11 @@ table.table.table-hover
             - var actualEndTime = tasks[i].actualEndTime
             - var planEndDate = new Date(planEndTime.replace(/\-/g, "\/"))
             - var actualEndDate = actualEndTime == null ? null : new Date(actualEndTime.replace(/\-/g, "\/"))
-            if tasks[i].progress == 100 && actualEndDate != null && actualEndDate <= planEndDate
+            if tasks[i].state == '已创建'
+                - var trClass = 'table-created'
+            else if tasks[i].state == '已关闭'
+                - var trClass = 'table-closed' 
+            else if tasks[i].progress == 100 && actualEndDate != null && actualEndDate <= planEndDate
                 - var trClass = 'table-success'
                 - tasks[i].state = '已完成'
             else if tasks[i].progress == 100 && actualEndDate != null && actualEndDate > planEndDate
@@ -44,8 +48,6 @@ table.table.table-hover
             else if planEndDate < today
                 - var trClass = 'table-danger'
                 - tasks[i].state = '已超期'    
-            else if tasks[i].state == '已创建'
-                - var trClass = 'table-created'
             else if tasks[i].state == '已下发'
                 - var trClass = 'table-info'       
             else

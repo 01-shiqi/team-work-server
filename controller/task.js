@@ -16,6 +16,7 @@ class Task extends Base {
         this.createTask = this.createTask.bind(this)
         this.updateTask = this.updateTask.bind(this)
         this.verifyTask = this.verifyTask.bind(this)
+        this.closeTask = this.closeTask.bind(this)
         this.deleteTasks = this.deleteTasks.bind(this)
         this.getMyTasks = this.getMyTasks.bind(this)
         this.getTaskList = this.getTaskList.bind(this)
@@ -233,7 +234,6 @@ class Task extends Base {
         try {
             let bodyData = await this.extractStringData(req)
             let task = JSON.parse(bodyData)
-            const id = this.uuid()
             const userID = this.getUserID(req)
             var sqlSource = []
             sqlSource.push(task.executor)
@@ -244,6 +244,34 @@ class Task extends Base {
             sqlSource.push(userID)
 
             let sql = 'update tw_task set executor_id=?, state=?, verified_at=?, verified_by=? where '
+                + this.genStrCondition('id', task.id)
+
+            let succeed = await this.executeSql(sql, sqlSource);
+            this.sendSucceed(res)
+        }
+        catch (error) {
+            logger.error(error)
+            this.sendFailed(res, error.message)
+        }
+    }
+    
+    /**
+     * 关闭任务
+     */
+    async closeTask(req, res, next) {
+
+        try {
+            let bodyData = await this.extractStringData(req)
+            let task = JSON.parse(bodyData)
+            const userID = this.getUserID(req)
+            var sqlSource = []
+            sqlSource.push('已关闭')
+
+            var now = moment().format('YYYY-MM-DD hh:mm:ss')
+            sqlSource.push(now)
+            sqlSource.push(userID)
+
+            let sql = 'update tw_task set state=?, closed_at=?, closed_by=? where '
                 + this.genStrCondition('id', task.id)
 
             let succeed = await this.executeSql(sql, sqlSource);
