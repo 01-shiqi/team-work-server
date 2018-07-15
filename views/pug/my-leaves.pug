@@ -22,6 +22,20 @@ block content
 			li.breadcrumb-item
 				a(href="#") 休假记录
 
+	.modal.fade.editDialog#edit-dialog(aria-hide="true")
+		.modal-dialog(role='dialog', style="width:1200px;max-width:1200px;top:50px;")
+			.modal-content
+				.modal-header
+					h5.modal-title#edit-dialog-title 修改申请记录
+					button.close(type='button', data-dismiss='modal', aria-label='Close')
+						span(aria-hidden='true') ×
+				.modal-body
+					form.row
+						include ./components/_leave-editor
+				.modal-footer
+					button.btn.btn-primary#btn-commit(type='button') 确定
+					button.btn.btn-secondary(type='button', data-dismiss='modal') 取消
+
 	.row
 		.col-md-12
 			.tile
@@ -35,6 +49,7 @@ block specific-js
 	script(type='text/javascript', src="js/plugins/bootstrap-datepicker/locales/bootstrap-datepicker.zh-CN.min.js", charset="UTF-8")
 	script(type='text/javascript', src="js/plugins/select2.min.js")
 	script(type='text/javascript', src="js/validate.js")
+	script(type='text/javascript', src="js/_table.js")
 	script(type='text/javascript', src="js/_leave.js")
 	script(type="text/javascript").
 		
@@ -45,18 +60,85 @@ block specific-js
 				beginDate: $('#beginDate').val(),
 				endDate: $('#endDate').val(),
 				leaveDays: $('#leaveDays').val(),
-				description: $('#description').val()
+				description: $('#description').val(),
+				state: $('#edit-dialog').data('state')
 			}
 
 			return leave
 		}
 
-		//- 全选或取消全选
-		$('#cb-select-all').click(function(){
+		// 设置对话框内容
+		function setEditDialogContent(leaveID) {
+			setSelect2Value('#leaveType', getTableCellData(leaveID, 1))
+			$('#beginDate').val(getTableCellData(leaveID, 2))
+			$('#endDate').val(getTableCellData(leaveID, 3))
+			setSelect2Value('#leaveDays', getTableCellData(leaveID, 4))
+			$('#description').val(getTableCellData(leaveID, '-leave-description'))
 
-			var allChecked = this.checked
-			$(".cb-task-item").each(function(){
-				this.checked = allChecked
+			$('#edit-dialog').attr('data-id', leaveID)
+			$('#edit-dialog').data('state', getTableCellData(leaveID, 5))
+		}
+
+		// 设置编辑对话框的模式
+		function setEditDialogMode(editMode, title, disabledSelector, enabledSelector) {
+			$('#edit-dialog').attr('data-edit-mode', editMode)
+			$('#edit-dialog-title').html(title)
+			$('#btn-commit').html(title)
+			if (disabledSelector != null) {
+				$(disabledSelector).attr('disabled', true)
+			}
+			if (enabledSelector != null) {
+				$(enabledSelector).attr('disabled', false)
+			}
+		}
+
+		// 修改休假申请
+		$('.btn-edit-leave').click(function(){
+			let leaveID = $(this).val()
+			setEditDialogContent(leaveID)
+			setEditDialogMode('update-leave', '修改休假申请', null, '.form-control')
+			$('#edit-dialog').modal()
+		})
+
+		// 验证输入的有效性
+		function checkInputValid(leave) {
+			return true
+		}
+
+		// 编辑对话框的确认事件
+		$('#btn-commit').click(function(){
+
+			let leave = getLeave()
+			leave.id = $('#edit-dialog').attr('data-id')
+			
+			//- 验证数据
+			if(!checkInputValid(leave)){
+				return;
+			}
+
+			let editMode = $('#edit-dialog').attr('data-edit-mode')
+
+			let messageTitle = $('#edit-dialog-title').html()
+
+			//- 向后台发送更新数据请求
+			$.ajax({
+				url: "/" + editMode + "/",
+				type: "post",
+				data: JSON.stringify(leave),
+				dataType: "json",
+				success: function(res){
+					if(res.succeed) {
+						//- 更新任务列表
+						$('#edit-dialog').modal('hide')
+						window.location.reload()
+					} else {
+						swal(messageTitle, messageTitle + "失败！ 原因：" + res.error, "error")
+					}
+				},
+
+				error: function(res){
+					swal(messageTitle, messageTitle + "失败！ 原因：" + res.error, "error")
+				}
 			})
 		})
 

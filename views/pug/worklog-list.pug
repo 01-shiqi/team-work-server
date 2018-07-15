@@ -92,6 +92,7 @@ block specific-js
 	script(type='text/javascript', src="js/plugins/bootstrap-datepicker/locales/bootstrap-datepicker.zh-CN.min.js", charset="UTF-8")
 	script(type='text/javascript', src="js/validate.js")
 	script(type='text/javascript', src="js/_worklog.js")
+	script(type='text/javascript', src="js/_table.js")
 	script(type="text/javascript").
 		$('.btn-editWorklog').click(function(){
 
@@ -173,15 +174,6 @@ block specific-js
 				error: function(res){
 					swal("日志修改", "日志修改失败！ 原因：" + res.error, "error")
 				}
-			})
-		})
-
-		//- 全选或取消全选
-		$('#cb-select-all').click(function(){
-
-			var allChecked = this.checked
-			$(".cb-worklog-item").each(function(){
-				this.checked = allChecked
 			})
 		})
 

@@ -53,24 +53,10 @@ block specific-js
 	script(type='text/javascript', src="js/plugins/bootstrap-datepicker/js/bootstrap-datepicker.min.js")
 	script(type='text/javascript', src="js/plugins/bootstrap-datepicker/locales/bootstrap-datepicker.zh-CN.min.js", charset="UTF-8")
 	script(type='text/javascript', src="js/validate.js")
+	script(type='text/javascript', src="js/_table.js")
 	script(type="text/javascript").
 
-		// 获取 表格单元格的内容
-		function getTableCellData(trID, tdIndex) {
-			return $("#"+ trID + " .td" + tdIndex).html()
-		}
-
-		// 获取 表格单元格的ID
-		function getTableCellID(trID, tdIndex) {
-			return $("#"+ trID + " .td" + tdIndex).attr('data-id')
-		}
-
-		// 获取 表格 行的属性数据
-		function getTableRowData(trID, dataID) {
-			return $("#"+ trID).attr(dataID)
-		}
-
-		// 设置任务对话框内容
+		// 设置对话框内容
 		function setEditTaskDialogContent(taskID) {
 			setSelect2Value('#taskType', getTableCellData(taskID, 1))
 			setSelect2Value('#model', getTableCellData(taskID, 2))
@@ -86,6 +72,19 @@ block specific-js
 
 			$('#task-dialog').attr('data-task-id', taskID)
 			$('#task-dialog').attr('data-task-state', getTableCellData(taskID, 7))
+		}
+
+		// 设置编辑对话框的模式
+		function setEditTaskDialogMode(editTaskMode, title, disabledSelector, enabledSelector) {
+			$('#task-dialog').attr('data-edit-task-mode', editTaskMode)
+			$('#task-dialog-title').html(title)
+			$('#btn-commit').html(title)
+			if (disabledSelector != null) {
+				$(disabledSelector).attr('disabled', true)
+			}
+			if (enabledSelector != null) {
+				$(enabledSelector).attr('disabled', false)
+			}
 		}
 		
 		// 根据对话框中的内容生成task对象
@@ -106,19 +105,6 @@ block specific-js
 			}
 			
 			return task
-		}
-
-		// 设置任务编辑对话框的模式
-		function setEditTaskDialogMode(editTaskMode, title, disabledSelector, enabledSelector) {
-			$('#task-dialog').attr('data-edit-task-mode', editTaskMode)
-			$('#task-dialog-title').html(title)
-			$('#btn-commit').html(title)
-			if (disabledSelector != null) {
-				$(disabledSelector).attr('disabled', true)
-			}
-			if (enabledSelector != null) {
-				$(enabledSelector).attr('disabled', false)
-			}
 		}
 
 
@@ -249,15 +235,5 @@ block specific-js
 				}
 			})
 		})
-
-		//- 全选或取消全选
-		$('#cb-select-all').click(function(){
-
-			var allChecked = this.checked
-			$(".cb-task-item").each(function(){
-				this.checked = allChecked
-			})
-		})
-
 
 		

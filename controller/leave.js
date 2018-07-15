@@ -15,6 +15,7 @@ class Leave extends Base {
         this.getMyLeaves = this.getMyLeaves.bind(this)
         this.getLeaveList = this.getLeaveList.bind(this)
         this.createLeave = this.createLeave.bind(this)
+        this.updateLeave = this.updateLeave.bind(this)
         this.deleteLeaves = this.deleteLeaves.bind(this)
     }
 
@@ -128,6 +129,47 @@ class Leave extends Base {
         }
     }
 
+
+    /**
+     * 修改休假申请
+     * @param {*} req 
+     * @param {*} res 
+     * @param {*} next 
+     */
+    async updateLeave(req, res, next) {
+
+        try {
+            let bodyData = await this.extractStringData(req)
+            let leave = JSON.parse(bodyData)
+
+            if(leave.state && leave.state != '已申请' && !this.isSuperAdmin(req)) {
+                this.sendFailed(res, '休假申请已审核，无法修改')
+                return
+            }
+
+            const userID = this.getUserID(req)
+            var sqlSource = []
+            sqlSource.push(leave.leaveType)
+            sqlSource.push(leave.beginDate)
+            sqlSource.push(leave.endDate)
+            sqlSource.push(leave.leaveDays)
+            sqlSource.push(leave.description)
+
+            var now = moment().format('YYYY-MM-DD hh:mm:ss')
+            sqlSource.push(now)
+            sqlSource.push(userID)
+
+            let sql = 'update tw_leave set leave_type=? , begin_date=?, end_date=?, leave_days=?, description=?, updated_at=?, updated_by=? where '
+                + this.genStrCondition('id', leave.id)
+
+            await this.executeSql(sql, sqlSource);
+            this.sendSucceed(res)
+        }
+        catch (error) {
+            logger.error(error)
+            this.sendFailed(res, error.message)
+        }
+    }
 
     /**
      * 删除休假记录

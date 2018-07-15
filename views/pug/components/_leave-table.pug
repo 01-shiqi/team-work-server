@@ -37,14 +37,13 @@ table.table.table-hover
                 td(class=`td${4}`) #{leaves[i].leaveDays.toFixed(1)}
                 td(class=`td${5}`) #{leaves[i].state}
                     td(class=`td${6}`) 
-                        .td-textarea.td-task-content #{leaves[i].description}
+                        .td-textarea.td-leave-description #{leaves[i].description}
                 td
                     .animated-checkbox
                         label
                             .btn-group
-                                if role >= 10
-                                    button.btn.btn-primary.btn-sm.btn-edit-leave(type='button', value=`${leaves[i].id}`, data-toggle='tooltip', title='修改')
-                                        i.fa.fa-edit
+                                button.btn.btn-primary.btn-sm.btn-edit-leave(type='button', value=`${leaves[i].id}`, data-toggle='tooltip', title='修改')
+                                    i.fa.fa-edit
                                 if role < 0
                                     button.btn.btn-primary.btn-sm.btn-verify-leave(type='button', value=`${leaves[i].id}`, data-toggle='tooltip', title='审核')
                                         i.fa.fa-thumb-tack
