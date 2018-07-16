@@ -86,14 +86,15 @@ class Trip extends Base {
 
             let pageCount = Math.ceil(totalCount / countPerPage)
 
-            let sql = 'select l.id, trip_type as tripType, begin_date as beginDate, end_date as endDate, trip_days as tripDays, description, state, u.true_name as creatorName '
-            sql += ' from tw_trip l left join tw_user u on (l.created_by = u.id) '
+            let sql = 'select t.id, task_id as taskID, model, work_type as workType, work_object as workObject, work_place as workPlace, plan_begin_date as planBeginDate, plan_end_date as planEndDate, actual_begin_date as actualBeginDate, actual_end_date as actaulEndDate, state, u.true_name as creatorName '
+            sql += ' from tw_trip t left join tw_user u on (t.created_by = u.id) '
 
             sql += whereClause
                 + ' order by created_at desc '
                 + ' limit ' + startIndex + ',' + countPerPage
 
-            let resultData = this.appendUserInfo(req)
+            let resultData = await this.loadAllBasicInfos()
+            resultData.tasks = await this.loadTasks(userID, allusers, true)
             resultData.trips = await this.queryArray(sql)
             resultData.pageCount = pageCount
             resultData.pageIndex = pageIndex
@@ -120,11 +121,13 @@ class Trip extends Base {
             const userID = this.getUserID(req)
             var sqlSource = []
             sqlSource.push(id)
-            sqlSource.push(trip.tripType)
-            sqlSource.push(trip.beginDate)
-            sqlSource.push(trip.endDate)
-            sqlSource.push(trip.tripDays)
-            sqlSource.push(trip.description)
+            sqlSource.push(trip.taskID)
+            sqlSource.push(trip.model)
+            sqlSource.push(trip.workType)
+            sqlSource.push(trip.workObject)
+            sqlSource.push(trip.workPlace)
+            sqlSource.push(trip.planBeginDate)
+            sqlSource.push(trip.planEndDate)
             sqlSource.push('待审核')
 
             var now = moment().format('YYYY-MM-DD hh:mm:ss')
@@ -133,8 +136,8 @@ class Trip extends Base {
             sqlSource.push(now)
             sqlSource.push(userID)
 
-            var sql = 'insert into tw_trip (id, trip_type, begin_date, end_date, trip_days, description, state, created_at, created_by, updated_at, updated_by)' +
-                'values(?,?,?,?, ?,?,?,?, ?,?,?)'
+            var sql = 'insert into tw_trip (id, task_id, model, work_type, work_object, work_place, plan_begin_date, plan_end_date, state, created_at, created_by, updated_at, updated_by) ' +
+                ' values(?,?,?,?, ?,?,?,?, ?,?,?,?, ?)'
 
             let succeed = await this.executeSql(sql, sqlSource)
             this.sendSucceed(res)
@@ -159,23 +162,26 @@ class Trip extends Base {
             let trip = JSON.parse(bodyData)
 
             if(trip.state && trip.state != '待审核' && !this.isSuperAdmin(req)) {
-                this.sendFailed(res, '出差申请已审核，无法修改')
+                this.sendFailed(res, '出差申请已审核或已批准，无法修改')
                 return
             }
 
             const userID = this.getUserID(req)
             var sqlSource = []
-            sqlSource.push(trip.tripType)
-            sqlSource.push(trip.beginDate)
-            sqlSource.push(trip.endDate)
-            sqlSource.push(trip.tripDays)
-            sqlSource.push(trip.description)
+            sqlSource.push(trip.taskID)
+            sqlSource.push(trip.workType)
+            sqlSource.push(trip.model)
+            sqlSource.push(trip.workObject)
+            sqlSource.push(trip.workPlace)
+            sqlSource.push(trip.planBeginDate)
+            sqlSource.push(trip.planEndDate)
+            sqlSource.push(trip.planTripDays)
 
             var now = moment().format('YYYY-MM-DD hh:mm:ss')
             sqlSource.push(now)
             sqlSource.push(userID)
 
-            let sql = 'update tw_trip set trip_type=? , begin_date=?, end_date=?, trip_days=?, description=?, updated_at=?, updated_by=? where '
+            let sql = 'update tw_trip set task_id=?, work_type=?, model=?, work_object=?, work_place=?, plan_begin_date=?, plan_end_date=?, plan_trip_days=?, updated_at=?, updated_by=? where '
                 + this.genStrCondition('id', trip.id)
 
             await this.executeSql(sql, sqlSource);

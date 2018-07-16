@@ -83,14 +83,14 @@ table.table.table-hover
                         label
                             .btn-group
                                 if role < 10
-                                    button.btn.btn-primary.btn-sm.btn-edit-task(type='button', value=`${tasks[i].id}`, data-toggle='tooltip', title='修改任务')
+                                    button.btn.btn-primary.btn-sm.btn-edit-task(type='button', value=`${tasks[i].id}`, data-toggle='tooltip', title='修改')
                                         i.fa.fa-edit
                                 if role <= 0
-                                    button.btn.btn-primary.btn-sm.btn-verify-task(type='button', value=`${tasks[i].id}`, data-toggle='tooltip', title='审核任务')
+                                    button.btn.btn-primary.btn-sm.btn-verify-task(type='button', value=`${tasks[i].id}`, data-toggle='tooltip', title='审核')
                                         i.fa.fa-thumb-tack
                                 if role < 10
-                                    button.btn.btn-primary.btn-sm.btn-close-task(type='button', value=`${tasks[i].id}`, data-toggle='tooltip', title='关闭任务')
+                                    button.btn.btn-primary.btn-sm.btn-close-task(type='button', value=`${tasks[i].id}`, data-toggle='tooltip', title='关闭')
                                         i.fa.fa-times-circle
                                 if role >= 10
-                                    button.btn.btn-primary.btn-sm.btn-browse-task(type='button', value=`${tasks[i].id}`, data-toggle='tooltip', title='查看任务')
+                                    button.btn.btn-primary.btn-sm.btn-browse-task(type='button', value=`${tasks[i].id}`, data-toggle='tooltip', title='查看')
                                         i.fa.fa-info

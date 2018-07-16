@@ -1,0 +1,92 @@
+table.table.table-hover
+    thead
+        tr
+            th
+                .animated-checkbox
+                    label
+                        input#cb-select-all(type="checkbox")
+                        span.label-text 
+            th #
+            if role < 10
+                th 出差人
+            th 所属型号
+            th 工作对象
+            th 出差地点
+            th 计划出发日期
+            th 计划完成日期
+            th 实际出发日期
+            th 实际完成日期
+            th 出差天数
+            th 当前状态
+            th
+                .animated-checkbox
+                    label
+                        button.btn.btn-primary.btn-sm#btn-delete(type='button')
+                            i.fa.fa-trash-o
+    tbody
+        - for (var i = 0; i < trips.length; i++)
+
+            if trips[i].state == '待审核'
+                - var trClass = 'table-danger'
+                - var updateDisabled = false
+                - var verifyDisabled = false
+                - var approveDisabled = false
+                - var finishDisabled = true
+            else if trips[i].state == '待批准'
+                - var trClass = 'table-warning'
+                - var updateDisabled = false
+                - var verifyDisabled = true
+                - var approveDisabled = false
+                - var finishDisabled = true
+            else if trips[i].state == '已批准'
+                - var trClass = 'table-info'
+                - var updateDisabled = true
+                - var verifyDisabled = true
+                - var approveDisabled = true
+                - var finishDisabled = true
+            else if trips[i].state == '已完成'
+                - var trClass = 'table-success'
+                - var updateDisabled = true
+                - var verifyDisabled = true
+                - var approveDisabled = true
+                - var finishDisabled = false
+            else
+                - var trClass = 'table-closed'
+                - var updateDisabled = true
+                - var verifyDisabled = true
+                - var approveDisabled = true
+                - var finishDisabled = false
+
+
+            tr(class=trClass, id=`${trips[i].id}`)
+                td
+                    .animated-checkbox
+                        label
+                            input.cb-task-item(type="checkbox", data-id=`${trips[i].id}`, data-state=`${trips[i].state}`, data-trip-work=`${trips[i].tripWork}`, data-plan-trip-days=`${trips[i].planTripDays}`)
+                            span.label-text 
+                td #{i + 1}
+                if role < 10
+                    td(class=`td${0}`) #{trips[i].creatorName}
+                td(class=`td${1}`) #{trips[i].model}
+                td(class=`td${2}`) #{trips[i].workObject}
+                td(class=`td${3}`) #{trips[i].workPlace}
+                td(class=`td${4}`) #{trips[i].planBeginDate}
+                td(class=`td${5}`) #{trips[i].planEndDate}
+                td(class=`td${6}`) #{trips[i].actualBeginDate}
+                td(class=`td${7}`) #{trips[i].actualEndDate}
+                td(class=`td${8}`) #{trips[i].actualTripDays}
+                td(class=`td${9}`) #{trips[i].state}
+                td
+                    .animated-checkbox
+                        label
+                            .btn-group
+                                button.btn.btn-primary.btn-sm.btn-edit(type='button', value=`${trips[i].id}`, data-toggle='tooltip', title='修改', disabled=updateDisabled)
+                                    i.fa.fa-edit
+                                if role < 10 && role >= 0
+                                    button.btn.btn-primary.btn-sm.btn-verify(type='button', value=`${trips[i].id}`, data-toggle='tooltip', title='审核', disabled=verifyDisabled)
+                                        i.fa.fa-thumb-tack
+                                if role < 0
+                                    button.btn.btn-primary.btn-sm.btn-approve(type='button', value=`${trips[i].id}`, data-toggle='tooltip', title='批准', disabled=approveDisabled)
+                                        i.fa.fa-check-square
+                                button.btn.btn-primary.btn-sm.btn-finish(type='button', value=`${trips[i].id}`, data-toggle='tooltip', title='完成', disabled=finishDisabled)
+                                    i.fa.fa-times-circle

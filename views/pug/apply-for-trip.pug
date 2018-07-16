@@ -42,9 +42,13 @@ block specific-js
 	script(type='text/javascript', src="js/_task-related.js")
 	script(type="text/javascript").
 
+		$('#actualBeginDate').attr('disabled', true)
+		$('#actualEndDate').attr('disabled', true)
+		$('#tripWork').attr('disabled', true)
+
 		$('#btn-create-trip').click(function(){
 
-			let leave = getTrip()
+			let trip = getTrip()
 
 			$.ajax({
 				url: "/create-trip/",
