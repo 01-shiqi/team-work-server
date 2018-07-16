@@ -272,7 +272,7 @@ class Trip extends Base {
 
 
     /**
-     * 批准出差申请
+     * 完成出差申请
      * @param {*} req 
      * @param {*} res 
      * @param {*} next 
@@ -304,6 +304,7 @@ class Trip extends Base {
                 + this.genStrCondition('id', trip.id)
 
             await this.executeSql(sql, sqlSource);
+            await this.updateTaskProgress(trip.taskID, 100)
             this.sendSucceed(res)
         }
         catch (error) {

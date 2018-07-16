@@ -5,6 +5,7 @@ import uuidv4 from 'uuid/v4'
 import config from 'config-lite';
 import fs from 'fs';
 import logger from '../logger/logger';
+import moment from 'moment'
 
 class Base {
 
@@ -53,6 +54,7 @@ class Base {
         this.loadBasicInfo = this.loadBasicInfo.bind(this)
         this.loadAllBasicInfos = this.loadAllBasicInfos.bind(this)
         this.loadTasks = this.loadTasks.bind(this)
+        this.updateTaskProgress = this.updateTaskProgress.bind(this)
     }
 
 
@@ -85,6 +87,32 @@ class Base {
             return []
         }
     }
+
+
+    /**
+     * 更新任务的完成进度
+     * @param {*} taskID 
+     * @param {*} taskProgress 
+     */
+    async updateTaskProgress(taskID, taskProgress) {
+        let sqlData = []
+        sqlData.push(taskProgress)
+
+        let sql = 'update tw_task set progress=? ' 
+        if(taskProgress >= 100) {
+            sql += ', actual_end_time=? '
+            let now = moment().format('YYYY-MM-DD')
+            sqlData.push(now)
+        }
+        sql += ' where ' + this.genStrCondition('id', taskID)
+
+        let succeed = await this.executeSql(sql, sqlData)
+
+        if(!succeed) {
+            throw '更新任务进度失败'
+        }
+    }
+
 
     /**
      * 加载基本信息

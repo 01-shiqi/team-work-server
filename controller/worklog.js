@@ -37,30 +37,6 @@ class Worklog extends Base {
         await this.getWorklogList(req, res, next, false)
     }
 
-    /**
-     * 更新任务的完成进度
-     * @param {*} taskID 
-     * @param {*} taskProgress 
-     */
-    async updateTaskProgress(taskID, taskProgress) {
-        let sqlData = []
-        sqlData.push(taskProgress)
-
-        let sql = 'update tw_task set progress=? ' 
-        if(taskProgress >= 100) {
-            sql += ', actual_end_time=? '
-            let now = moment().format('YYYY-MM-DD')
-            sqlData.push(now)
-        }
-        sql += ' where ' + this.genStrCondition('id', taskID)
-
-        let succeed = await this.executeSql(sql, sqlData)
-
-        if(!succeed) {
-            throw '更新任务进度失败'
-        }
-    }
-
     // 获取日志列表
     async getWorklogList(req, res, next, allusers) {
 
