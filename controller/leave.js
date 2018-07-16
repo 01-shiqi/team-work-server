@@ -124,7 +124,7 @@ class Leave extends Base {
             sqlSource.push(leave.description)
             sqlSource.push('待审核')
 
-            var now = moment().format('YYYY-MM-DD hh:mm:ss')
+            var now = moment().format('YYYY-MM-DD HH:mm:ss')
             sqlSource.push(now)
             sqlSource.push(userID)
             sqlSource.push(now)
@@ -168,7 +168,7 @@ class Leave extends Base {
             sqlSource.push(leave.leaveDays)
             sqlSource.push(leave.description)
 
-            var now = moment().format('YYYY-MM-DD hh:mm:ss')
+            var now = moment().format('YYYY-MM-DD HH:mm:ss')
             sqlSource.push(now)
             sqlSource.push(userID)
 
@@ -212,7 +212,7 @@ class Leave extends Base {
             }
 
             sqlSource.push(state)
-            let now = moment().format('YYYY-MM-DD hh:mm:ss')
+            let now = moment().format('YYYY-MM-DD HH:mm:ss')
             sqlSource.push(now)
             sqlSource.push(userID)
 
@@ -249,7 +249,7 @@ class Leave extends Base {
             let sqlSource = []
 
             sqlSource.push('已完成')
-            let now = moment().format('YYYY-MM-DD hh:mm:ss')
+            let now = moment().format('YYYY-MM-DD HH:mm:ss')
             sqlSource.push(now)
             sqlSource.push(userID)
 

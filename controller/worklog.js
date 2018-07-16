@@ -112,7 +112,7 @@ class Worklog extends Base {
             sqlSource.push(worklog.workContent)
             sqlSource.push(worklog.taskID)
 
-            var now = moment().format('YYYY-MM-DD hh:mm:ss')
+            var now = moment().format('YYYY-MM-DD HH:mm:ss')
             sqlSource.push(now)
             sqlSource.push(now)
 
@@ -151,7 +151,7 @@ class Worklog extends Base {
 			sqlData.push(worklog.workContent)
 			sqlData.push(worklog.taskID)
 
-            let now = moment().format('YYYY-MM-DD hh:mm:ss')
+            let now = moment().format('YYYY-MM-DD HH:mm:ss')
             sqlData.push(now)
 
             await this.executeSql(sql, sqlData)

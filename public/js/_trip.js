@@ -10,8 +10,10 @@ function getTrip() {
         workPlace: $('#workPlace').val(), 
         planBeginDate: $('#planBeginDate').val(),
         planEndDate: $('#planEndDate').val(),
+        planTripDays: $('#span-plan-trip-days').html(),
         actualBeginDate: $('#actualBeginDate').val(),
         actualEndDate: $('#actualEndDate').val(),       
+        actualTripDays: $('#span-actual-trip-days').html(),
         tripWork: $('#tripWork').val(),  
         state: $('#edit-dialog').data('state')     
     }
@@ -51,7 +53,7 @@ function calcDateDiff(beginDate, endDate) {
 function calcPlanTripDays(beginDate, endDate) {
     let days = calcDateDiff(beginDate, endDate)
     if(days) {
-        $('#planTripDays').html(days)
+        $('#span-plan-trip-days').html(days)
     }
 }
 
@@ -63,7 +65,7 @@ function calcPlanTripDays(beginDate, endDate) {
 function calcActualTripDays(beginDate, endDate) {
     let days = calcDateDiff(beginDate, endDate)
     if(days) {
-        $('#actualTripDays').html(days)
+        $('#span-actual-trip-days').html(days)
     }
 }
 
@@ -76,11 +78,11 @@ $('#planEndDate').bind('change', function(){
 })
 
 $('#actualBeginDate').bind('change', function(){
-    calcPlanTripDays($('#actualBeginDate').val(), $('#actualEndDate').val())
+    calcActualTripDays($('#actualBeginDate').val(), $('#actualEndDate').val())
 })
 
 $('#actualEndDate').bind('change', function(){
-    calcPlanTripDays($('#actualBeginDate').val(), $('#actualEndDate').val())
+    calcActualTripDays($('#actualBeginDate').val(), $('#actualEndDate').val())
 })
 
 

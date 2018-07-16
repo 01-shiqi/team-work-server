@@ -129,16 +129,17 @@ class Trip extends Base {
             sqlSource.push(trip.workPlace)
             sqlSource.push(trip.planBeginDate)
             sqlSource.push(trip.planEndDate)
+            sqlSource.push(trip.planTripDays)
             sqlSource.push('待审核')
 
-            var now = moment().format('YYYY-MM-DD hh:mm:ss')
+            var now = moment().format('YYYY-MM-DD HH:mm:ss')
             sqlSource.push(now)
             sqlSource.push(userID)
             sqlSource.push(now)
             sqlSource.push(userID)
 
-            var sql = 'insert into tw_trip (id, task_id, model, work_type, work_object, work_place, plan_begin_date, plan_end_date, state, created_at, created_by, updated_at, updated_by) ' +
-                ' values(?,?,?,?, ?,?,?,?, ?,?,?,?, ?)'
+            var sql = 'insert into tw_trip (id, task_id, model, work_type, work_object, work_place, plan_begin_date, plan_end_date, plan_trip_days, state, created_at, created_by, updated_at, updated_by) ' +
+                ' values(?,?,?,?, ?,?,?,?, ?,?,?,?, ?,?)'
 
             let succeed = await this.executeSql(sql, sqlSource)
             this.sendSucceed(res)
@@ -178,7 +179,7 @@ class Trip extends Base {
             sqlSource.push(trip.planEndDate)
             sqlSource.push(trip.planTripDays)
 
-            var now = moment().format('YYYY-MM-DD hh:mm:ss')
+            var now = moment().format('YYYY-MM-DD HH:mm:ss')
             sqlSource.push(now)
             sqlSource.push(userID)
 
@@ -217,7 +218,7 @@ class Trip extends Base {
             let sqlSource = []
 
             sqlSource.push('待批准')
-            let now = moment().format('YYYY-MM-DD hh:mm:ss')
+            let now = moment().format('YYYY-MM-DD HH:mm:ss')
             sqlSource.push(now)
             sqlSource.push(userID)
 
@@ -254,7 +255,7 @@ class Trip extends Base {
             let sqlSource = []
 
             sqlSource.push('已批准')
-            let now = moment().format('YYYY-MM-DD hh:mm:ss')
+            let now = moment().format('YYYY-MM-DD HH:mm:ss')
             sqlSource.push(now)
             sqlSource.push(userID)
 
@@ -296,7 +297,7 @@ class Trip extends Base {
             sqlSource.push(trip.actualEndDate)
             sqlSource.push(trip.actualTripDays)
             sqlSource.push(trip.tripWork)
-            let now = moment().format('YYYY-MM-DD hh:mm:ss')
+            let now = moment().format('YYYY-MM-DD HH:mm:ss')
             sqlSource.push(now)
             sqlSource.push(userID)
 
