@@ -62,7 +62,7 @@ table.table.table-hover
                 td
                     .animated-checkbox
                         label
-                            input.cb-task-item(type="checkbox", data-id=`${trips[i].id}`)
+                            input.cb-task-item(type="checkbox", data-id=`${trips[i].id}`, data-state=`${trips[i].state}`)
                             span.label-text 
                 td #{i + 1}
                 if role < 10
