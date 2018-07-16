@@ -57,13 +57,22 @@ class Base {
 
 
     /**
-     * 加载我的任务信息
+     * 加载任务信息
+     * @param {*用户ID} userID 
+     * @param {*是否加载所有执行人的用户} allExecutors 
+     * @param {*是否包含关闭状态的任务} containClosedState 
+     * @param {*是出差类型任务还是其他类型任务} isTripType 
      */
-    async loadTasks(userID, allExecutors, containClosedState) {
+    async loadTasks(userID, allExecutors, containClosedState, isTripType) {
         try {
             let sql = 'select id, `name`, model, type as type, work_object as workObject, work_place as workPlace, begin_time as beginTime, end_time as endTime, progress from tw_task where state != \'已创建\' '
             if(!containClosedState) {
                 sql += ' and state != \'已关闭\' '
+            }
+            if(isTripType) {
+                sql += ' and type = \'出差\' '
+            } else {
+                sql += ' and type != \'出差\' '
             }
             if(!allExecutors) {
                 sql += ' and ' + this.genStrCondition('executor_id', userID)

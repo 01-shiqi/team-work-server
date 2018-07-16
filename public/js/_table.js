@@ -10,7 +10,8 @@ function getTableCellID(trID, tdIndex) {
 
 // 获取 表格 行的属性数据
 function getTableRowData(trID, dataID) {
-    return $("#"+ trID).attr(dataID)
+    let data = $("#"+ trID).attr(dataID)
+    return (!data || data == 'null') ? '' : data
 }
 
 //- 全选或取消全选

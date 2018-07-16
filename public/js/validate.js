@@ -155,3 +155,13 @@ initEditDialog()
 
 $('.customSelect').select2({ tags: false })
 $('.customSelect-tags').select2({ tags: true })
+
+
+/**
+ * 绑定输入框输入事件，如果有输入，则取消红色边框显示
+ */
+$(".input-no-empty").bind("input propertychange change",function(event) {
+    if($(this).val() != '') {
+        $(this).removeClass('is-invalid')
+    }
+})

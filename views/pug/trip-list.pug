@@ -117,8 +117,26 @@ block specific-js
 		})
 
 		// 验证输入的有效性
-		function checkInputValid(leave) {
-			return true
+		function checkInputValid(trip, editMode) {
+			if(editMode == 'finish-trip') {
+				if(!trip.actualBeginDate){
+					$('#actualBeginDate').addClass('is-invalid')
+					return false
+				}
+
+				if(!trip.actualEndDate){
+					$('#actualEndDate').addClass('is-invalid')
+					return false
+				}
+				if(!trip.tripWork){
+					$('#tripWork').addClass('is-invalid')
+					return false
+				}
+				return true
+			}
+			else {
+				return true
+			}
 		}
 
 		// 编辑对话框的确认事件
@@ -126,15 +144,15 @@ block specific-js
 
 			let trip = getTrip()
 			trip.id = $('#edit-dialog').attr('data-id')
-			
-			//- 验证数据
-			if(!checkInputValid(trip)){
-				return;
-			}
 
 			let editMode = $('#edit-dialog').attr('data-edit-mode')
 
 			let messageTitle = $('#edit-dialog-title').html()
+			
+			//- 验证数据
+			if(!checkInputValid(trip, editMode)){
+				return;
+			}
 
 			//- 向后台发送更新数据请求
 			$.ajax({

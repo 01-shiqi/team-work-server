@@ -32,7 +32,7 @@ class Trip extends Base {
     async applyForTrip(req, res, next) {
         let basicInfos = await this.loadAllBasicInfos()
         const userID = this.getUserID(req)
-        basicInfos.tasks = await this.loadTasks(userID, false, false)
+        basicInfos.tasks = await this.loadTasks(userID, false, false, true)
         res.render('apply-for-trip', this.appendUserInfo(req, basicInfos))
     }
 
@@ -95,7 +95,7 @@ class Trip extends Base {
                 + ' limit ' + startIndex + ',' + countPerPage
 
             let resultData = await this.loadAllBasicInfos()
-            resultData.tasks = await this.loadTasks(userID, allusers, true)
+            resultData.tasks = await this.loadTasks(userID, allusers, true, true)
             resultData.trips = await this.queryArray(sql)
             resultData.pageCount = pageCount
             resultData.pageIndex = pageIndex
