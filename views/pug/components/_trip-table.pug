@@ -80,6 +80,8 @@ table.table.table-hover
                     .animated-checkbox
                         label
                             .btn-group
+                                button.btn.btn-primary.btn-sm.btn-browse(type='button', value=`${trips[i].id}`, data-toggle='tooltip', title='查看')
+                                    i.fa.fa-info
                                 button.btn.btn-primary.btn-sm.btn-edit(type='button', value=`${trips[i].id}`, data-toggle='tooltip', title='修改', disabled=updateDisabled)
                                     i.fa.fa-edit
                                 if role < 10 && role >= 0

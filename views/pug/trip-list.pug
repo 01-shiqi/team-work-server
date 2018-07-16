@@ -34,7 +34,7 @@ block content
 						include ./components/_trip-editor
 				.modal-footer
 					button.btn.btn-primary#btn-commit(type='button') 确定
-					button.btn.btn-secondary(type='button', data-dismiss='modal') 取消
+					button.btn.btn-secondary#btn-cancel(type='button', data-dismiss='modal') 取消
 
 	.row
 		.col-md-12
@@ -82,7 +82,22 @@ block specific-js
 			if (enabledSelector != null) {
 				$(enabledSelector).attr('disabled', false)
 			}
+			if(editMode == 'browse-trip') {
+				$('#btn-commit').hide()
+				$('#btn-cancel').html('关闭')
+			} else {
+				$('#btn-commit').show()
+				$('#btn-cancel').html('取消')
+			}
 		}
+
+		// 查看出差申请
+		$('.btn-browse').click(function(){
+			let tripID = $(this).val()
+			setEditDialogContent(tripID)
+			setEditDialogMode('browse-trip', '查看出差申请', '.form-control', null)
+			$('#edit-dialog').modal()
+		})
 
 		// 修改出差申请
 		$('.btn-edit').click(function(){

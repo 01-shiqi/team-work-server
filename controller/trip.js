@@ -87,7 +87,7 @@ class Trip extends Base {
 
             let pageCount = Math.ceil(totalCount / countPerPage)
 
-            let sql = 'select t.id, task_id as taskID, model, work_type as workType, work_object as workObject, work_place as workPlace, plan_begin_date as planBeginDate, plan_end_date as planEndDate, actual_begin_date as actualBeginDate, actual_end_date as actualEndDate, trip_work as tripWork, state, u.true_name as creatorName '
+            let sql = 'select t.id, task_id as taskID, model, work_type as workType, work_object as workObject, work_place as workPlace, plan_begin_date as planBeginDate, plan_end_date as planEndDate, plan_trip_days as planTripDays, actual_begin_date as actualBeginDate, actual_end_date as actualEndDate, actual_trip_days as actualTripDays, trip_work as tripWork, state, u.true_name as creatorName '
             sql += ' from tw_trip t left join tw_user u on (t.created_by = u.id) '
 
             sql += whereClause
