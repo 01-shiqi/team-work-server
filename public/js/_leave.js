@@ -2,8 +2,8 @@
 function getLeave() {
     let leave = {
         leaveType: $('#leaveType').val(),
-        beginDate: $('#beginDate').val(),
-        endDate: $('#endDate').val(),
+        beginDate: $('#dp-begin-date').val(),
+        endDate: $('#dp-end-date').val(),
         leaveDays: $('#leaveDays').val(),
         description: $('#description').val()
     }

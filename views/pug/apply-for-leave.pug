@@ -43,10 +43,8 @@ block specific-js
 
 		// 设置日期的当前时间和截至时间
 		var now = new Date()
-		$('#beginDate').datepicker('setDate', now)
-		$('#beginDate').datepicker('setBeginDate', now)
-		$('#endDate').datepicker('setDate', now)
-		$('#endDate').datepicker('setBeginDate', now)
+		$('#dp-begin-date').datepicker('setDate', now)
+		$('#dp-end-date').datepicker('setDate', now)
 		setSelect2Value('#leaveDays', '1.0')
 
 		$('#btn-create-leave').click(function(){

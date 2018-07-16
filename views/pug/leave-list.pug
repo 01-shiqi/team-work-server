@@ -57,8 +57,8 @@ block specific-js
 		function getLeave() {
 			let leave = {
 				leaveType: $('#leaveType').val(),
-				beginDate: $('#beginDate').val(),
-				endDate: $('#endDate').val(),
+				beginDate: $('#dp-begin-date').val(),
+				endDate: $('#dp-end-date').val(),
 				leaveDays: $('#leaveDays').val(),
 				description: $('#description').val(),
 				state: $('#edit-dialog').data('state')
@@ -70,8 +70,8 @@ block specific-js
 		// 设置对话框内容
 		function setEditDialogContent(leaveID) {
 			setSelect2Value('#leaveType', getTableCellData(leaveID, 1))
-			$('#beginDate').val(getTableCellData(leaveID, 2))
-			$('#endDate').val(getTableCellData(leaveID, 3))
+			$('#dp-begin-date').val(getTableCellData(leaveID, 2))
+			$('#dp-end-date').val(getTableCellData(leaveID, 3))
 			setSelect2Value('#leaveDays', getTableCellData(leaveID, 4))
 			$('#description').val(getTableCellData(leaveID, '-leave-description'))
 

@@ -107,6 +107,10 @@ function existOption(selector, value) {
  */
 function setSelect2Value(selector, value){
 
+    if(!value) {
+        return
+    }
+
     // 如果值不在select的列表中，则先把值添加至列表
     if(!existOption(selector, value)) {
         $(selector).append("<option value='"+ value +"' selected>"+ value +"</option>")

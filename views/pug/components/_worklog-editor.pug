@@ -49,7 +49,7 @@
 .form-group.col-md-3
     label.control-label.worklog-edit-label 工作时长(小时)
     select.form-control.customSelect-tags#workTimeLength
-        optgroup(label="选择或录入工作时长")
+        optgroup(label="选择工作时长")
             option 0.5
             option 1.0
             option 1.5
@@ -61,8 +61,8 @@
 
 .form-group.col-md-3
     label.control-label.worklog-edit-label 任务完成进度(%)
-    select.form-control.customSelect-tags#taskProgress
-        optgroup(label="选择或录入任务的完成进度")
+    select.form-control.customSelect#taskProgress
+        optgroup(label="选择任务的完成进度")
             option 0
             option 10
             option 20

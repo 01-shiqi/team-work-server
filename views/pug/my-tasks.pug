@@ -72,7 +72,7 @@ block specific-js
 			$('#endTime').val(getTableCellData(taskID, 4))
 			setSelect2Value('#personHours', getTableCellData(taskID, 5))
 			$('#executor').val(getTableCellID(taskID, 8))
-			$('#taskName').val(getTableCellData(taskID, '-task-name'))
+			$('#input-task-name').val(getTableCellData(taskID, '-task-name'))
 			$('#taskContent').val(getTableCellData(taskID, '-task-content'))
 
 			$('#task-dialog').attr('data-task-id', taskID)
@@ -90,7 +90,7 @@ block specific-js
 				personHours: $('#personHours').val(), 
 				state: $('#task-dialog').attr('data-task-state'),  
 				executor: $('#executor').val(), 
-				name: $('#taskName').val(), 
+				name: $('#input-task-name').val(), 
 				content: $('#taskContent').val(),
 			}
 			
@@ -121,7 +121,7 @@ block specific-js
 
 		function checkTaskInputValid(task) {
 			if(!task.name){
-				$('#taskName').addClass('is-invalid')
+				$('#input-task-name').addClass('is-invalid')
 				return false
 			}
 

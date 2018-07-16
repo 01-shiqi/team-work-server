@@ -19,7 +19,7 @@ function getTask() {
         personHours: $('#personHours').val(), 
         state: $('#task-dialog').attr('data-task-state'),  
         executor: $('#executor').val(), 
-        name: $('#taskName').val(), 
+        name: $('#input-task-name').val(), 
         content: $('#taskContent').val(),
     }
     
@@ -37,7 +37,7 @@ function checkTaskInputValid(task) {
         return false
     }
     if(!task.name){
-        $('#taskName').addClass('is-invalid')
+        $('#input-task-name').addClass('is-invalid')
         return false
     }
 
