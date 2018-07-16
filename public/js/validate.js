@@ -118,6 +118,15 @@ function setSelect2Value(selector, value){
 }
 
 /**
+ * 为日期控件设置值
+ * @param {*} selector 
+ * @param {*} value 
+ */
+function setDatePickerValue(selector, value) {
+    $(selector).datepicker('setDate', value)
+}
+
+/**
  * 初始化日期选择器
  */
 function initDatePicker() {

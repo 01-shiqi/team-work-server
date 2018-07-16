@@ -59,10 +59,10 @@ block specific-js
 			setSelect2Value('#model', getTableCellData(tripID, 1))
 			setSelect2Value('#workObject', getTableCellData(tripID, 2))
 			setSelect2Value('#workPlace', getTableCellData(tripID, 3))
-			$('#planBeginDate').val(getTableCellData(tripID, 4))
-			$('#planEndDate').val(getTableCellData(tripID, 5))
-			$('#actualBeginDate').val(getTableCellData(tripID, 6))
-			$('#actualEndDate').val(getTableCellData(tripID, 7))
+			setDatePickerValue('#planBeginDate', getTableCellData(tripID, 4))
+			setDatePickerValue('#planEndDate', getTableCellData(tripID, 5))
+			setDatePickerValue('#actualBeginDate', getTableCellData(tripID, 6))
+			setDatePickerValue('#actualEndDate', getTableCellData(tripID, 7))
 			setSelect2Value('#actualTripDays', getTableCellData(tripID, 8))
 			$('#tripWork').val(getTableRowData(tripID, 'data-trip-work'))
 
@@ -86,32 +86,32 @@ block specific-js
 
 		// 修改出差申请
 		$('.btn-edit').click(function(){
-			let leaveID = $(this).val()
-			setEditDialogContent(leaveID)
+			let tripID = $(this).val()
+			setEditDialogContent(tripID)
 			setEditDialogMode('update-trip', '修改出差申请', '.item-need-finish', '.item-can-modify')
 			$('#edit-dialog').modal()
 		})
 
 		// 审核出差申请
 		$('.btn-verify').click(function(){
-			let leaveID = $(this).val()
-			setEditDialogContent(leaveID)
+			let tripID = $(this).val()
+			setEditDialogContent(tripID)
 			setEditDialogMode('verify-trip', '审核出差申请', '.item-need-finish', '.item-can-modify')
 			$('#edit-dialog').modal()
 		})
 
 		// 批准出差申请
 		$('.btn-approve').click(function(){
-			let leaveID = $(this).val()
-			setEditDialogContent(leaveID)
+			let tripID = $(this).val()
+			setEditDialogContent(tripID)
 			setEditDialogMode('approve-trip', '批准出差申请', '.item-need-finish', '.item-can-modify')
 			$('#edit-dialog').modal()
 		})
 
 		// 完成出差
-		$('.btn-approve').click(function(){
-			let leaveID = $(this).val()
-			setEditDialogContent(leaveID)
+		$('.btn-finish').click(function(){
+			let tripID = $(this).val()
+			setEditDialogContent(tripID)
 			setEditDialogMode('finish-trip', '完成出差', '.item-can-modify', '.item-need-finish')
 			$('#edit-dialog').modal()
 		})

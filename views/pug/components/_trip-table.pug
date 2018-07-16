@@ -43,7 +43,7 @@ table.table.table-hover
                 - var updateDisabled = true
                 - var verifyDisabled = true
                 - var approveDisabled = true
-                - var finishDisabled = true
+                - var finishDisabled = false
             else if trips[i].state == '已完成'
                 - var trClass = 'table-success'
                 - var updateDisabled = true
@@ -58,11 +58,11 @@ table.table.table-hover
                 - var finishDisabled = false
 
 
-            tr(class=trClass, id=`${trips[i].id}`)
+            tr(class=trClass, id=`${trips[i].id}`, data-state=`${trips[i].state}`, data-trip-work=`${trips[i].tripWork}`, data-plan-trip-days=`${trips[i].planTripDays}`)
                 td
                     .animated-checkbox
                         label
-                            input.cb-task-item(type="checkbox", data-id=`${trips[i].id}`, data-state=`${trips[i].state}`, data-trip-work=`${trips[i].tripWork}`, data-plan-trip-days=`${trips[i].planTripDays}`)
+                            input.cb-task-item(type="checkbox", data-id=`${trips[i].id}`)
                             span.label-text 
                 td #{i + 1}
                 if role < 10
@@ -88,5 +88,6 @@ table.table.table-hover
                                 if role < 0
                                     button.btn.btn-primary.btn-sm.btn-approve(type='button', value=`${trips[i].id}`, data-toggle='tooltip', title='批准', disabled=approveDisabled)
                                         i.fa.fa-check-square
-                                button.btn.btn-primary.btn-sm.btn-finish(type='button', value=`${trips[i].id}`, data-toggle='tooltip', title='完成', disabled=finishDisabled)
-                                    i.fa.fa-times-circle
+                                if role >= 10
+                                    button.btn.btn-primary.btn-sm.btn-finish(type='button', value=`${trips[i].id}`, data-toggle='tooltip', title='完成', disabled=finishDisabled)
+                                        i.fa.fa-times-circle

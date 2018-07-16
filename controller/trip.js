@@ -18,6 +18,7 @@ class Trip extends Base {
         this.createTrip = this.createTrip.bind(this)
         this.updateTrip = this.updateTrip.bind(this)
         this.verifyTrip = this.verifyTrip.bind(this)
+        this.finishTrip = this.finishTrip.bind(this)
         this.approveTrip = this.approveTrip.bind(this)
         this.deleteTrips = this.deleteTrips.bind(this)
     }
@@ -86,7 +87,7 @@ class Trip extends Base {
 
             let pageCount = Math.ceil(totalCount / countPerPage)
 
-            let sql = 'select t.id, task_id as taskID, model, work_type as workType, work_object as workObject, work_place as workPlace, plan_begin_date as planBeginDate, plan_end_date as planEndDate, actual_begin_date as actualBeginDate, actual_end_date as actaulEndDate, state, u.true_name as creatorName '
+            let sql = 'select t.id, task_id as taskID, model, work_type as workType, work_object as workObject, work_place as workPlace, plan_begin_date as planBeginDate, plan_end_date as planEndDate, actual_begin_date as actualBeginDate, actual_end_date as actualEndDate, trip_work as tripWork, state, u.true_name as creatorName '
             sql += ' from tw_trip t left join tw_user u on (t.created_by = u.id) '
 
             sql += whereClause
@@ -215,12 +216,7 @@ class Trip extends Base {
             const userID = this.getUserID(req)
             let sqlSource = []
 
-            let state = '待批准'
-            if(trip.tripDays <= 1.0) {
-                state = '已完成'
-            }
-
-            sqlSource.push(state)
+            sqlSource.push('待批准')
             let now = moment().format('YYYY-MM-DD hh:mm:ss')
             sqlSource.push(now)
             sqlSource.push(userID)
@@ -249,7 +245,7 @@ class Trip extends Base {
             let bodyData = await this.extractStringData(req)
             let trip = JSON.parse(bodyData)
 
-            if(trip.state && trip.state == '已完成') {
+            if(trip.state && trip.state == '已批准') {
                 this.sendFailed(res, '出差申请已批准')
                 return
             }
@@ -257,12 +253,54 @@ class Trip extends Base {
             const userID = this.getUserID(req)
             let sqlSource = []
 
-            sqlSource.push('已完成')
+            sqlSource.push('已批准')
             let now = moment().format('YYYY-MM-DD hh:mm:ss')
             sqlSource.push(now)
             sqlSource.push(userID)
 
             let sql = 'update tw_trip set state=?, approved_at=?, approved_by=? where '
+                + this.genStrCondition('id', trip.id)
+
+            await this.executeSql(sql, sqlSource);
+            this.sendSucceed(res)
+        }
+        catch (error) {
+            logger.error(error)
+            this.sendFailed(res, error.message)
+        }
+    }
+
+
+    /**
+     * 批准出差申请
+     * @param {*} req 
+     * @param {*} res 
+     * @param {*} next 
+     */
+    async finishTrip(req, res, next) {
+
+        try {
+            let bodyData = await this.extractStringData(req)
+            let trip = JSON.parse(bodyData)
+
+            if(trip.state && trip.state != '已批准' && trip.state != '已完成') {
+                this.sendFailed(res, '出差申请未批准')
+                return
+            }
+
+            const userID = this.getUserID(req)
+            let sqlSource = []
+
+            sqlSource.push('已完成')
+            sqlSource.push(trip.actualBeginDate)
+            sqlSource.push(trip.actualEndDate)
+            sqlSource.push(trip.actualTripDays)
+            sqlSource.push(trip.tripWork)
+            let now = moment().format('YYYY-MM-DD hh:mm:ss')
+            sqlSource.push(now)
+            sqlSource.push(userID)
+
+            let sql = 'update tw_trip set state=?, actual_begin_date=?, actual_end_date=?, actual_trip_days=?, trip_work=?, finished_at=?, finished_by=? where '
                 + this.genStrCondition('id', trip.id)
 
             await this.executeSql(sql, sqlSource);

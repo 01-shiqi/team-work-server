@@ -44,6 +44,7 @@ router.post('/create-trip', Check.checkLogin, Trip.createTrip)
 router.post('/update-trip', Check.checkLogin, Trip.updateTrip)
 router.post('/verify-trip', Check.checkLogin, Trip.verifyTrip)
 router.post('/approve-trip', Check.checkLogin, Trip.approveTrip)
+router.post('/finish-trip', Check.checkLogin, Trip.finishTrip)
 router.delete('/delete-trips', Check.checkLogin, Trip.deleteTrips)
 router.get('/my-trips', Check.checkLogin, Trip.getMyTrips)
 

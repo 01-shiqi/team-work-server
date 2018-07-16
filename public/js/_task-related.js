@@ -18,8 +18,8 @@ $("#task").bind("change", function(){
     setSelect2Value('#workObject', getOptionData(index, 'work-object'))
     setSelect2Value('#workPlace', getOptionData(index, 'work-place'))
     setSelect2Value('#taskProgress', getOptionData(index, 'task-progress'))
-    $('#planBeginDate').val(getOptionData(index, 'begin-time'))
-    $('#planEndDate').val(getOptionData(index, 'end-time'))
+    setDatePickerValue('#planBeginDate', getOptionData(index, 'begin-time'))
+    setDatePickerValue('#planEndDate', getOptionData(index, 'end-time'))
 })
 
 $('#task').trigger('change')
