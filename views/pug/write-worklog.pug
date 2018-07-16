@@ -41,6 +41,7 @@ block specific-js
 	script(type='text/javascript', src="js/plugins/select2.min.js")
 	script(type='text/javascript', src="js/validate.js")
 	script(type='text/javascript', src="js/_worklog.js")
+	script(type='text/javascript', src="js/_task-related.js")
 	script(type="text/javascript").
 		$('#sl').click(function(){
 			$('#tl').loadingBtn();
@@ -51,8 +52,6 @@ block specific-js
 			$('#tl').loadingBtnComplete();
 			$('#tb').loadingBtnComplete({ html : "Sign In"});
 		})
-
-		$('#task').trigger('change')
 
 		// 设置日期的当前时间和截至时间
 		var now = new Date()

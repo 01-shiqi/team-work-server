@@ -61,7 +61,7 @@ class Base {
      */
     async loadTasks(userID, allExecutors, containClosedState) {
         try {
-            let sql = 'select id, `name`, model, type as type, work_object as workObject, work_place as workPlace, progress from tw_task where state != \'已创建\' '
+            let sql = 'select id, `name`, model, type as type, work_object as workObject, work_place as workPlace, begin_time as beginTime, end_time as endTime, progress from tw_task where state != \'已创建\' '
             if(!containClosedState) {
                 sql += ' and state != \'已关闭\' '
             }

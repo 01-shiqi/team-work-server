@@ -4,7 +4,7 @@
     select.form-control.customSelect#task(placeholder="选择任务")
         optgroup(label="选择任务")
             - for (var i = 0; i < tasks.length; i++)
-                option(value=`${tasks[i].id}`, data-model=`${tasks[i].model}`, data-type=`${tasks[i].type}`, data-work-object=`${tasks[i].workObject}`, data-work-place=`${tasks[i].workPlace}`, data-task-progress=`${tasks[i].progress}`) #{tasks[i].name}
+                option(value=`${tasks[i].id}`, data-model=`${tasks[i].model}`, data-type=`${tasks[i].type}`, data-work-object=`${tasks[i].workObject}`, data-work-place=`${tasks[i].workPlace}`, data-task-progress=`${tasks[i].progress}`, data-begin-time=`${tasks[i].beginTime}`, data-end-time=`${tasks[i].endTime}`) #{tasks[i].name}
 
 .form-group.col-md-3
     label.control-label.worklog-edit-label 所属型号
@@ -35,35 +35,21 @@
                 option #{workPlaces[i].name}
 
 .form-group.col-md-3
-    label.control-label.worklog-edit-label 休假类型
-    select.form-control.customSelect-tags#leaveType
-        optgroup(label="选择休假类型")
-            option 年假
-            option 事假
-            option 病假
-            option 产假
+    label.control-label 预计出发时间
+    input.form-control.datepicker#planBeginDate(type="text",placeholder="选择开始日期")
 
 .form-group.col-md-3
-    label.control-label 开始日期
-    input.form-control.datepicker#beginDate(type="text",placeholder="选择开始日期")
+    label.control-label 预计完成时间
+    input.form-control.datepicker#planEndDate(type="text",placeholder="选择结束日期")
 
 .form-group.col-md-3
-    label.control-label 结束日期
-    input.form-control.datepicker#endDate(type="text",placeholder="选择结束日期")
+    label.control-label 实际出发时间
+    input.form-control.datepicker#actualBeginDate(type="text",placeholder="选择开始日期")
 
 .form-group.col-md-3
-    label.control-label.worklog-edit-label 休假天数
-    select.form-control.customSelect-tags#leaveDays
-        optgroup(label="选择或录入休假天数")
-            option 0.5
-            option 1.0
-            option 1.5
-            option 2.0
-            option 2.5
-            option 3.0
-            option 3.5
-            option 4.0
+    label.control-label 实际完成时间
+    input.form-control.datepicker#actualEndDate(type="text",placeholder="选择结束日期")
 
 .form-group.col-md-12
-    label(for='description') 请假说明
-    textarea#description.form-control(rows='6', placeholder='请输入请假说明或工作交接情况')
+    label(for='description') 出差工作情况
+    textarea#description.form-control(rows='5', placeholder='请录入出差期间工作情况')

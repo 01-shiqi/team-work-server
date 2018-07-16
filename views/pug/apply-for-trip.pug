@@ -39,15 +39,8 @@ block specific-js
 	script(type='text/javascript', src="js/plugins/select2.min.js")
 	script(type='text/javascript', src="js/validate.js")
 	script(type='text/javascript', src="js/_trip.js")
+	script(type='text/javascript', src="js/_task-related.js")
 	script(type="text/javascript").
-
-		// 设置日期的当前时间和截至时间
-		var now = new Date()
-		$('#beginDate').datepicker('setDate', now)
-		$('#beginDate').datepicker('setBeginDate', now)
-		$('#endDate').datepicker('setDate', now)
-		$('#endDate').datepicker('setBeginDate', now)
-		setSelect2Value('#leaveDays', '1.0')
 
 		$('#btn-create-trip').click(function(){
 

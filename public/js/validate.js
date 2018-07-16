@@ -138,7 +138,7 @@ function initEditDialog() {
     $('.editDialog').on('shown.bs.modal', function() {
         $('.customSelect').select2({ tags: false })
         $('.customSelect-tags').select2({ tags: true })
-    })    
+    })
 }
 
 initDatePicker()
