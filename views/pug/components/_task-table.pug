@@ -7,8 +7,7 @@ table.table.table-hover
                         input#cb-select-all(type="checkbox")
                         span.label-text 
             th #
-            if role < 10
-                th 创建人
+            th 创建人
             th 任务类型
             th 所属型号
             th 开始时间
@@ -61,8 +60,7 @@ table.table.table-hover
                             input.cb-task-item(type="checkbox", data-id=`${tasks[i].id}`)
                             span.label-text 
                 td #{i + 1}
-                if role < 10
-                    td(class=`td${0}`) #{tasks[i].creatorName}
+                td(class=`td${0}`) #{tasks[i].creatorName}
                 td(class=`td${1}`) #{tasks[i].type}
                 td(class=`td${2}`) #{tasks[i].model}
                 td(class=`td${3}`) #{tasks[i].beginTime}

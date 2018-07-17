@@ -157,14 +157,10 @@ class Task extends Base {
 
             let sql = 'select tw_task.id, type, name, content, state, model, work_object as workObject, work_place as workPlace, begin_time as beginTime, end_time as endTime, person_hours as personHours, progress, actual_end_time as actualEndTime '
             sql += ', b.true_name as executorName, b.id as executorID '
-            if (allusers) {
-                sql += ', c.true_name as creatorName '
-            }
+            sql += ', c.true_name as creatorName '
 
             sql += ' from tw_task left join tw_user b on (tw_task.executor_id = b.id) '
-            if (allusers) {
-                sql += ' left join tw_user c on (tw_task.created_by = c.id) '
-            }
+            sql += ' left join tw_user c on (tw_task.created_by = c.id) '
 
             sql += whereClause
                 + ' order by created_at desc '
