@@ -10,7 +10,7 @@ Target Server Type    : MYSQL
 Target Server Version : 50720
 File Encoding         : 65001
 
-Date: 2018-07-16 16:29:38
+Date: 2018-07-17 21:08:13
 */
 
 SET FOREIGN_KEY_CHECKS=0;
@@ -151,8 +151,7 @@ CREATE TABLE `tw_user` (
   `password` varchar(255) DEFAULT NULL,
   `job_position` varchar(255) DEFAULT NULL,
   `role` int(11) NOT NULL DEFAULT '1',
-  PRIMARY KEY (`id`),
-  UNIQUE KEY `uk_login_name` (`login_name`) USING HASH
+  PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 -- ----------------------------
@@ -175,7 +174,7 @@ CREATE TABLE `tw_worklog` (
   `work_date` date DEFAULT NULL,
   `work_begin_time` varchar(50) DEFAULT NULL,
   `work_time_length` float(50,1) DEFAULT NULL,
-  `task_id` char(36) NOT NULL,
+  `task_id` char(36) DEFAULT NULL,
   `work_type` varchar(50) DEFAULT NULL,
   `model` varchar(50) DEFAULT NULL,
   `work_object` varchar(50) DEFAULT NULL,
