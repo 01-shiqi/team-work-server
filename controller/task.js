@@ -190,10 +190,10 @@ class Task extends Base {
             let bodyData = await this.extractStringData(req)
             let task = JSON.parse(bodyData)
 
-            if(task.state != '已创建' && !this.isSuperAdmin(req)) {
-                this.sendFailed(res, '任务已下发，无法修改')
-                return
-            }
+            // if(task.state != '已创建' && !this.isSuperAdmin(req)) {
+            //     this.sendFailed(res, '任务已下发，无法修改')
+            //     return
+            // }
 
             const id = this.uuid()
             const userID = this.getUserID(req)
