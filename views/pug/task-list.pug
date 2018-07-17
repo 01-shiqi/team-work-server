@@ -63,8 +63,8 @@ block specific-js
 			setSelect2Value('#workObject', getTableRowData(taskID, 'data-work-object'))
 			setSelect2Value('#workPlace', getTableRowData(taskID, 'data-work-place'))
 
-			$('#beginTime').val(getTableCellData(taskID, 3))
-			$('#endTime').val(getTableCellData(taskID, 4))
+			$('#dp-begin-time').val(getTableCellData(taskID, 3))
+			$('#dp-end-time').val(getTableCellData(taskID, 4))
 			setSelect2Value('#personHours', getTableCellData(taskID, 5))
 			$('#executor').val(getTableCellID(taskID, 8))
 			$('#input-task-name').val(getTableCellData(taskID, '-task-name'))
@@ -95,8 +95,8 @@ block specific-js
 				model: $('#model').val(),
 				workObject: $('#workObject').val(),
 				workPlace: $('#workPlace').val(),
-				beginTime: $('#beginTime').val(),
-				endTime: $('#endTime').val(),
+				beginTime: $('#dp-begin-time').val(),
+				endTime: $('#dp-end-time').val(),
 				personHours: $('#personHours').val(), 
 				state: $('#task-dialog').attr('data-task-state'),  
 				executor: $('#executor').val(), 
@@ -178,8 +178,8 @@ block specific-js
 		
 		// 设置日期的当前时间和截至时间
 		var now = new Date()
-		$('#beginTime').datepicker('setDate', now)
-		$('#endTime').datepicker('setDate', now)
+		$('#dp-begin-time').datepicker('setDate', now)
+		$('#dp-end-time').datepicker('setDate', now)
 
 		$(".input-no-empty").bind("input propertychange change",function(event) {
 			if($(this).val() != '') {

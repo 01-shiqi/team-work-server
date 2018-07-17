@@ -1,8 +1,8 @@
 
 // 设置日期的当前时间和截至时间
 var now = new Date()
-$('#beginTime').datepicker('setDate', now)
-$('#endTime').datepicker('setDate', now)
+$('#dp-begin-time').datepicker('setDate', now)
+$('#dp-end-time').datepicker('setDate', now)
 
 		
 /**
@@ -14,8 +14,8 @@ function getTask() {
         model: $('#model').val(),
         workObject: $('#workObject').val(),
         workPlace: $('#workPlace').val(),
-        beginTime: $('#beginTime').val(),
-        endTime: $('#endTime').val(),
+        beginTime: $('#dp-begin-time').val(),
+        endTime: $('#dp-end-time').val(),
         personHours: $('#personHours').val(), 
         state: $('#task-dialog').attr('data-task-state'),  
         executor: $('#executor').val(), 
@@ -33,7 +33,7 @@ function getTask() {
 function checkTaskInputValid(task) {
 
     if(task.endTime < task.beginTime){
-        $('#endTime').addClass('is-invalid')
+        $('#dp-end-time').addClass('is-invalid')
         return false
     }
     if(!task.name){
