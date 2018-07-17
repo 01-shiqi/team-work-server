@@ -1,7 +1,7 @@
             
 .form-group.col-md-12
     label.control-label.worklog-edit-label 任务名称
-    select.form-control.item-can-modify.customSelect#task(placeholder="选择任务")
+    select.form-control.item-can-modify.customSelect.input-no-empty#task(placeholder="选择任务")
         optgroup(label="选择任务")
             - for (var i = 0; i < tasks.length; i++)
                 option(value=`${tasks[i].id}`, data-model=`${tasks[i].model}`, data-type=`${tasks[i].type}`, data-work-object=`${tasks[i].workObject}`, data-work-place=`${tasks[i].workPlace}`, data-task-progress=`${tasks[i].progress}`, data-begin-time=`${tasks[i].beginTime}`, data-end-time=`${tasks[i].endTime}`) #{tasks[i].name}

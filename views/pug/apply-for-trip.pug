@@ -50,6 +50,11 @@ block specific-js
 
 			let trip = getTrip()
 
+			//- 验证数据
+			if(!checkTripInput(trip, null)){
+				return
+			}
+
 			$.ajax({
 				url: "/create-trip/",
 				type: "post",

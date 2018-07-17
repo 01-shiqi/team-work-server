@@ -69,6 +69,38 @@ function calcActualTripDays(beginDate, endDate) {
     }
 }
 
+
+// 验证输入的有效性
+function checkTripInput(trip, editMode) {
+
+    if(!trip.taskID){
+        $('#task').addClass('is-invalid')
+        showWarning('任务名称不能为空')
+        return false 
+    }
+
+    if(editMode == 'finish-trip') {
+        if(!trip.actualBeginDate){
+            $('#actualBeginDate').addClass('is-invalid')
+            return false
+        }
+
+        if(!trip.actualEndDate){
+            $('#actualEndDate').addClass('is-invalid')
+            return false
+        }
+        if(!trip.tripWork){
+            $('#tripWork').addClass('is-invalid')
+            return false
+        }
+        return true
+    }
+    else {
+        return true
+    }
+}
+
+
 $('#planBeginDate').bind('change', function(){
     calcPlanTripDays($('#planBeginDate').val(), $('#planEndDate').val())
 })
