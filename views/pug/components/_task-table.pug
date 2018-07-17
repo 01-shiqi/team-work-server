@@ -54,7 +54,7 @@ table.table.table-hover
             else
                 - var trClass = 'table-error'
 
-            tr(class=trClass, id=`${tasks[i].id}`, data-work-object=`${tasks[i].workObject}`, data-work-place=`${tasks[i].workPlace}`, data-content=`${tasks[i].content}`)
+            tr(class=trClass, id=`${tasks[i].id}`, data-work-object=`${tasks[i].workObject}`, data-work-place=`${tasks[i].workPlace}`, data-content=`${tasks[i].content}`, data-executor-id=`${tasks[i].executorID}`)
                 td
                     .animated-checkbox
                         label

@@ -52,17 +52,8 @@ block specific-js
 	script(type='text/javascript', src="js/plugins/bootstrap-datepicker/js/bootstrap-datepicker.min.js")
 	script(type='text/javascript', src="js/plugins/bootstrap-datepicker/locales/bootstrap-datepicker.zh-CN.min.js", charset="UTF-8")
 	script(type='text/javascript', src="js/validate.js")
+	script(type='text/javascript', src="js/_table.js")
 	script(type="text/javascript").
-
-		// 获取 表格单元格的内容
-		function getTableCellData(trID, tdIndex) {
-			return $("#"+ trID + " .td" + tdIndex).html()
-		}
-
-		// 获取 表格单元格的ID
-		function getTableCellID(trID, tdIndex) {
-			return $("#"+ trID + " .td" + tdIndex).attr('data-id')
-		}
 
 		// 设置任务对话框内容
 		function setEditTaskDialogContent(taskID) {
@@ -71,7 +62,7 @@ block specific-js
 			$('#beginTime').val(getTableCellData(taskID, 3))
 			$('#endTime').val(getTableCellData(taskID, 4))
 			setSelect2Value('#personHours', getTableCellData(taskID, 5))
-			$('#executor').val(getTableCellID(taskID, 8))
+			setSelect2Value('#executor', getTableRowData(taskID, 'data-executor-id'))
 			$('#input-task-name').val(getTableCellData(taskID, '-task-name'))
 			$('#taskContent').val(getTableCellData(taskID, '-task-content'))
 
