@@ -15257,6 +15257,10 @@ be a descendant of the grid when it is being dragged.
   font-size: 18px;
 }
 
+#div-worklog-list {
+  margin-bottom: 0px;
+}
+
 .table-created,
 .table-created > th,
 .table-created > td {
