@@ -77,6 +77,11 @@ block specific-js
 
 			$('#task-dialog').attr('data-task-id', taskID)
 			$('#task-dialog').attr('data-task-state', getTableCellData(taskID, 7))
+
+			// 不允许查看工作量
+			$('#personHours').html('')
+			$('#label-executor').html('执行人')
+			
 		}
 		
 		// 根据对话框中的内容生成task对象
