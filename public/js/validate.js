@@ -63,7 +63,7 @@ function existOption(selector, value) {
  */
 function setSelect2Value(selector, value){
 
-    if(!value) {
+    if(value === null || value === undefined || value === '') {
         return
     }
 
