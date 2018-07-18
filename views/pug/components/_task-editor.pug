@@ -36,8 +36,9 @@
 .form-group.col-md-3
     label.control-label 计划完成时间
     span (
-    span#span-task-days(style='color:blue')
-    span 个工作日)
+    span.span-highlight#span-task-days
+    span.span-highlight 个工作日
+    span )
     input.form-control.datepicker#dp-end-time(type="text",placeholder="选择日期")
 
 .form-group.col-md-3
