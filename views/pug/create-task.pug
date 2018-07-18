@@ -62,7 +62,7 @@ block specific-js
 				dataType: "json",
 				success: function(res){
 					if(res.succeed) {
-						swal(messageTitle, messageTitle + "成功。", "success");
+						swal(messageTitle, messageTitle + "成功，等待审核确认后，任务会自动下发给执行人。", "success");
 					} else {
 						swal(messageTitle, messageTitle + "失败！ 原因：" + res.error, "error")
 					}
