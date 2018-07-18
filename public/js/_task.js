@@ -1,9 +1,4 @@
 
-// 设置日期的当前时间和截至时间
-var now = new Date()
-$('#dp-begin-time').datepicker('setDate', now)
-$('#dp-end-time').datepicker('setDate', now)
-
 		
 /**
  * 根据对话框中的内容生成task对象
@@ -56,3 +51,31 @@ $(".input-no-empty").bind("input propertychange change",function(event) {
         $(this).removeClass('is-invalid')
     }
 })
+
+
+
+/**
+ * 计算完成任务的实际天数
+ * @param {*} beginDate 
+ * @param {*} endDate 
+ */
+function calcDaysOfTask(beginDate, endDate) {
+    let days = calcWorkDayDiff(beginDate, endDate)
+    if(days) {
+        $('#span-task-days').html(days)
+        setSelect2Value('#personHours', days * 8)
+    }
+}
+
+$('#dp-begin-time').bind('change', function(){
+    calcDaysOfTask($('#dp-begin-time').val(), $('#dp-end-time').val())
+})
+
+$('#dp-end-time').bind('change', function(){
+    calcDaysOfTask($('#dp-begin-time').val(), $('#dp-end-time').val())
+})
+
+// 设置日期的当前时间和截至时间
+var now = new Date()
+$('#dp-begin-time').datepicker('setDate', now)
+$('#dp-end-time').datepicker('setDate', now)

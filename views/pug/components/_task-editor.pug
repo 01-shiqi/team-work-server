@@ -35,23 +35,23 @@
 
 .form-group.col-md-3
     label.control-label 计划完成时间
+    span (
+    span#span-task-days(style='color:blue')
+    span 个工作日)
     input.form-control.datepicker#dp-end-time(type="text",placeholder="选择日期")
 
 .form-group.col-md-3
     label.control-label 工作量(人时=人天*8)
     select.form-control.customSelect-tags#personHours
         optgroup(label="选择或录入工作量(人时)")
-            option 0.5
-            option 1.0
-            option 1.5
-            option 2.0
-            option 2.5
-            option 3.0
-            option 3.5
-            option 4.0
-            option 4.5
-            option 5.5
-            option 6.0
+            option 1
+            option 2
+            option 3
+            option 4
+            option 5
+            option 6
+            option 7
+            option 8
 
 .form-group.col-md-3
     label.control-label.worklog-edit-label#label-executor 建议执行人

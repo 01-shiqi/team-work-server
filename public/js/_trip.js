@@ -28,47 +28,6 @@ function disableTaskRelatedItems() {
     $('#workPlace').attr('disabled', true)
 }
 
-/**
- * 计算日期间隔的天数
- * @param {*} beginDate 
- * @param {*} endDate 
- */
-function calcDateDiff(beginDate, endDate) {
-    if(beginDate == '' || endDate == '') {
-        return
-    }
-    let beginDateTime = new Date(beginDate.replace(/\-/g, "\/"))
-    let endDateTime = new Date(endDate.replace(/\-/g, "\/"))
-
-    let diffMilliseconds = endDateTime - beginDateTime
-    let diff = Math.abs(diffMilliseconds / 86400000 + 1)
-    return diff
-}
-
-/**
- * 计算计划出差天数
- * @param {*} beginDate 
- * @param {*} endDate 
- */
-function calcPlanTripDays(beginDate, endDate) {
-    let days = calcDateDiff(beginDate, endDate)
-    if(days) {
-        $('#span-plan-trip-days').html(days)
-    }
-}
-
-/**
- * 计算实际出差天数
- * @param {*} beginDate 
- * @param {*} endDate 
- */
-function calcActualTripDays(beginDate, endDate) {
-    let days = calcDateDiff(beginDate, endDate)
-    if(days) {
-        $('#span-actual-trip-days').html(days)
-    }
-}
-
 
 // 验证输入的有效性
 function checkTripInput(trip, editMode) {
@@ -100,6 +59,31 @@ function checkTripInput(trip, editMode) {
     }
 }
 
+
+
+/**
+ * 计算计划出差天数
+ * @param {*} beginDate 
+ * @param {*} endDate 
+ */
+function calcPlanTripDays(beginDate, endDate) {
+    let days = calcDateDiff(beginDate, endDate)
+    if(days) {
+        $('#span-plan-trip-days').html(days)
+    }
+}
+
+/**
+ * 计算实际出差天数
+ * @param {*} beginDate 
+ * @param {*} endDate 
+ */
+function calcActualTripDays(beginDate, endDate) {
+    let days = calcDateDiff(beginDate, endDate)
+    if(days) {
+        $('#span-actual-trip-days').html(days)
+    }
+}
 
 $('#planBeginDate').bind('change', function(){
     calcPlanTripDays($('#planBeginDate').val(), $('#planEndDate').val())
