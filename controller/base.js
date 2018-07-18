@@ -55,6 +55,8 @@ class Base {
         this.loadAllBasicInfos = this.loadAllBasicInfos.bind(this)
         this.loadTasks = this.loadTasks.bind(this)
         this.updateTaskProgress = this.updateTaskProgress.bind(this)
+
+        this.calcDays = this.calcDays.bind(this)
     }
 
 
@@ -482,6 +484,23 @@ class Base {
 
     genStrCondition(name, value) {
         return name + ' = \'' + value + '\''
+    }
+
+    /**
+     * 计算两个日期间的天数
+     * @param {*} beginDate 
+     * @param {*} endDate 
+     */
+    calcDays(beginDate, endDate) {
+        if(beginDate == '' || endDate == '') {
+            return
+        }
+        let beginDateTime = new Date(beginDate.replace(/\-/g, "\/"))
+        let endDateTime = new Date(endDate.replace(/\-/g, "\/"))
+    
+        let diffMilliseconds = endDateTime - beginDateTime
+        let diff = Math.abs(diffMilliseconds / 86400000 + 1)
+        return diff
     }
 
 }

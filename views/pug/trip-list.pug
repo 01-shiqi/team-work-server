@@ -173,7 +173,7 @@ block specific-js
 			let ids = []
 			$(".cb-task-item:checked").each(function(index){
 				let state = $(this).data('state')
-				if(!state || state == '待审核'){
+				if(!state || state == '待审核' || state == '待批准'){
 					ids.push($(this).data('id'))	
 				}
 			})
@@ -182,7 +182,7 @@ block specific-js
 				return
 			}
 
-			confirmDelete(ids.length, '只能删除待审核状态的出差记录', function(isConfirm){
+			confirmDelete(ids.length, '只能删除待审核或待批准状态的出差记录', function(isConfirm){
 				if(!isConfirm) {
 					return
 				}

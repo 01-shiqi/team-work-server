@@ -21,6 +21,8 @@ class Trip extends Base {
         this.finishTrip = this.finishTrip.bind(this)
         this.approveTrip = this.approveTrip.bind(this)
         this.deleteTrips = this.deleteTrips.bind(this)
+
+        this.newTrip = this.newTrip.bind(this)
     }
 
     /**
@@ -74,7 +76,7 @@ class Trip extends Base {
             let whereClause = ''
             const userID = this.getUserID(req)
             if (userID && !allusers) {
-                whereClause += this.genStrCondition('created_by', userID)
+                whereClause += this.genStrCondition('executor_id', userID)
             }
             if (whereClause != '') {
                 whereClause = ' where ' + whereClause
@@ -88,7 +90,7 @@ class Trip extends Base {
             let pageCount = Math.ceil(totalCount / countPerPage)
 
             let sql = 'select t.id, task_id as taskID, model, work_type as workType, work_object as workObject, work_place as workPlace, plan_begin_date as planBeginDate, plan_end_date as planEndDate, plan_trip_days as planTripDays, actual_begin_date as actualBeginDate, actual_end_date as actualEndDate, actual_trip_days as actualTripDays, trip_work as tripWork, state, u.true_name as creatorName '
-            sql += ' from tw_trip t left join tw_user u on (t.created_by = u.id) '
+            sql += ' from tw_trip t left join tw_user u on (t.executor_id = u.id) '
 
             sql += whereClause
                 + ' order by created_at desc '
@@ -109,17 +111,52 @@ class Trip extends Base {
     }
 
     /**
-     * 创建出差申请
-     * @param {*} req 
-     * @param {*} res 
-     * @param {*} next 
+     * 判断是否存在taskID对应的出差申请
+     * @param {*} taskID 
      */
-    async createTrip(req, res, next) {
+    async existTrip(taskID) {
         try {
-            let bodyData = await this.extractStringData(req)
-            let trip = JSON.parse(bodyData)
+            let totalCountSql = 'select count(*) as value from tw_trip where ' + this.genStrCondition('task_id', taskID)
+            let totalCount = await this.queryValue(totalCountSql)
+            return totalCount >= 1
+        } catch(error) {
+            throw error
+        }
+    }
+
+    /**
+     * 更新出差的执行人信息
+     * @param {*} taskID 
+     * @param {*} executorID 
+     * @param {*} updatedBy 
+     */
+    async updateTripExecutor(taskID, executorID, updatedBy) {
+        try {
+            var sqlSource = []
+            sqlSource.push(executorID)
+
+            var now = moment().format('YYYY-MM-DD HH:mm:ss')
+            sqlSource.push(now)
+            sqlSource.push(updatedBy)
+
+            let sql = 'update tw_trip set executor_id=?, updated_at=?, updated_by=? where '
+                + this.genStrCondition('task_id', taskID)
+
+            await this.executeSql(sql, sqlSource)
+        } catch(error) {
+            throw error
+        }        
+    }
+
+
+    /**
+     * 创建出差申请
+     * @param {*} trip 
+     * @param {*} creatorID 
+     */
+    async newTrip(trip, creatorID) {
+        try {
             const id = this.uuid()
-            const userID = this.getUserID(req)
             var sqlSource = []
             sqlSource.push(id)
             sqlSource.push(trip.taskID)
@@ -130,18 +167,40 @@ class Trip extends Base {
             sqlSource.push(trip.planBeginDate)
             sqlSource.push(trip.planEndDate)
             sqlSource.push(trip.planTripDays)
-            sqlSource.push('待审核')
+            sqlSource.push(trip.state)
+            sqlSource.push(trip.executorID)
 
             var now = moment().format('YYYY-MM-DD HH:mm:ss')
             sqlSource.push(now)
-            sqlSource.push(userID)
+            sqlSource.push(creatorID)
             sqlSource.push(now)
-            sqlSource.push(userID)
+            sqlSource.push(creatorID)
 
-            var sql = 'insert into tw_trip (id, task_id, model, work_type, work_object, work_place, plan_begin_date, plan_end_date, plan_trip_days, state, created_at, created_by, updated_at, updated_by) ' +
-                ' values(?,?,?,?, ?,?,?,?, ?,?,?,?, ?,?)'
+            var sql = 'insert into tw_trip (id, task_id, model, work_type, work_object, work_place, plan_begin_date, plan_end_date, plan_trip_days, state, executor_id, created_at, created_by, updated_at, updated_by) ' +
+                ' values(?,?,?,?, ?,?,?,?, ?,?,?,?, ?,?,?)'
 
             let succeed = await this.executeSql(sql, sqlSource)
+            return true
+        }
+        catch (error) {
+            throw error
+        }
+    }
+
+    /**
+     * 创建出差申请
+     * @param {*} req 
+     * @param {*} res 
+     * @param {*} next 
+     */
+    async createTrip(req, res, next) {
+        try {
+            let bodyData = await this.extractStringData(req)
+            let trip = JSON.parse(bodyData)
+            const userID = this.getUserID(req)
+            trip.executorID = userID
+            trip.state = '待审核'
+            await this.newTrip(trip, userID)
             this.sendSucceed(res)
         }
         catch (error) {
@@ -149,7 +208,6 @@ class Trip extends Base {
             this.sendFailed(res, error.message)
         }
     }
-
 
     /**
      * 修改出差申请
@@ -186,7 +244,7 @@ class Trip extends Base {
             let sql = 'update tw_trip set task_id=?, work_type=?, model=?, work_object=?, work_place=?, plan_begin_date=?, plan_end_date=?, plan_trip_days=?, updated_at=?, updated_by=? where '
                 + this.genStrCondition('id', trip.id)
 
-            await this.executeSql(sql, sqlSource);
+            await this.executeSql(sql, sqlSource)
             this.sendSucceed(res)
         }
         catch (error) {

@@ -2,6 +2,7 @@
 
 import Base from './base'
 import logger from '../logger/logger'
+import Trip from './trip'
 
 import moment from 'moment'
 
@@ -22,6 +23,10 @@ class Task extends Base {
         this.getTaskList = this.getTaskList.bind(this)
         this.loadBasicInfo = this.loadBasicInfo.bind(this)
         this.loadAllBasicInfos = this.loadAllBasicInfos.bind(this)
+        
+        this.createTripByTask = this.createTripByTask.bind(this)
+        this.updateTripByTask = this.updateTripByTask.bind(this)
+        this.createOrUpdateTripByTask = this.createOrUpdateTripByTask.bind(this)
     }
 
     /**
@@ -242,13 +247,60 @@ class Task extends Base {
             let sql = 'update tw_task set executor_id=?, state=?, verified_at=?, verified_by=? where '
                 + this.genStrCondition('id', task.id)
 
-            let succeed = await this.executeSql(sql, sqlSource);
+            await this.executeSql(sql, sqlSource)
+            await this.createOrUpdateTripByTask(task, userID)
+
             this.sendSucceed(res)
         }
         catch (error) {
             logger.error(error)
             this.sendFailed(res, error.message)
         }
+    }
+
+    /**
+     * 根据任务创建出差申请或更新出差的执行人
+     * @param {*} task 
+     * @param {*} userID 
+     */
+    async createOrUpdateTripByTask(task, userID) {
+        if(await Trip.existTrip(task.id)) {
+            await this.updateTripByTask(task, userID)
+        } else {
+            await this.createTripByTask(task, userID)
+        }
+    }
+
+    /**
+     * 根据任务创建出差申请
+     * @param {*} task 
+     * @param {*} userID 
+     */
+    async createTripByTask(task, userID) {
+        if(task.type != '出差') {
+            return
+        }
+        let trip = {}
+        trip.taskID = task.id
+        trip.model = task.model
+        trip.workTimes = task.type
+        trip.workObject = task.workObject
+        trip.workPlace = task.workPlace
+        trip.planBeginDate = task.beginTime
+        trip.planEndDate = task.endTime
+        trip.planTripDays = this.calcDays(trip.planBeginDate, trip.planEndDate)
+        trip.state = '待批准'
+        trip.executorID = task.executor
+        await Trip.newTrip(trip, userID)
+    }
+
+    /**
+     * 根据任务更新出差的执行人
+     * @param {*} task 
+     * @param {*} userID 
+     */
+    async updateTripByTask(task, userID) {
+        await Trip.updateTripExecutor(task.id, task.executor, userID)
     }
     
     /**
