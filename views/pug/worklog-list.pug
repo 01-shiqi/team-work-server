@@ -137,6 +137,7 @@ block specific-js
 			$("#"+ worklog.id + " .td" + index++).html(worklog.workObject)
 			$("#"+ worklog.id + " .td-textarea").html(worklog.workContent)
 			$("#"+ worklog.id).data('task-id', worklog.taskID)
+			$("#"+ worklog.id).data('task-progress', worklog.taskProgress)
 		}
 
 		// 设置日期的当前时间和截至时间
