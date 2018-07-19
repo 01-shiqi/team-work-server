@@ -63,9 +63,8 @@ block specific-js
 			setSelect2Value('#model', getTableCellData(taskID, 2))
 			setSelect2Value('#workObject', getTableRowData(taskID, 'data-work-object'))
 			setSelect2Value('#workPlace', getTableRowData(taskID, 'data-work-place'))
-
-			$('#dp-begin-time').val(getTableCellData(taskID, 3))
-			$('#dp-end-time').val(getTableCellData(taskID, 4))
+			setDatePickerValue('#dp-begin-time', getTableCellData(taskID, 3))
+			setDatePickerValue('#dp-end-time', getTableCellData(taskID, 4))
 			setSelect2Value('#personHours', getTableCellData(taskID, 5))
 			$('#executor').val(getTableCellID(taskID, 8))
 			$('#input-task-name').val(getTableCellData(taskID, '-task-name'))

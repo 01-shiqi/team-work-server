@@ -60,12 +60,33 @@ $(".input-no-empty").bind("input propertychange change",function(event) {
  * @param {*} endDate 
  */
 function calcDaysOfTask(beginDate, endDate) {
-    let days = calcWorkDayDiff(beginDate, endDate)
+    if(!beginDate || !endDate) {
+        return
+    }
+
+    let taskType = $('#taskType').val()
+    let days = null
+    let daysType = null
+
+    // 出差任务计算天数，非出差任务计算工作日数
+    if(taskType == '出差') {
+        days = calcDateDiff(beginDate, endDate)
+        daysType = '天'
+    } else {
+        days = calcWorkDayDiff(beginDate, endDate)
+        daysType = '个工作日'
+    }
+    
     if(days) {
         $('#span-task-days').html(days)
-        setSelect2Value('#personHours', days * 8)
+        $('#span-days-or-workdays').html(daysType)
+        setSelect2Value('#personHours', days * 6)
     }
 }
+
+$('#taskType').bind('change', function(){
+    calcDaysOfTask($('#dp-begin-time').val(), $('#dp-end-time').val())
+})
 
 $('#dp-begin-time').bind('change', function(){
     calcDaysOfTask($('#dp-begin-time').val(), $('#dp-end-time').val())
