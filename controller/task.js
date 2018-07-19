@@ -27,6 +27,7 @@ class Task extends Base {
         this.createTripByTask = this.createTripByTask.bind(this)
         this.updateTripByTask = this.updateTripByTask.bind(this)
         this.createOrUpdateTripByTask = this.createOrUpdateTripByTask.bind(this)
+        this.statisticsTasks = this.statisticsTasks.bind(this)
     }
 
     /**
@@ -134,6 +135,47 @@ class Task extends Base {
         await this.getTaskList(req, res, next, false)
     }
 
+    /**
+     * 统计任务情况 已下发、已超期、已完成、已关闭
+     * @param {*} whereClause 
+     */
+    async statisticsTasks(whereClause) {
+
+        try {
+            let sql = 'select end_time as endTime, progress, actual_end_time as actualEndTime, state from tw_task ' + whereClause
+            let tasks = await this.queryArray(sql)
+
+            let statistics = {
+                verifiedTasksCount: 0,
+                expiredTasksCount: 0,
+                finishedTasksCount: 0,
+                closedTasksCount: 0
+            }
+
+            let now = new Date()
+            let today = new Date(now.getFullYear(), now.getMonth(), now.getDate())
+
+            for(let i = 0; i < tasks.length; ++i) {
+                let planEndDate = new Date(tasks[i].endTime.replace(/\-/g, "\/"))
+                if (tasks[i].state == '已创建') {
+
+                } else if (tasks[i].state == '已关闭') {
+                    statistics.closedTasksCount++
+                } else if (tasks[i].progress == 100) {
+                    statistics.finishedTasksCount++
+                } else if (planEndDate < today) {
+                    statistics.expiredTasksCount++
+                } else if (tasks[i].state == '已下发') {
+                    statistics.verifiedTasksCount++
+                }
+            }
+            return statistics
+        }
+        catch (error) {
+            throw error
+        }
+    }
+
     // 获取任务列表
     async getTaskList(req, res, next, allusers) {
 
@@ -173,6 +215,8 @@ class Task extends Base {
 
             let resultData = await this.loadAllBasicInfos()
             resultData.tasks = await this.queryArray(sql)
+            resultData.statistics = await this.statisticsTasks(whereClause)
+
             resultData.pageCount = pageCount
             resultData.pageIndex = pageIndex
             let viewName = allusers ? 'manage-tasks' : 'my-tasks'
