@@ -96,6 +96,8 @@ $('#dp-end-time').bind('change', function(){
     calcDaysOfTask($('#dp-begin-time').val(), $('#dp-end-time').val())
 })
 
+
+
 // 设置日期的当前时间和截至时间
 var now = new Date()
 $('#dp-begin-time').datepicker('setDate', now)

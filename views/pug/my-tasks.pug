@@ -55,6 +55,7 @@ block specific-js
 	script(type='text/javascript', src="js/plugins/bootstrap-datepicker/locales/bootstrap-datepicker.zh-CN.min.js", charset="UTF-8")
 	script(type='text/javascript', src="js/validate.js")
 	script(type='text/javascript', src="js/_table.js")
+	script(type='text/javascript', src="js/_task.js")
 	script(type="text/javascript").
 
 		// 设置任务对话框内容
@@ -172,6 +173,12 @@ block specific-js
 			$(".cb-task-item").each(function(){
 				this.checked = allChecked
 			})
+		})
+
+		$('.widget-task-counter').click(function(){
+			taskType = $(this).data('task-type')
+			inputParam = 'taskType=' + taskType
+			$(window).attr('location', '/my-tasks?' + inputParam);
 		})
 
 

@@ -15294,3 +15294,7 @@ be a descendant of the grid when it is being dragged.
 .span-highlight {
   color: #009688;
 }
+
+.widget-task-counter {
+  cursor: pointer;
+}

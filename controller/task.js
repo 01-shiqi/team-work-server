@@ -28,6 +28,7 @@ class Task extends Base {
         this.updateTripByTask = this.updateTripByTask.bind(this)
         this.createOrUpdateTripByTask = this.createOrUpdateTripByTask.bind(this)
         this.statisticsTasks = this.statisticsTasks.bind(this)
+        this.genWhereClauseByTaskType = this.genWhereClauseByTaskType.bind(this)
     }
 
     /**
@@ -146,6 +147,8 @@ class Task extends Base {
             let tasks = await this.queryArray(sql)
 
             let statistics = {
+                totalTasksCount: tasks.length,
+                createdTasksCount: 0,
                 verifiedTasksCount: 0,
                 expiredTasksCount: 0,
                 finishedTasksCount: 0,
@@ -158,9 +161,9 @@ class Task extends Base {
             for(let i = 0; i < tasks.length; ++i) {
                 let planEndDate = new Date(tasks[i].endTime.replace(/\-/g, "\/"))
                 if (tasks[i].state == '已创建') {
-
+                    statistics.createdTasksCount++
                 } else if (tasks[i].state == '已关闭') {
-                    statistics.closedTasksCount++
+                    statistics.finishedTasksCount++
                 } else if (tasks[i].progress == 100) {
                     statistics.finishedTasksCount++
                 } else if (planEndDate < today) {
@@ -176,12 +179,25 @@ class Task extends Base {
         }
     }
 
+    genWhereClauseByTaskType(taskType) {
+        let condition = ''
+        if(taskType == 'verified') {
+            condition = ' state = \'已下发\' and end_time >= \'' + this.today() + '\' '
+        } else if (taskType == 'expired') {
+            condition = ' state = \'已下发\' and end_time < \'' + this.today() + '\' '
+        } else if (taskType == 'finished') {
+            condition = ' (state = \'已关闭\' or progress = 100) '
+        }
+        return condition
+    }
+
     // 获取任务列表
     async getTaskList(req, res, next, allusers) {
 
         try {
             let params = await this.extractQueryParams(req)
             let pageIndex = params.pageIndex || 0
+            let taskType = params.taskType || 'total'
 
             const countPerPage = 12
 
@@ -193,6 +209,20 @@ class Task extends Base {
             }
             if (whereClause != '') {
                 whereClause = ' where ' + whereClause
+            }
+
+            let resultData = await this.loadAllBasicInfos()
+            resultData.statistics = await this.statisticsTasks(whereClause)
+
+            // 根据任务类型添加where条件
+            let condition = this.genWhereClauseByTaskType(taskType)
+            if(condition) {
+                if(whereClause == '') {
+                    whereClause = ' where '
+                } else {
+                    whereClause += ' and '
+                }
+                whereClause += condition
             }
 
             let totalCountSql = 'select count(*) as value from tw_task ' + whereClause
@@ -213,12 +243,11 @@ class Task extends Base {
                 + ' order by created_at desc '
                 + ' limit ' + startIndex + ',' + countPerPage
 
-            let resultData = await this.loadAllBasicInfos()
             resultData.tasks = await this.queryArray(sql)
-            resultData.statistics = await this.statisticsTasks(whereClause)
 
             resultData.pageCount = pageCount
             resultData.pageIndex = pageIndex
+            resultData.queryParam = 'taskType=' + taskType
             let viewName = allusers ? 'manage-tasks' : 'my-tasks'
             res.render(viewName, this.appendUserInfo(req, resultData))
         }

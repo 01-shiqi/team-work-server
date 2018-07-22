@@ -7,35 +7,38 @@
                 - var currPage = parseInt(pageIndex)
                 - var prevPage = currPage - 1
                 - var nextPage = currPage + 1 
+                - var hrefAddr = activePage + '?'
+                if queryParam
+                    - hrefAddr += queryParam + '&'
                 if pageIndex == 0
                     li.page-item.disabled
-                        a.page-link(href=`${activePage}?pageIndex=${0}`)
+                        a.page-link(href=`${hrefAddr}pageIndex=${0}`)
                             i.fa.fa-angle-double-left
                     li.page-item.disabled
-                        a.page-link(href=`${activePage}?pageIndex=${prevPage}`)
+                        a.page-link(href=`${hrefAddr}pageIndex=${prevPage}`)
                             i.fa.fa-angle-left
                 else
                     li.page-item
-                        a.page-link(href=`${activePage}?pageIndex=${0}`)
+                        a.page-link(href=`${hrefAddr}pageIndex=${0}`)
                             i.fa.fa-angle-double-left
                     li.page-item
-                        a.page-link(href=`${activePage}?pageIndex=${prevPage}`)
+                        a.page-link(href=`${hrefAddr}pageIndex=${prevPage}`)
                             i.fa.fa-angle-left
 
                 li.page-item.disabled
-                    a.page-link(href=`${activePage}?pageIndex=${currPage}`) #{currPage+1} / #{pageCount}
+                    a.page-link(href=`${hrefAddr}pageIndex=${currPage}`) #{currPage+1} / #{pageCount}
 
                 if pageIndex == pageCount - 1
                     li.page-item.disabled
-                        a.page-link(href=`${activePage}?pageIndex=${nextPage}`)
+                        a.page-link(href=`${hrefAddr}pageIndex=${nextPage}`)
                             i.fa.fa-angle-right
                     li.page-item.disabled
-                        a.page-link(href=`${activePage}?pageIndex=${pageCount - 1}`)
+                        a.page-link(href=`${hrefAddr}pageIndex=${pageCount - 1}`)
                             i.fa.fa-angle-double-right
                 else
                     li.page-item
-                        a.page-link(href=`${activePage}?pageIndex=${nextPage}`)
+                        a.page-link(href=`${hrefAddr}pageIndex=${nextPage}`)
                             i.fa.fa-angle-right
                     li.page-item
-                        a.page-link(href=`${activePage}?pageIndex=${pageCount - 1}`)
+                        a.page-link(href=`${hrefAddr}pageIndex=${pageCount - 1}`)
                             i.fa.fa-angle-double-right

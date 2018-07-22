@@ -57,6 +57,9 @@ class Base {
         this.updateTaskProgress = this.updateTaskProgress.bind(this)
 
         this.calcDays = this.calcDays.bind(this)
+
+        this.today = this.today.bind(this)
+        this.now = this.now.bind(this)
     }
 
 
@@ -501,6 +504,14 @@ class Base {
         let diffMilliseconds = endDateTime - beginDateTime
         let diff = Math.abs(diffMilliseconds / 86400000 + 1)
         return diff
+    }
+
+    today() {
+        return moment().format('YYYY-MM-DD')
+    }
+
+    now() {
+        return moment().format('YYYY-MM-DD HH:mm:ss')
     }
 
 }

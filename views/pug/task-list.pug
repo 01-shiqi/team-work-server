@@ -238,4 +238,10 @@ block specific-js
 			})
 		})
 
+		$('.widget-task-counter').click(function(){
+			taskType = $(this).data('task-type')
+			inputParam = 'taskType=' + taskType
+			$(window).attr('location', '/manage-tasks?' + inputParam);
+		})
+
 		

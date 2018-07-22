@@ -1,16 +1,25 @@
 
 .row
 
+
     .col-md-6.col-lg-3
-        .widget-small.primary.coloured-icon
+        .widget-small.primary.coloured-icon.widget-task-counter(data-task-type='total')
             i.icon.fa.fa-users.fa-3x
+            div.info
+                h4 总任务(未下发)
+                p
+                    b#b-verified-tasks-count #{statistics.totalTasksCount} ( #{statistics.createdTasksCount} )
+
+    .col-md-6.col-lg-3
+        .widget-small.warning.coloured-icon.widget-task-counter(data-task-type='verified')
+            i.icon.fa.fa-files-o.fa-3x
             div.info
                 h4 已下发
                 p
-                    b#b-verified-tasks-count #{statistics.verifiedTasksCount}
+                    b#b-expire-finished-tasks-count #{statistics.verifiedTasksCount}
 
     .col-md-6.col-lg-3
-        .widget-small.danger.coloured-icon
+        .widget-small.danger.coloured-icon.widget-task-counter(data-task-type='expired')
             i.icon.fa.fa-star.fa-3x
             div.info
                 h4 已超期
@@ -18,17 +27,9 @@
                     b#b-expired-tasks-count #{statistics.expiredTasksCount}
 
     .col-md-6.col-lg-3
-        .widget-small.info.coloured-icon
+        .widget-small.info.coloured-icon.widget-task-counter(data-task-type='finished')
             i.icon.fa.fa-thumbs-o-up.fa-3x
             div.info
-                h4 已完成
+                h4 已完成/已关闭
                 p
                     b#b-finished-tasks-count #{statistics.finishedTasksCount}
-
-    .col-md-6.col-lg-3
-        .widget-small.warning.coloured-icon
-            i.icon.fa.fa-files-o.fa-3x
-            div.info
-                h4 已关闭
-                p
-                    b#b-expire-finished-tasks-count #{statistics.closedTasksCount}
