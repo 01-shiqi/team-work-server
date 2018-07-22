@@ -106,8 +106,7 @@ class Base {
         let sql = 'update tw_task set progress=? ' 
         if(taskProgress >= 100) {
             sql += ', actual_end_time=? '
-            let now = moment().format('YYYY-MM-DD')
-            sqlData.push(now)
+            sqlData.push(this.today())
         }
         sql += ' where ' + this.genStrCondition('id', taskID)
 

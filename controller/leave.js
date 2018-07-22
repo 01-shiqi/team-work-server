@@ -3,9 +3,6 @@
 import Base from './base'
 import logger from '../logger/logger'
 
-import moment from 'moment'
-
-
 class Leave extends Base {
 
     constructor() {
@@ -124,7 +121,7 @@ class Leave extends Base {
             sqlSource.push(leave.description)
             sqlSource.push('待审核')
 
-            var now = moment().format('YYYY-MM-DD HH:mm:ss')
+            var now = this.now()
             sqlSource.push(now)
             sqlSource.push(userID)
             sqlSource.push(now)
@@ -168,7 +165,7 @@ class Leave extends Base {
             sqlSource.push(leave.leaveDays)
             sqlSource.push(leave.description)
 
-            var now = moment().format('YYYY-MM-DD HH:mm:ss')
+            var now = this.now()
             sqlSource.push(now)
             sqlSource.push(userID)
 
@@ -212,7 +209,7 @@ class Leave extends Base {
             }
 
             sqlSource.push(state)
-            let now = moment().format('YYYY-MM-DD HH:mm:ss')
+            let now = this.now()
             sqlSource.push(now)
             sqlSource.push(userID)
 
@@ -249,7 +246,7 @@ class Leave extends Base {
             let sqlSource = []
 
             sqlSource.push('已完成')
-            let now = moment().format('YYYY-MM-DD HH:mm:ss')
+            let now = this.now()
             sqlSource.push(now)
             sqlSource.push(userID)
 

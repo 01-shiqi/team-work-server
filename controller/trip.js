@@ -3,8 +3,6 @@
 import Base from './base'
 import logger from '../logger/logger'
 
-import moment from 'moment'
-
 
 class Trip extends Base {
 
@@ -135,7 +133,7 @@ class Trip extends Base {
             var sqlSource = []
             sqlSource.push(executorID)
 
-            var now = moment().format('YYYY-MM-DD HH:mm:ss')
+            var now = this.now()
             sqlSource.push(now)
             sqlSource.push(updatedBy)
 
@@ -170,7 +168,7 @@ class Trip extends Base {
             sqlSource.push(trip.state)
             sqlSource.push(trip.executorID)
 
-            var now = moment().format('YYYY-MM-DD HH:mm:ss')
+            var now = this.now()
             sqlSource.push(now)
             sqlSource.push(creatorID)
             sqlSource.push(now)
@@ -237,7 +235,7 @@ class Trip extends Base {
             sqlSource.push(trip.planEndDate)
             sqlSource.push(trip.planTripDays)
 
-            var now = moment().format('YYYY-MM-DD HH:mm:ss')
+            var now = this.now()
             sqlSource.push(now)
             sqlSource.push(userID)
 
@@ -276,7 +274,7 @@ class Trip extends Base {
             let sqlSource = []
 
             sqlSource.push('待批准')
-            let now = moment().format('YYYY-MM-DD HH:mm:ss')
+            let now = this.now()
             sqlSource.push(now)
             sqlSource.push(userID)
 
@@ -313,7 +311,7 @@ class Trip extends Base {
             let sqlSource = []
 
             sqlSource.push('已批准')
-            let now = moment().format('YYYY-MM-DD HH:mm:ss')
+            let now = this.now()
             sqlSource.push(now)
             sqlSource.push(userID)
 
@@ -355,7 +353,7 @@ class Trip extends Base {
             sqlSource.push(trip.actualEndDate)
             sqlSource.push(trip.actualTripDays)
             sqlSource.push(trip.tripWork)
-            let now = moment().format('YYYY-MM-DD HH:mm:ss')
+            let now = this.now()
             sqlSource.push(now)
             sqlSource.push(userID)
 

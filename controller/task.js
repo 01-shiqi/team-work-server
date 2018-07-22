@@ -4,8 +4,6 @@ import Base from './base'
 import logger from '../logger/logger'
 import Trip from './trip'
 
-import moment from 'moment'
-
 
 class Task extends Base {
 
@@ -64,7 +62,7 @@ class Task extends Base {
             sqlSource.push(task.content)
             sqlSource.push('已创建')
 
-            var now = moment().format('YYYY-MM-DD HH:mm:ss')
+            var now = this.now()
             sqlSource.push(now)
             sqlSource.push(userID)
             sqlSource.push(now)
@@ -283,7 +281,7 @@ class Task extends Base {
             sqlSource.push(task.name)
             sqlSource.push(task.content)
 
-            var now = moment().format('YYYY-MM-DD HH:mm:ss')
+            var now = this.now()
             sqlSource.push(now)
             sqlSource.push(userID)
 
@@ -313,7 +311,7 @@ class Task extends Base {
             sqlSource.push(task.executor)
             sqlSource.push('已下发')
 
-            var now = moment().format('YYYY-MM-DD HH:mm:ss')
+            var now = this.now()
             sqlSource.push(now)
             sqlSource.push(userID)
 
@@ -388,7 +386,7 @@ class Task extends Base {
             var sqlSource = []
             sqlSource.push('已关闭')
 
-            var now = moment().format('YYYY-MM-DD HH:mm:ss')
+            var now = this.now()
             sqlSource.push(now)
             sqlSource.push(userID)
 

@@ -3,8 +3,6 @@
 import Base from './base'
 import logger from '../logger/logger'
 
-import moment from 'moment'
-
 
 class Worklog extends Base {
 
@@ -112,7 +110,7 @@ class Worklog extends Base {
             sqlSource.push(worklog.workContent)
             sqlSource.push(worklog.taskID)
 
-            var now = moment().format('YYYY-MM-DD HH:mm:ss')
+            var now = this.now()
             sqlSource.push(now)
             sqlSource.push(now)
 
@@ -151,7 +149,7 @@ class Worklog extends Base {
 			sqlData.push(worklog.workContent)
 			sqlData.push(worklog.taskID)
 
-            let now = moment().format('YYYY-MM-DD HH:mm:ss')
+            let now = this.now()
             sqlData.push(now)
 
             await this.executeSql(sql, sqlData)
