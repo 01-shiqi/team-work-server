@@ -56,7 +56,7 @@
     "babel-plugin-transform-es2015-modules-commonjs": "^6.24.1",
     "babel-plugin-transform-export-extensions": "^6.22.0",
     "autoprefixer": "^7.2.6",
-    "grunt": "^1.0.2",
+    "grunt": "^1.5.3",
     "grunt-contrib-pug": "^1.0.0",
     "grunt-contrib-watch": "^1.0.1",
     "grunt-postcss": "^0.8.0",
